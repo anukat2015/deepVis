@@ -304,7 +304,10 @@
 	  	.append("g")
 	    .attr("transform", "translate(" + width / 10 + "," + height / 10 + ")");
 
-	var diagonal = d3.svg.diagonal();
+	var diagonal = d3.svg.diagonal()
+    .source(function(d) { return {"x":d.source.y, "y":d.source.x}; })            
+    .target(function(d) { return {"x":d.target.y, "y":d.target.x}; })
+    .projection(function(d) { return [d.y, d.x]; });
 
 	svg.selectAll(".link")
 		.data(links)
