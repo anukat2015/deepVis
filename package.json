@@ -1,0 +1,19 @@
+{
+  "name": "deepvis",
+  "version": "1.0.0",
+  "description": "deep learning visualization",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davianlab/deepVis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davianlab/deepVis/issues"
+  },
+  "homepage": "https://github.com/davianlab/deepVis#readme"
+}
