@@ -67,13 +67,8 @@ function updateEmbedding() {
   if(T.iter % 10 == 0) {
     // get current solution
     var resultY = T.getSolution();
-    // console.log(resultY);
 
-    // move the groups accordingly
-    // if(T.iter % 100 == 0)
-    //     console.log(Y);
     data = resultY;
-    // change();
 
     //update
     xMax = d3.max(data, function(d) { return d[xCat]; });
@@ -109,25 +104,25 @@ function init_tSNE() {
   console.log('init');
 
   opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
-    T = new tsnejs.tSNE(opt); // create a tSNE instance
-    preProData();
-    
-    T.initDataRaw(data);
-    console.log(data);
-
-    drawEmbedding();
-    iid = setInterval(step, 10);
-    // for(var k = 0; k < 300; k++) {
-    //   step(); // every time you call this, solution gets better
-    // }
-      // drawEmbedding();
-
-    $("#run").click(function() {
-
-    console.log('run');
-    dotrain = true;
+  T = new tsnejs.tSNE(opt); // create a tSNE instance
+  preProData();
   
-    });
+  T.initDataRaw(data);
+  console.log(data);
+
+  drawEmbedding();
+  iid = setInterval(step, 0);
+  // for(var k = 0; k < 300; k++) {
+  //   step(); // every time you call this, solution gets better
+  // }
+    // drawEmbedding();
+
+  $("#run").click(function() {
+
+  console.log('run');
+  dotrain = true;
+
+  });
 
   $("#stop").click(function() {
 
@@ -205,7 +200,7 @@ function drawEmbedding() {
       .orient("left")
       .tickSize(-width);
 
-  color = d3.scale.category10();
+  color = d3.scale.category20();
 
   tip = d3.tip()
       .attr("class", "d3-tip")
@@ -282,7 +277,8 @@ function drawEmbedding() {
       .classed("dot", true)
       .attr("r", function (d) { return 6 * Math.sqrt(3 / Math.PI); })
       .attr("transform", transform)
-      .style("fill", function(d) { return color(5); })
+      .attr("fill", color)
+      // .style("fill", function(d) { return color(5); })
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide);
 
