@@ -13,4 +13,7 @@ $ cd deepVis
 $ npm install
 $ npm start
 # Open http://localhost:8080/ on your browser
+# or use watch-http-server
+$ npm run watch
+# Open http://0.0.0.0:8080/
 ```
