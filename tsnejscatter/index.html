@@ -15,7 +15,15 @@
     <script src="./d3.min.js" charset="utf-8"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="tsne.js"></script>
-    <script src="scatter.js" charset="utf-8"></script>
+    <script src="tsnejscatter.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+
+      S = new tsnejscatter($, '0'); // create a scatterjs instance
+
+    });
+    </script>
 
 <button type="button" id="run" style="width:100px; height:50px;">Run</button>
 <button type="button" id="stop" style="width:100px; height:50px;">Stop</button>
@@ -78,4 +86,5 @@
 
 </div>
   </body>
+      
 </html>
