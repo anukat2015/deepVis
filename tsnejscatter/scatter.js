@@ -7,12 +7,15 @@ var resultY; // tsne result stored here
 var data;
 var gs;
 
-var x;
-var y;
+var xscale;
+var yscale;
 var xCat, yCat, rCat, colorCat;
 var xMax, xMin, yMAX, yMin; 
-
+var xAxis, yAxis, color, tip, zoomBeh, svg, objects;
+dotrain = true;
+var stepnum = 0;
 dataok = false;
+
 function preProData() {
 
   var txt = $("#incsv").val();
@@ -48,9 +51,6 @@ function preProData() {
   data = raw_data; // set global
 }
 
-dotrain = true;
-var stepnum = 0;
-
 function step() {
 
   if(dotrain) {
@@ -58,67 +58,91 @@ function step() {
     if(T.iter % 100 == 0)
       console.log("iter: " + T.iter);
     // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
+    updateEmbedding();
   }
-  updateEmbedding();
-  // updateEmbedding();
 }
 
 function updateEmbedding() {
 
-  // get current solution
-  var resultY = T.getSolution();
+  if(T.iter % 10 == 0) {
+    // get current solution
+    var resultY = T.getSolution();
+    // console.log(resultY);
 
-  // move the groups accordingly
-  // if(T.iter % 100 == 0)
-  //     console.log(Y);
-  data = resultY;
+    // move the groups accordingly
+    // if(T.iter % 100 == 0)
+    //     console.log(Y);
+    data = resultY;
+    // change();
 
-  // gs.attr("transform", function(d, i) { return "translate(" +
-  //                                         resultY[i][0] + "," +
-  //                                         resultY[i][1] + ")"; });
+    //update
+    xMax = d3.max(data, function(d) { return d[xCat]; });
+    xMin = d3.min(data, function(d) { return d[xCat]; });
+    yMax = d3.max(data, function(d) { return d[yCat]; });
+    yMin = d3.min(data, function(d) { return d[yCat]; });
 
-  // change();
-  // gs.empty();
-  // data = resultY;
+    xscale.domain([xMin, xMax]);
+    yscale.domain([yMin, yMax]);
 
-  //do the update
+    zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
+
+    svg = svg;
+    svg.attr("d", data);
+
+    svg.select(".x.axis").call(xAxis).select(".label").text(xCat);
+    svg.select(".y.axis").call(yAxis).select(".label").text(yCat);
+
+    gs.attr("d", data)
+      .attr("transform", function(d, i) {
+      return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
+
+    });
+  }
+
+}
+
+function init_Embedding() {
+
+}
+
+function init_tSNE() {
+  console.log('init');
+
+  opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
+    T = new tsnejs.tSNE(opt); // create a tSNE instance
+    preProData();
+    
+    T.initDataRaw(data);
+    console.log(data);
+
+    drawEmbedding();
+    iid = setInterval(step, 10);
+    // for(var k = 0; k < 300; k++) {
+    //   step(); // every time you call this, solution gets better
+    // }
+      // drawEmbedding();
+
+    $("#run").click(function() {
+
+    console.log('run');
+    dotrain = true;
+  
+    });
+
+  $("#stop").click(function() {
+
+    console.log('stop');
+    dotrain = false;
+
+  
+  });
+
 }
 
 $(window).load(function() {
   // ok lets do this
     console.log('start');
-    opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
-    T = new tsnejs.tSNE(opt); // create a tSNE instance
-    preProData();
-    
-    T.initDataRaw(data);
-    console.log(data);
-
-    // drawEmbedding();
-    // iid = setInterval(step, 10);
-    for(var k = 0; k < 300; k++) {
-      step(); // every time you call this, solution gets better
-    }
-      drawEmbedding();
-
-    $("#inbut").click(function() {
-
-    console.log('start');
-    opt = {epsilon: parseFloat(10), perplexity: parseInt(2)};
-    T = new tsnejs.tSNE(opt); // create a tSNE instance
-    preProData();
-    
-    T.initDataRaw(data);
-    console.log(data);
-
-    // drawEmbedding();
-    // iid = setInterval(step, 10);
-    for(var k = 0; k < 1300; k++) {
-      step(); // every time you call this, solution gets better
-    }
-      drawEmbedding();
-  
-  });
+    init_tSNE();
 
 });
 
@@ -127,16 +151,16 @@ $(window).load(function() {
 function drawEmbedding() {
 // $("#scatter").empty();
 
-var margin = { top: 50, right: 50, bottom: 50, left: 50 },
-    outerWidth = 500,
-    outerHeight = 400,
-    width = outerWidth - margin.left - margin.right,
-    height = outerHeight - margin.top - margin.bottom;
+  var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+      outerWidth = 500,
+      outerHeight = 400,
+      width = outerWidth - margin.left - margin.right,
+      height = outerHeight - margin.top - margin.bottom;
 
-  x = d3.scale.linear()
+  xscale = d3.scale.linear()
     .range([0, width]).nice();
 
-  y = d3.scale.linear()
+  yscale = d3.scale.linear()
     .range([height, 0]).nice();
 
     xCat = 0;
@@ -161,42 +185,42 @@ var margin = { top: 50, right: 50, bottom: 50, left: 50 },
   //   d["Vitamins and Minerals"] = +d["Vitamins and Minerals"];
   // });
 
-      xMax = d3.max(data, function(d) { return d[xCat]; }) * 1.05;
-      xMin = d3.min(data, function(d) { return d[xCat]; });
-      // xMin = xMin > 0 ? 0 : xMin,
-      yMax = d3.max(data, function(d) { return d[yCat]; }) * 1.05;
-      yMin = d3.min(data, function(d) { return d[yCat]; });
+  xMax = d3.max(data, function(d) { return d[xCat]; }) * 1.05;
+  xMin = d3.min(data, function(d) { return d[xCat]; });
+  // xMin = xMin > 0 ? 0 : xMin,
+  yMax = d3.max(data, function(d) { return d[yCat]; }) * 1.05;
+  yMin = d3.min(data, function(d) { return d[yCat]; });
       // yMin = yMin > 0 ? 0 : yMin;
 
-  x.domain([xMin, xMax]);
-  y.domain([yMin, yMax]);
+  xscale.domain([xMin, xMax]);
+  yscale.domain([yMin, yMax]);
 
-  var xAxis = d3.svg.axis()
-      .scale(x)
+  xAxis = d3.svg.axis()
+      .scale(xscale)
       .orient("bottom")
       .tickSize(-height);
 
-  var yAxis = d3.svg.axis()
-      .scale(y)
+  yAxis = d3.svg.axis()
+      .scale(yscale)
       .orient("left")
       .tickSize(-width);
 
-  var color = d3.scale.category10();
+  color = d3.scale.category10();
 
-  var tip = d3.tip()
+  tip = d3.tip()
       .attr("class", "d3-tip")
       .offset([-10, 0])
       .html(function(d) {
         return xCat + ": " + d[xCat] + "<br>" + yCat + ": " + d[yCat];
       });
 
-  var zoomBeh = d3.behavior.zoom()
-      .x(x)
-      .y(y)
+  zoomBeh = d3.behavior.zoom()
+      .x(xscale)
+      .y(yscale)
       .scaleExtent([0, 500])
       .on("zoom", zoom);
 
-  var svg = d3.select("#scatter")
+  svg = d3.select("#scatter")
     .append("svg")
       .attr("width", outerWidth)
       .attr("height", outerHeight)
@@ -232,7 +256,7 @@ var margin = { top: 50, right: 50, bottom: 50, left: 50 },
       .style("text-anchor", "end")
       .text(yCat);
 
-  var objects = svg.append("svg")
+  objects = svg.append("svg")
       .classed("objects", true)
       .attr("width", width)
       .attr("height", height);
@@ -280,35 +304,42 @@ var margin = { top: 50, right: 50, bottom: 50, left: 50 },
 
   d3.select("#plotbtn").on("click", change);
 
-  function change() {
+}
+
+function change() {
     // xCat = "Carbs";
-    // xMax = d3.max(data, function(d) { return d[xCat]; });
-    // xMin = d3.min(data, function(d) { return d[xCat]; });
+    xMax = d3.max(data, function(d) { return d[xCat]; });
+    xMin = d3.min(data, function(d) { return d[xCat]; });
+    zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
 
-    zoomBeh.x(x.domain([xMin, xMax])).y(y.domain([yMin, yMax]));
+    var svgupdate = svg.transition();
 
-    var svg = d3.select("#scatter").transition();
+    svgupdate.select(".x.axis").duration(0).call(xAxis).select(".label").text(xCat);
+    svgupdate.select(".y.axis").duration(0).call(yAxis).select(".label").text(yCat);
 
-    svg.select(".x.axis").duration(325).call(xAxis).select(".label").text(xCat);
+    gs.attr("d", data)
+      .attr("transform", function(d, i) {
+      return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
 
-    objects.selectAll(".dot").transition().duration(500).attr("transform", transform);
+    });
 
-    svg.select(".x.axis").call(xAxis);
-    svg.select(".y.axis").call(yAxis);
-  }
+    // objects.selectAll(".dot").transition().duration(0).attr("transform", transform);
+}
 
-  function zoom() {
-    svg.select(".x.axis").call(xAxis);
-    svg.select(".y.axis").call(yAxis);
+function zoom() {
 
-    svg.selectAll(".dot")
-        .attr("transform", transform);
-  }
+  svg.select(".x.axis").call(xAxis);
+  svg.select(".y.axis").call(yAxis);
 
-  function transform(d) {
-    return "translate(" + x(d[xCat]) + "," + y(d[yCat]) + ")";
-  }
+  gs.attr("d", data)
+      .attr("transform", function(d, i) {
+      return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
 
+    });
+}
+
+function transform(d) {
+  return "translate(" + xscale(d[xCat]) + "," + yscale(d[yCat]) + ")";
 }
 //)
 //}
