@@ -1,6 +1,5 @@
-var tsnejscatter = (function(tsnejscatter, $, undefined){
+var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
   // "use strict";
-  //for t-SNE
   ////////////////////tsnejscatter
   var T, opt;
   var iid;
@@ -16,10 +15,11 @@ var tsnejscatter = (function(tsnejscatter, $, undefined){
   var dotrain = true;
   var stepnum = 0;
   var dataok = false;
+  var outdom;
 
   function preProData() {
 
-    var txt = $("#incsv").val();
+    var txt = data;
     // console.log(txt);
     var d = ',';
     var lines = txt.split("\n");
@@ -137,14 +137,17 @@ var tsnejscatter = (function(tsnejscatter, $, undefined){
   //     // init_tSNE();
 
   // });
+  
+  var tsnejscatter = function($, inputdata, out) {
 
-  var tsnejscatter = function($, opt) {
-    var opt = opt || {};
+    //init 
+    data = inputdata || {};
+    outdom = out;
+    
+    console.log('start');
 
-    console.log('start' + opt);
     init_tSNE();
   }
-
 
   ////////////////////
   function drawEmbedding() {
@@ -219,7 +222,7 @@ var tsnejscatter = (function(tsnejscatter, $, undefined){
         .scaleExtent([0, 500])
         .on("zoom", zoom);
 
-    svg = d3.select("#scatter")
+    svg = d3.select(outdom)
       .append("svg")
         .attr("width", outerWidth)
         .attr("height", outerHeight)

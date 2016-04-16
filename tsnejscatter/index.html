@@ -20,7 +20,10 @@
     <script type="text/javascript">
     $(document).ready(function(){
 
-      S = new tsnejscatter($, '0'); // create a scatterjs instance
+      var datafield = document.getElementById("incsv");
+      var out = document.getElementById("scatter");
+
+      S = new tsnejscatter($, $(datafield).val(), out); // create a scatterjs instance
 
     });
     </script>

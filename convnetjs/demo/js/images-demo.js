@@ -4,7 +4,6 @@
 sample_training_instance
 sample_test_instance
 */
-
 var sample_training_instance = function() {
   // find an unloaded batch
   var bi = Math.floor(Math.random()*loaded_train_batches.length);
