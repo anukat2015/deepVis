@@ -340,14 +340,30 @@ var visualize_activations = function(net, elt) {
         filters_div.appendChild(document.createTextNode('Filters list:'));
         filters_div.appendChild(document.createElement('br'));
 
+        var filterstring = "";
+
         for(var j=0;j<L.filters.length;j++) {
           
             // filters_div.appendChild(document.createTextNode('('));
-            filters_div.appendChild(document.createTextNode(L.filters[j].w));
-            filters_div.appendChild(document.createElement('br'));
+            filterstring = filterstring.concat(L.filters[j].w);
+            filterstring = filterstring.concat("\n");
+            // filters_div.appendChild(document.createTextNode(L.filters[j].w));
+            // filters_div.appendChild(document.createElement('br'));
             // filters_div.appendChild(document.createTextNode(')'));
         }
-        // here we do the tSNE
+
+        // filters_div.appendChild(document.createTextNode(filterstring));
+        // filters_div.appendChild(document.createElement('br'));
+
+
+      // tSNE plot
+
+      var scatterplot = document.createElement('scatter');
+
+      S = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
+      
+      filters_div.appendChild(scatterplot);
+
 
         //
         //
@@ -577,7 +593,7 @@ var step = function(sample) {
   train_elt.appendChild(document.createElement('br'));
 
   // visualize activations
-  if(step_num % 100 === 0) {
+  if(step_num % 500 === 0) {
     var vis_elt = document.getElementById("visnet");
     visualize_activations(net, vis_elt);
   }

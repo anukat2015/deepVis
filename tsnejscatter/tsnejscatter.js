@@ -58,6 +58,12 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       var cost = T.step(); // do a few steps
       if(T.iter % 100 == 0)
         console.log("iter: " + T.iter);
+
+      // if(T.iter > 1000) {
+
+      //   clearInterval(iid);
+      //   dotrain = false;
+      // }
       // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
       updateEmbedding();
     }
@@ -143,7 +149,7 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     //init 
     data = inputdata || {};
     outdom = out;
-    
+
     console.log('start');
 
     init_tSNE();
