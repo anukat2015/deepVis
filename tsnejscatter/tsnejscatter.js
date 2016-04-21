@@ -1,9 +1,8 @@
 var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
   // "use strict";
-  ////////////////////tsnejscatter
   var T, opt;
   var iid;
-  var resultY; // tsne result stored here
+  var resultY;
   var data;
   var gs;
 
@@ -20,7 +19,6 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
   function preProData() {
 
     var txt = data;
-    // console.log(txt);
     var d = ',';
     var lines = txt.split("\n");
     var raw_data = [];
@@ -59,11 +57,11 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       if(T.iter % 100 == 0)
         console.log("iter: " + T.iter);
 
-      // if(T.iter > 1000) {
+      if(T.iter > 2000) {
 
-      //   clearInterval(iid);
-      //   dotrain = false;
-      // }
+        clearInterval(iid);
+        dotrain = false;
+      }
       // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
       updateEmbedding();
     }
@@ -114,11 +112,10 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     // console.log(data);
 
     drawEmbedding();
+    for(var k = 0; k < 200; k++) {
+      step(); // every time you call this, solution gets better
+    }
     iid = setInterval(step, 0);
-    // for(var k = 0; k < 300; k++) {
-    //   step(); // every time you call this, solution gets better
-    // }
-      // drawEmbedding();
 
     $("#run").click(function() {
 
@@ -136,13 +133,6 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     });
 
   }
-
-  // $(window).load(function() {
-  //   // ok lets do this
-  //     // console.log('start');
-  //     // init_tSNE();
-
-  // });
   
   var tsnejscatter = function($, inputdata, out) {
 
@@ -155,7 +145,6 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     init_tSNE();
   }
 
-  ////////////////////
   function drawEmbedding() {
   // $("#scatter").empty();
 
@@ -331,7 +320,6 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
 
     });
-
     // objects.selectAll(".dot").transition().duration(0).attr("transform", transform);
   }
 
