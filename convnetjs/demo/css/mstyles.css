@@ -4,16 +4,16 @@
     stroke-width: 1.5px;
     }
 
-    circle {
+/*    circle {
     stroke: #000;
     stroke-width: 0.5px;
-    opacity: 0.5;
-    }
+    opacity: 0.9;
+    }*/
 
     .link {
     fill: none;
     stroke: #999;
-    stroke-width: 1.0px;
+    stroke-width: 0.5px;
     stroke-opacity: .3;
     }
 

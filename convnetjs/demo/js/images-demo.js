@@ -310,30 +310,30 @@ var visualize_activations = function(net, elt) {
       var filters_div = document.createElement('div');
       if(L.filters[0].sx>3) {
         // actual weights
-        filters_div.appendChild(document.createTextNode('Weights:'));
-        filters_div.appendChild(document.createElement('br'));
-        for(var j=0;j<L.filters.length;j++) {
-          // HACK to draw in color for first layer conv filters
-          if(i===1) {
-            draw_activations_COLOR(filters_div, L.filters[j], 2);
-          } else {
-            filters_div.appendChild(document.createTextNode('('));
-            draw_activations(filters_div, L.filters[j], 2);
-            filters_div.appendChild(document.createTextNode(')'));
-          }
-        }
+        // filters_div.appendChild(document.createTextNode('Weights:'));
+        // filters_div.appendChild(document.createElement('br'));
+        // for(var j=0;j<L.filters.length;j++) {
+        //   // HACK to draw in color for first layer conv filters
+        //   if(i===1) {
+        //     draw_activations_COLOR(filters_div, L.filters[j], 2);
+        //   } else {
+        //     filters_div.appendChild(document.createTextNode('('));
+        //     draw_activations(filters_div, L.filters[j], 2);
+        //     filters_div.appendChild(document.createTextNode(')'));
+        //   }
+        // }
         // gradients
-        filters_div.appendChild(document.createElement('br'));
-        filters_div.appendChild(document.createTextNode('Weight Gradients:'));
-        filters_div.appendChild(document.createElement('br'));
-        for(var j=0;j<L.filters.length;j++) {
-          if(i===1) { draw_activations_COLOR(filters_div, L.filters[j], 2, true); }
-          else {
-            filters_div.appendChild(document.createTextNode('('));
-            draw_activations(filters_div, L.filters[j], 2, true);
-            filters_div.appendChild(document.createTextNode(')'));
-          }
-        }
+        // filters_div.appendChild(document.createElement('br'));
+        // filters_div.appendChild(document.createTextNode('Weight Gradients:'));
+        // filters_div.appendChild(document.createElement('br'));
+        // for(var j=0;j<L.filters.length;j++) {
+        //   if(i===1) { draw_activations_COLOR(filters_div, L.filters[j], 2, true); }
+        //   else {
+        //     filters_div.appendChild(document.createTextNode('('));
+        //     draw_activations(filters_div, L.filters[j], 2, true);
+        //     filters_div.appendChild(document.createTextNode(')'));
+        //   }
+        // }
 
         //show filters
         filters_div.appendChild(document.createElement('br'));
