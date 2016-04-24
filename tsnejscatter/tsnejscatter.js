@@ -1,22 +1,10 @@
-var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
-  // "use strict";
-  var T, opt;
-  var iid;
-  var resultY;
-  var data;
-  var gs;
-
-  var xscale;
-  var yscale;
-  var xCat, yCat, rCat, colorCat;
-  var xMax, xMin, yMAX, yMin; 
-  var xAxis, yAxis, color, tip, zoomBeh, svg, objects;
-  var dotrain = true;
-  var stepnum = 0;
+var tsnejscatter = (function(){
+  "use strict";
+ 
+  var dotrain =  true;
   var dataok = false;
-  var outdom;
 
-  function preProData() {
+  var preProData = function(data) {
 
     var txt = data;
     var d = ',';
@@ -47,10 +35,11 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       }
       raw_data.push(data_point);
     }
-    data = raw_data; // set global
+    data = raw_data;
+    return data; // set global
   }
 
-  function step() {
+  var step = function(data, T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis) {
 
     if(dotrain) {
       var cost = T.step(); // do a few steps
@@ -63,65 +52,67 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       //   dotrain = false;
       // }
       // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
-      updateEmbedding();
+      updateEmbedding(T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis);
     }
   }
 
-  function updateEmbedding() {
+  var updateEmbedding = function(T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis) {
 
-    if(T.iter % 10 == 0) {
+    if(T.iter % 1 == 0) {
       // get current solution
-      var resultY = T.getSolution();
-
-      data = resultY;
+      var data = T.getSolution();
 
       //update
-      xMax = d3.max(data, function(d) { return d[xCat]; });
-      xMin = d3.min(data, function(d) { return d[xCat]; });
-      yMax = d3.max(data, function(d) { return d[yCat]; });
-      yMin = d3.min(data, function(d) { return d[yCat]; });
+      var xMax = d3.max(data, function(d) { return d[0]; });
+      var xMin = d3.min(data, function(d) { return d[0]; });
+      var yMax = d3.max(data, function(d) { return d[1]; });
+      var yMin = d3.min(data, function(d) { return d[1]; });
 
       xscale.domain([xMin, xMax]);
       yscale.domain([yMin, yMax]);
 
       zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
+      zoomBeh.on("zoom", function () {
+        zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
+      });
 
-      svg = svg;
       svg.attr("d", data);
-
-      svg.select(".x.axis").call(xAxis).select(".label").text(xCat);
-      svg.select(".y.axis").call(yAxis).select(".label").text(yCat);
+      svg.select(".x.axis").call(xAxis).select(".label").text(0);
+      svg.select(".y.axis").call(yAxis).select(".label").text(1);
 
       gs.attr("d", data)
         .attr("transform", function(d, i) {
         return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
-
       });
     }
 
   }
 
-  function init_tSNE() {
+  var init_tSNE = function(data, outdom) {
+
     console.log('init');
 
-    opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
-    T = new tsnejs.tSNE(opt); // create a tSNE instance
-    preProData();
+    var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
+    var T = new tsnejs.tSNE(opt); // create a tSNE instance
+    var data = preProData(data);
     
     T.initDataRaw(data);
-    // console.log(data);
 
-    drawEmbedding();
+    var svgc = drawEmbedding(data, outdom);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
-    iid = setInterval(step, 0);
+    // iid = setInterval(step, 0);
+
+    var iid = setInterval(function () {
+      step(data, T, svgc.xscale, svgc.yscale, svgc.zoomBeh, 
+        svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
+    }, 0);
 
     $("#run").click(function() {
 
       console.log('run');
       dotrain = true;
-
     });
 
     $("#stop").click(function() {
@@ -129,24 +120,11 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       console.log('stop');
       // clearInterval(iid);
       dotrain = false;
-    
     });
 
   }
-  
-  var tsnejscatter = function($, inputdata, out) {
 
-    //init 
-    data = inputdata || {};
-    outdom = out;
-
-    console.log('start');
-
-    init_tSNE();
-  }
-
-  function drawEmbedding() {
-  // $("#scatter").empty();
+  var drawEmbedding = function(data, outdom) {
 
     var margin = { top: 50, right: 50, bottom: 50, left: 50 },
         outerWidth = 500,
@@ -154,76 +132,54 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
 
-    xscale = d3.scale.linear()
-      .range([0, width]).nice();
+    var xscale = d3.scale.linear().range([0, width]).nice();
 
-    yscale = d3.scale.linear()
-      .range([height, 0]).nice();
+    var yscale = d3.scale.linear().range([height, 0]).nice();
 
-      xCat = 0;
-      yCat = 1;
-      rCat = "Protein (g)";
+     var rCat = "Protein (g)",
       colorCat = "Manufacturer";
 
-  // d3.csv("cereal.csv", function(data) {
-
-    // data.forEach(function(d) {
-    //   d.Calories = +d.Calories;
-    //   d.Carbs = +d.Carbs;
-    //   d["Cups per Serving"] = +d["Cups per Serving"];
-    //   d["Dietary Fiber"] = +d["Dietary Fiber"];
-    //   d["Display Shelf"] = +d["Display Shelf"];
-    //   d.Fat = +d.Fat;
-    //   d.Potassium = +d.Potassium;
-    //   d["Protein (g)"] = +d["Protein (g)"];
-    //   d["Serving Size Weight"] = +d["Serving Size Weight"];
-    //   d.Sodium = +d.Sodium;
-    //   d.Sugars = +d.Sugars;
-    //   d["Vitamins and Minerals"] = +d["Vitamins and Minerals"];
-    // });
-
-    xMax = d3.max(data, function(d) { return d[xCat]; }) * 1.05;
-    xMin = d3.min(data, function(d) { return d[xCat]; });
+    var xMax = d3.max(data, function(d) { return d[0]; }) * 1.05;
+    var xMin = d3.min(data, function(d) { return d[0]; });
     // xMin = xMin > 0 ? 0 : xMin,
-    yMax = d3.max(data, function(d) { return d[yCat]; }) * 1.05;
-    yMin = d3.min(data, function(d) { return d[yCat]; });
+    var yMax = d3.max(data, function(d) { return d[1]; }) * 1.05;
+    var yMin = d3.min(data, function(d) { return d[1]; });
         // yMin = yMin > 0 ? 0 : yMin;
 
     xscale.domain([xMin, xMax]);
     yscale.domain([yMin, yMax]);
 
-    xAxis = d3.svg.axis()
+    var xAxis = d3.svg.axis()
         .scale(xscale)
         .orient("bottom")
         .tickSize(-height);
 
-    yAxis = d3.svg.axis()
+    var yAxis = d3.svg.axis()
         .scale(yscale)
         .orient("left")
         .tickSize(-width);
 
-    color = d3.scale.category20();
+    var color = d3.scale.category20();
 
-    tip = d3.tip()
+    var tip = d3.tip()
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
-          return xCat + ": " + d[xCat] + "<br>" + yCat + ": " + d[yCat];
+          return 0 + ": " + d[0] + "<br>" + 1 + ": " + d[1];
         });
 
-    zoomBeh = d3.behavior.zoom()
+    var zoomBeh = d3.behavior.zoom()
         .x(xscale)
         .y(yscale)
         .scaleExtent([0, 500])
-        .on("zoom", zoom);
 
-    svg = d3.select(outdom)
+    var svg = d3.select(outdom)
       .append("svg")
         .attr("width", outerWidth)
         .attr("height", outerHeight)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(zoomBeh);
+        .call(zoomBeh)
 
     svg.call(tip);
 
@@ -240,7 +196,7 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text(xCat);
+        .text(0);
 
     svg.append("g")
         .classed("y axis", true)
@@ -251,9 +207,9 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
         .attr("y", -margin.left)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text(yCat);
+        .text(1);
 
-    objects = svg.append("svg")
+    var objects = svg.append("svg")
         .classed("objects", true)
         .attr("width", width)
         .attr("height", height);
@@ -273,16 +229,20 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
         .attr("x2", 0)
         .attr("y2", height);
 
-    gs = objects.selectAll(".dot")
+    var gs = objects.selectAll(".dot")
         .data(data)
       .enter().append("circle")
         .classed("dot", true)
         .attr("r", function (d) { return 6 * Math.sqrt(3 / Math.PI); })
-        .attr("transform", transform)
+        // .attr("transform", transform(data, xscale, yscale))
         .attr("fill", color)
         // .style("fill", function(d) { return color(5); })
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide);
+
+    zoomBeh.on("zoom", function () {
+      zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
+    });
 
     // var legend = svg.selectAll(".legend")
     //     .data(color.domain())
@@ -300,20 +260,22 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     //     .attr("dy", ".35em")
     //     .text(function(d) { return d; });
 
-    d3.select("#plotbtn").on("click", change);
-
+    // d3.select("#plotbtn").on("click", change);
+    return {
+      xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis
+    };
   }
 
-  function change() {
-    // xCat = "Carbs";
-    xMax = d3.max(data, function(d) { return d[xCat]; });
-    xMin = d3.min(data, function(d) { return d[xCat]; });
+  var change = function() {
+    // 0 = "Carbs";
+    var xMax = d3.max(data, function(d) { return d[0]; });
+    var xMin = d3.min(data, function(d) { return d[0]; });
     zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
 
     var svgupdate = svg.transition();
 
-    svgupdate.select(".x.axis").duration(0).call(xAxis).select(".label").text(xCat);
-    svgupdate.select(".y.axis").duration(0).call(yAxis).select(".label").text(yCat);
+    svgupdate.select(".x.axis").duration(0).call(xAxis).select(".label").text(0);
+    svgupdate.select(".y.axis").duration(0).call(yAxis).select(".label").text(1);
 
     gs.attr("d", data)
       .attr("transform", function(d, i) {
@@ -323,7 +285,7 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     // objects.selectAll(".dot").transition().duration(0).attr("transform", transform);
   }
 
-  function zoom() {
+  var zoom = function(data, svg, xscale, yscale, xAxis, yAxis, gs) {
 
     svg.select(".x.axis").call(xAxis);
     svg.select(".y.axis").call(yAxis);
@@ -335,10 +297,21 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       });
   }
 
-  function transform(d) {
-    return "translate(" + xscale(d[xCat]) + "," + yscale(d[yCat]) + ")";
+  var transform = function(d, xscale, yscale) {
+
+    return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  return tsnejscatter;
+  var tsnejsc = function($, inputdata, out) {
+    //constructor 
+    console.log('start tsnejsc');
 
-})(window.tsnejscatter || {},jQuery);
+    var data = inputdata || {};
+    var outdom = out;
+
+    init_tSNE(data, outdom);
+  }
+
+  return tsnejsc;
+  
+})();
