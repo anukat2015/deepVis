@@ -57,11 +57,11 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
       if(T.iter % 100 == 0)
         console.log("iter: " + T.iter);
 
-      if(T.iter > 2000) {
+      // if(T.iter > 2000) {
 
-        clearInterval(iid);
-        dotrain = false;
-      }
+      //   clearInterval(iid);
+      //   dotrain = false;
+      // }
       // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
       updateEmbedding();
     }
@@ -112,9 +112,9 @@ var tsnejscatter = (function(tsnejscatter, $, undefined, undefined){
     // console.log(data);
 
     drawEmbedding();
-    for(var k = 0; k < 200; k++) {
-      step(); // every time you call this, solution gets better
-    }
+    // for(var k = 0; k < 200; k++) {
+    //   step(); // every time you call this, solution gets better
+    // }
     iid = setInterval(step, 0);
 
     $("#run").click(function() {
