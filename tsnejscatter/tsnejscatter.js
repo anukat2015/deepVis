@@ -102,11 +102,12 @@ var tsnejscatter = (function(){
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
-    // iid = setInterval(step, 0);
-
     var iid = setInterval(function () {
       step(data, T, svgc.xscale, svgc.yscale, svgc.zoomBeh, 
         svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
+
+      if(T.iter > 700)
+        clearInterval(iid);
     }, 0);
 
     $("#run").click(function() {

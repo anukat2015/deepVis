@@ -355,18 +355,12 @@ var visualize_activations = function(net, elt) {
         // filters_div.appendChild(document.createTextNode(filterstring));
         // filters_div.appendChild(document.createElement('br'));
 
-
       // tSNE plot
-
       var scatterplot = document.createElement('scatter');
 
-      S = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
-      
+      var tsnescatter = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
       filters_div.appendChild(scatterplot);
 
-
-        //
-        //
       } else {
         filters_div.appendChild(document.createTextNode('Weights hidden, too small'));
       }

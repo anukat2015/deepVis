@@ -3,7 +3,6 @@
     <meta charset="utf-8">
     <title>Visualization</title>
     <link rel="stylesheet" href="scatter.css" charset="utf-8">
-
   </head>
   <body>
 
@@ -11,12 +10,11 @@
     <div id="scatter"></div>
     
     <input id="plotbtn" type="button" name="xAxis" value="xAxis">
-    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="./d3.min.js" charset="utf-8"></script>
-    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script src="./d3.tip.v0.6.3.js"></script>
     <script src="tsne.js"></script>
     <script src="tsnejscatter.js" charset="utf-8"></script>
-
     <script type="text/javascript">
     $(document).ready(function(){
 
@@ -25,6 +23,8 @@
 
       S = new tsnejscatter($, $(datafield).val(), out); // create a scatterjs instance
       S1 = new tsnejscatter($, $(datafield).val(), out); // create a scatterjs instance
+
+      
     });
     </script>
 
