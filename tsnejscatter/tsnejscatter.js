@@ -3,6 +3,7 @@ var tsnejscatter = (function(){
  
   var dotrain =  true;
   var dataok = false;
+  var T;
 
   var preProData = function(data) {
 
@@ -88,12 +89,17 @@ var tsnejscatter = (function(){
 
   }
 
+  var change_p = function(data) {
+    var data = preProData(data);
+    T.changeP(data);
+  }
+
   var init_tSNE = function(data, outdom) {
 
     console.log('init');
 
     var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
-    var T = new tsnejs.tSNE(opt); // create a tSNE instance
+    T = new tsnejs.tSNE(opt); // create a tSNE instance
     var data = preProData(data);
     
     T.initDataRaw(data);
@@ -309,6 +315,8 @@ var tsnejscatter = (function(){
 
     var data = inputdata || {};
     var outdom = out;
+
+    var change_p = change_p;
 
     init_tSNE(data, outdom);
   }

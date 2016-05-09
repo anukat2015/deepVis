@@ -151,6 +151,8 @@ var load_data_batch = function(batch_num) {
 var maxmin = cnnutil.maxmin;
 var f2t = cnnutil.f2t;
 
+
+var tsnescatter;
 // elt is the element to add all the canvas activation drawings into
 // A is the Vol() to use
 // scale is a multiplier to make the visualizations larger. Make higher for larger pictures
@@ -358,7 +360,11 @@ var visualize_activations = function(net, elt) {
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      var tsnescatter = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
+      if(tsnescatter==undefined) {
+        tsnescatter = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
+      } else {
+        tsnescatter.change_p(filterstring);
+      }
       filters_div.appendChild(scatterplot);
 
       } else {

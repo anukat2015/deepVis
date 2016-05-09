@@ -174,6 +174,7 @@ var tsnejs = tsnejs || { REVISION: 'ALPHA' };
     return Pout;
   }
 
+
   // helper function
   function sign(x) { return x > 0 ? 1 : x < 0 ? -1 : 0; }
 
@@ -233,6 +234,11 @@ var tsnejs = tsnejs || { REVISION: 'ALPHA' };
     // return pointer to current solution
     getSolution: function() {
       return this.Y;
+    },
+
+
+    changeNewP: function(D) {
+      this.P = d2P(D,this.perplexity, 1e-4);
     },
 
     // perform a single step of optimization to improve the embedding
