@@ -362,7 +362,9 @@ var visualize_activations = function(net, elt) {
 
       if(tsnescatter==undefined) {
         tsnescatter = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
+        
       } else {
+
         tsnescatter.change_p(filterstring);
       }
       filters_div.appendChild(scatterplot);

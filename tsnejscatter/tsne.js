@@ -237,7 +237,7 @@ var tsnejs = tsnejs || { REVISION: 'ALPHA' };
     },
 
     changeP: function(X) {
-      d = xtod(X);
+      var d = xtod(X);
       this.P = d2p(d, this.perplexity, 1e-4);
     },
 

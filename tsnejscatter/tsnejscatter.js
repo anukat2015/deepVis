@@ -89,10 +89,10 @@ var tsnejscatter = (function(){
 
   }
 
-  var change_p = function(data) {
-    var data = preProData(data);
-    T.changeP(data);
-  }
+  // var change_p = function(data) {
+  //   var data = preProData(data);
+  //   T.changeP(data);
+  // }
 
   var init_tSNE = function(data, outdom) {
 
@@ -319,6 +319,16 @@ var tsnejscatter = (function(){
     var change_p = change_p;
 
     init_tSNE(data, outdom);
+  }
+
+  tsnejsc.prototype = {
+
+    change_p: function(data) {
+      var data = preProData(data);
+      T.changeP(data);
+      //console.log('changeP');
+    }
+
   }
 
   return tsnejsc;
