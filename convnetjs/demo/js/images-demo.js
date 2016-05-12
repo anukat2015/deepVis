@@ -690,3 +690,18 @@ var change_net = function() {
   eval($("#newnet").val());
   reset_all();
 }
+
+/*We addtional implemented*/
+var calculate_filtercost = function(A){
+ // this moudle calculate square sum of  cost at each filter 
+
+  for(var d=0;d<A.dept ; d++) {
+    for(var x=0;x<A.sx;x++) {
+      for(var y=0;y<A.sy;y++) {
+        grad_cost=A.get_grad(x,y,d);
+        filters_cost+=grad_cost*grad_cost;  
+      }
+    }
+  }
+  return filters_cost;
+}
