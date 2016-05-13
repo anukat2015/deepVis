@@ -601,13 +601,37 @@ var step = function(sample) {
   }
 
   // log progress to graph, (full loss)
-  if(step_num % 200 === 0) {
-    var xa = xLossWindow.get_average();
-    var xw = wLossWindow.get_average();
-    if(xa >= 0 && xw >= 0) { // if they are -1 it means not enough data was accumulated yet for estimates
-      lossGraph.add(step_num, xa + xw);
-      lossGraph.drawSelf(document.getElementById("lossgraph"));
+  // if(step_num % 200 === 0) {
+  //   var xa = xLossWindow.get_average();
+  //   var xw = wLossWindow.get_average();
+  //   if(xa >= 0 && xw >= 0) { // if they are -1 it means not enough data was accumulated yet for estimates
+  //     lossGraph.add(step_num, xa + xw);
+  //     lossGraph.drawSelf(document.getElementById("lossgraph"));
+  //   }
+  // }
+
+  // log progress to graph, (full loss)
+  if(step_num % 100 === 0) {
+
+    // var xa = xLossWindow.get_average();
+    // var xw = wLossWindow.get_average();
+    
+    // conv1 filter[0] grad
+    var L = net.layers[1];
+    console.log(L.layer_type);
+
+    var total_grad = 0;
+    for(var j=0; j<L.filters[0].dw.length; j++) {
+
+      var f_gd = L.filters[0].dw[j];
+      total_grad += f_gd * f_gd;
     }
+
+    console.log('total grad: '+total_grad);
+
+    lossGraph.add(step_num, total_grad);
+    lossGraph.drawSelf(document.getElementById("lossgraph"));
+    
   }
 
   // run prediction on test set
@@ -694,14 +718,17 @@ var change_net = function() {
 /*We addtional implemented*/
 var calculate_filtercost = function(A){
  // this moudle calculate square sum of  cost at each filter 
+  var filters_cost = 0;
 
   for(var d=0;d<A.dept ; d++) {
     for(var x=0;x<A.sx;x++) {
       for(var y=0;y<A.sy;y++) {
         grad_cost=A.get_grad(x,y,d);
-        filters_cost+=grad_cost*grad_cost;  
+        console.log(grad_cost);
+        d_grad = grad_cost*grad_cost;
+        filters_cost+=d_grad;  
       }
     }
   }
-  return filters_cost;
+return filters_cost;
 }
