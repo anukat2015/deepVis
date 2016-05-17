@@ -61,7 +61,7 @@
   net = new convnetjs.Net();\n\
   net.makeLayers(layer_defs);\n\
   \n\
-  trainer = new convnetjs.SGDTrainer(net, {method:'adadelta', batch_size:4, l2_decay:0.0001});\n\
+  trainer = new convnetjs.SGDTrainer(net, {method:'adadgrad', batch_size:4, l2_decay:0.0001});\n\
   ";
   // ------------------------
   // END CIFAR-10 SPECIFIC STUFF
@@ -75,7 +75,7 @@
 <body>
 
   <header>
-    <h1 class="l--page" id="header-title"><br>Davian <b>deepVIS</b><br><br></h1>
+    <h1><br>Davian <b>deepVIS</b><br><br></h1>
   </header>
 
   <div id="wrap">
@@ -145,12 +145,10 @@
   </div>
 
   <div class="divsec">
-  <h1 id="h1-bg">Visualization</h1>
+  <h1>Visualization</h1>
 
-    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
     <div id="deepVis"></div>
 
-    </div>
   </div>
 
   <div class="divsec">

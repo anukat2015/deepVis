@@ -1,7 +1,7 @@
 $( document ).ready(function() {
 
   var width = 800;
-  var height = 500;
+  var height = 300;
 
   var angle = d3.scale.ordinal().domain(d3.range(4)).rangePoints([0, 2 * Math.PI]),
       color = d3.scale.category10().domain(d3.range(width/10));
