@@ -116,33 +116,33 @@
   <h3 id="h3">Training Stats</h3>
   <div class="divsec" style="270px;">
     <div class="secpart">
-      <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"/>
+      <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
 
       <div id="trainstats"></div>
 
       <div id="controls">
         Learning rate: <input name="lri" type="text" maxlength="20" id="lr_input"/>
-        <input id="buttonlr" type="submit" value="change" onclick="change_lr();"/>
+        <input id="buttonlr" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_lr();"/>
         <br />
 
         Momentum: <input name="momi" type="text" maxlength="20" id="momentum_input"/>
-        <input id="buttonmom" type="submit" value="change" onclick="change_momentum();"/>
+        <input id="buttonmom" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_momentum();"/>
         <br />
 
         Batch size: <input name="bsi" type="text" maxlength="20" id="batch_size_input"/>
-        <input id="buttonbs" type="submit" value="change" onclick="change_batch_size();"/>
+        <input id="buttonbs" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_batch_size();"/>
         <br />
 
         Weight decay: <input name="wdi" type="text" maxlength="20" id="decay_input"/>
-        <input id="buttonwd" type="submit" value="change" onclick="change_decay();"/>
+        <input id="buttonwd" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_decay();"/>
       </div>
 
-      <input id="buttondj" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
-      <input id="buttonlfj" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
+      <input id="buttondj" class="btn btn-default btn-xs" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
+      <input id="buttonlfj" class="btn btn-default btn-xs" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
       <textarea id="dumpjson"></textarea>
       <br>
 
-      <input id="buttonpre" type="submit" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
+      <input id="buttonpre" type="submit" class="btn btn-default btn-xs" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
     </div>
     <div class="secpart">
       <div>
@@ -150,7 +150,7 @@
         <canvas id="lossgraph">
         </canvas>
         <br />
-        <input id="buttoncg" type="submit" value="clear graph" onclick="clear_graph();"/>
+        <input id="buttoncg" class="btn btn-default btn-xs" type="submit" value="clear graph" onclick="clear_graph();"/>
       </div>
     </div>
     <div class="secpart"> 
@@ -161,7 +161,7 @@
         </div>
         <input name="image" type="file" accept="image/*" onchange="loadFile(event)">
 
-        <input type="submit" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
+        <input type="submit" class="btn btn-default btn-xs" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
       </div>
     </div>
     <div style="clear:both;"></div>
@@ -170,7 +170,7 @@
   <h3 id="h3">Instantiate a Network and Trainer</h3>
   <div>
     <textarea id="newnet" style="width:100%; height:200px;"></textarea><br />
-    <input id="buttonnn" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
+    <input id="buttonnn" class="btn btn-default btn-xs" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
   </div>
 
   <div class="divsec">
