@@ -7,7 +7,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    
   <!-- <script src="js/jquery-1.8.3.min.js"></script> -->
   <script src="/node_modules/jquery/dist/jquery.min.js"></script>
 
@@ -29,171 +28,189 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/d3net_style.css">
 
-  <!-- bootstrap start-->
+  <!-- bootstrap START-->
   <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- bootstrap end -->
+  <!-- bootstrap END -->
 
-<script type="text/javascript">
-  // ------------------------
-  // BEGIN CIFAR-10 SPECIFIC STUFF
-  // ------------------------
-  var classes_txt = ['airplane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'];
-  var dataset_name = "cifar10";
-  var num_batches = 51; // 20 training batches, 1 test
-  var test_batch = 50;
-  var num_samples_per_batch = 1000;
-  var image_dimension = 32;
-  var image_channels = 3;
-  var use_validation_data = true;
-  var random_flip = true;
-  var random_position = true;
+  <script type="text/javascript">
 
-  var layer_defs, net, trainer;
-  var t = "layer_defs = [];\n\
-  layer_defs.push({type:'input', out_sx:32, out_sy:32, out_depth:3});\n\
-  layer_defs.push({type:'conv', sx:5, filters:16, stride:1, pad:2, activation:'relu'});\n\
-  layer_defs.push({type:'pool', sx:2, stride:2});\n\
-  layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
-  layer_defs.push({type:'pool', sx:2, stride:2});\n\
-  layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
-  layer_defs.push({type:'pool', sx:2, stride:2});\n\
-  layer_defs.push({type:'softmax', num_classes:10});\n\
-  \n\
-  net = new convnetjs.Net();\n\
-  net.makeLayers(layer_defs);\n\
-  \n\
-  trainer = new convnetjs.SGDTrainer(net, {method:'adadgrad', batch_size:4, l2_decay:0.0001});\n\
-  ";
-  // ------------------------
-  // END CIFAR-10 SPECIFIC STUFF
-  // ------------------------
-</script>
-<script src="js/images-demo.js"></script>
-<script src="./d3net.js"></script>
+    var classes_txt = ['airplane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'];
+    var dataset_name = "cifar10";
+    var num_batches = 51; // 20 training batches, 1 test
+    var test_batch = 50;
+    var num_samples_per_batch = 1000;
+    var image_dimension = 32;
+    var image_channels = 3;
+    var use_validation_data = true;
+    var random_flip = true;
+    var random_position = true;
 
+    var layer_defs, net, trainer;
+    var t = "layer_defs = [];\n\
+    layer_defs.push({type:'input', out_sx:32, out_sy:32, out_depth:3});\n\
+    layer_defs.push({type:'conv', sx:5, filters:16, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'pool', sx:2, stride:2});\n\
+    layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'pool', sx:2, stride:2});\n\
+    layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'pool', sx:2, stride:2});\n\
+    layer_defs.push({type:'softmax', num_classes:10});\n\
+    \n\
+    net = new convnetjs.Net();\n\
+    net.makeLayers(layer_defs);\n\
+    \n\
+    trainer = new convnetjs.SGDTrainer(net, {method:'adadgrad', batch_size:4, l2_decay:0.0001});\n\
+    ";
+
+  </script>
+  <script src="js/images-demo.js"></script>
+  <script src="./d3net.js"></script>
 </head>
 
 <body>
 
+  <!-- tabs START-->
   <div class="container">
-  <h1>cnnVis</h1>
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-    <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
-  </ul>
-
-  <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div id="menu1" class="tab-pane fade">
-      <h3>Menu 1</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>
-<!--     <div id="menu3" class="tab-pane fade">
-      <h3>Menu 3</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-    </div> -->
+    <h1>cnnVis</h1>
+      <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+      <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+    </ul>
   </div>
-</div>
+  <!-- tabs END-->
 
-
+  <!-- tab content START-->
   <div class="container">
-
-  <div class="panel panel-primary">
-    <div class="panel-heading">Visualization</div>
-    <div class="panel-body"><div id="deepVis"></div></div>
-  </div>
-
-  <div class="panel panel-warning">
-  <div class="panel-heading">Training Stats</div>
-  <div class="panel-body">
-  <!-- <p>Report questions/bugs/suggestions to <a href="https://twitter.com/karpathy">@karpathy</a>.</p> -->
-  <!-- <h3 id="h3">Training Stats</h3> -->
-  <div class="divsec" style="270px;">
-    <div class="secpart">
-      <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
-
-      <div id="trainstats"></div>
-
-      <div id="controls">
-        Learning rate: <input name="lri" type="text" maxlength="20" id="lr_input"/>
-        <input id="buttonlr" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_lr();"/>
-        <br />
-
-        Momentum: <input name="momi" type="text" maxlength="20" id="momentum_input"/>
-        <input id="buttonmom" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_momentum();"/>
-        <br />
-
-        Batch size: <input name="bsi" type="text" maxlength="20" id="batch_size_input"/>
-        <input id="buttonbs" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_batch_size();"/>
-        <br />
-
-        Weight decay: <input name="wdi" type="text" maxlength="20" id="decay_input"/>
-        <input id="buttonwd" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_decay();"/>
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade in active">
+        <h3>HOME</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
       </div>
 
-      <input id="buttondj" class="btn btn-default btn-xs" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
-      <input id="buttonlfj" class="btn btn-default btn-xs" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
-      <textarea id="dumpjson"></textarea>
-      <br>
+      <div id="menu1" class="tab-pane fade">
+        <h3>Menu 1</h3>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco </p>
+      </div>
 
-      <input id="buttonpre" type="submit" class="btn btn-default btn-xs" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
-    </div>
-    <div class="secpart">
-      <div>
-        Loss:<br />
-        <canvas id="lossgraph">
-        </canvas>
-        <br />
-        <input id="buttoncg" class="btn btn-default btn-xs" type="submit" value="clear graph" onclick="clear_graph();"/>
+      <div id="menu2" class="tab-pane fade">
+        <h3>Menu 2</h3>
+        <p>Sed ut perspiciatis unde omnis is</p>
+      </div>
+
+      <div id="menu3" class="tab-pane fade">
+        <h3>Menu 3</h3>
+        <p>Eaque ipsa quae ab illo inventore veri</p>
+      </div>
+
       </div>
     </div>
-    <div class="secpart"> 
-      <div id="upload_box">
-        Test an image from your computer:
-        <div id="img_div">
-            <img id="preview_img"/>
+  </div>
+  <!-- tab content END-->
+
+  <!-- content container START-->
+  <div class="container">
+
+    <!-- Visualization panel START-->
+    <div class="panel panel-primary">
+      <div class="panel-heading">Visualization</div>
+      <div class="panel-body">
+        <div id="deepVis"></div>
+      </div>
+    </div>
+    <!-- Visualization panel END-->
+
+    <!-- Training Stats panel START-->
+    <div class="panel panel-warning">
+      <div class="panel-heading">Training Stats</div>
+
+      <div class="panel-body">
+        <div class="divsec" style="270px;">
+          <div class="secpart">
+            <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
+
+            <div id="trainstats"></div>
+
+            <div id="controls">
+            Learning rate: <input name="lri" type="text" maxlength="20" id="lr_input"/>
+            <input id="buttonlr" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_lr();"/>
+            <br />
+
+            Momentum: <input name="momi" type="text" maxlength="20" id="momentum_input"/>
+            <input id="buttonmom" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_momentum();"/>
+            <br />
+
+            Batch size: <input name="bsi" type="text" maxlength="20" id="batch_size_input"/>
+            <input id="buttonbs" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_batch_size();"/>
+            <br />
+
+            Weight decay: <input name="wdi" type="text" maxlength="20" id="decay_input"/>
+            <input id="buttonwd" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_decay();"/>
+            </div>
+
+            <input id="buttondj" class="btn btn-default btn-xs" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
+            <input id="buttonlfj" class="btn btn-default btn-xs" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
+            <textarea id="dumpjson"></textarea>
+            <br>
+
+            <input id="buttonpre" type="submit" class="btn btn-default btn-xs" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
+            </div>
+            <div class="secpart">
+            <div>
+            Loss:<br />
+            <canvas id="lossgraph">
+            </canvas>
+            <br />
+            <input id="buttoncg" class="btn btn-default btn-xs" type="submit" value="clear graph" onclick="clear_graph();"/>
+          </div>
         </div>
-        <input name="image" type="file" accept="image/*" onchange="loadFile(event)">
 
-        <input type="submit" class="btn btn-default btn-xs" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
+        <div class="secpart"> 
+          <div id="upload_box">
+          Test an image from your computer:
+          <div id="img_div">
+              <img id="preview_img"/>
+          </div>
+          <input name="image" type="file" accept="image/*" onchange="loadFile(event)">
+
+          <input type="submit" class="btn btn-default btn-xs" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+        </div>
       </div>
     </div>
-    <div style="clear:both;"></div>
-  </div>
-  <!-- end -->
-  </div>
-  </div>
-  
-  <div class="panel panel-success">
-  <!-- <h3 id="h3">Instantiate a Network and Trainer</h3> -->
-  <div class="panel-heading">Instantiate a Network and Trainer</div>
-  <div class="panel-body">
-    <textarea id="newnet" style="width:100%; height:200px;"></textarea><br />
-    <input id="buttonnn" class="btn btn-default btn-xs" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
-  </div>
-  </div>
+    <!-- Training Stats panel END-->
 
-  <div class="divsec">
-    <h3 id="h3">Network Visualization</h3>
-    <div id="visnet"></div>
+    <!-- Instantiate panel START-->
+    <div class="panel panel-success">
+      <div class="panel-heading">Instantiate a Network and Trainer</div>
+      <div class="panel-body">
+        <textarea id="newnet" style="width:100%; height:200px;"></textarea><br />
+        <input id="buttonnn" class="btn btn-default btn-xs" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
+      </div>
+    </div>
+    <!-- Instantiate panel END-->
+
+    <!-- Network Visualization panel START-->
+    <div class="divsec">
+      <h3 id="h3">Network Visualization</h3>
+      <div id="visnet"></div>
+    </div>
+    <!-- Network Visualization panel END-->
+
+    <!-- Example panel START-->
+    <div class="divsec">
+      <h3 id="h3">Example predictions on Test set</h3>
+      <div id="testset_acc"></div>
+      <div id="testset_vis"></div>
+    </div>
+    <!-- Example panel END-->
+
   </div>
-  
-  <div class="divsec">
-    <h3 id="h3">Example predictions on Test set</h3>
-    <div id="testset_acc"></div>
-    <div id="testset_vis"></div>
-  </div>
-  </div>  
+  <!-- content container END-->
 </body>
 </html>
 
