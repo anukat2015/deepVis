@@ -74,42 +74,15 @@
   <div class="container">
     <h1>cnnVis</h1>
       <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-      <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+      <li class="active"><a data-toggle="tab" href="#home">Network</a></li>
+      <li><a data-toggle="tab" href="#menu1">Training Stats</a></li>
+      <li><a data-toggle="tab" href="#menu2">Vis</a></li>
+      <li><a data-toggle="tab" href="#menu3">Test</a></li>
     </ul>
   </div>
   <!-- tabs END-->
 
-  <!-- tab content START-->
-  <div class="container">
-    <div class="tab-content">
-      <div id="home" class="tab-pane fade in active">
-        <h3>HOME</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-      </div>
-
-      <div id="menu1" class="tab-pane fade">
-        <h3>Menu 1</h3>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco </p>
-      </div>
-
-      <div id="menu2" class="tab-pane fade">
-        <h3>Menu 2</h3>
-        <p>Sed ut perspiciatis unde omnis is</p>
-      </div>
-
-      <div id="menu3" class="tab-pane fade">
-        <h3>Menu 3</h3>
-        <p>Eaque ipsa quae ab illo inventore veri</p>
-      </div>
-
-      </div>
-    </div>
-  </div>
-  <!-- tab content END-->
-
+  <br>
   <!-- content container START-->
   <div class="container">
 
@@ -122,95 +95,118 @@
     </div>
     <!-- Visualization panel END-->
 
-    <!-- Training Stats panel START-->
-    <div class="panel panel-warning">
-      <div class="panel-heading">Training Stats</div>
-
-      <div class="panel-body">
-        <div class="divsec" style="270px;">
-          <div class="secpart">
-            <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
-
-            <div id="trainstats"></div>
-
-            <div id="controls">
-            Learning rate: <input name="lri" type="text" maxlength="20" id="lr_input"/>
-            <input id="buttonlr" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_lr();"/>
-            <br />
-
-            Momentum: <input name="momi" type="text" maxlength="20" id="momentum_input"/>
-            <input id="buttonmom" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_momentum();"/>
-            <br />
-
-            Batch size: <input name="bsi" type="text" maxlength="20" id="batch_size_input"/>
-            <input id="buttonbs" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_batch_size();"/>
-            <br />
-
-            Weight decay: <input name="wdi" type="text" maxlength="20" id="decay_input"/>
-            <input id="buttonwd" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_decay();"/>
-            </div>
-
-            <input id="buttondj" class="btn btn-default btn-xs" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
-            <input id="buttonlfj" class="btn btn-default btn-xs" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
-            <textarea id="dumpjson"></textarea>
-            <br>
-
-            <input id="buttonpre" type="submit" class="btn btn-default btn-xs" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
-            </div>
-            <div class="secpart">
-            <div>
-            Loss:<br />
-            <canvas id="lossgraph">
-            </canvas>
-            <br />
-            <input id="buttoncg" class="btn btn-default btn-xs" type="submit" value="clear graph" onclick="clear_graph();"/>
-          </div>
-        </div>
-
-        <div class="secpart"> 
-          <div id="upload_box">
-          Test an image from your computer:
-          <div id="img_div">
-              <img id="preview_img"/>
-          </div>
-          <input name="image" type="file" accept="image/*" onchange="loadFile(event)">
-
-          <input type="submit" class="btn btn-default btn-xs" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
-          </div>
-        </div>
-        <div style="clear:both;"></div>
-        </div>
-      </div>
-    </div>
-    <!-- Training Stats panel END-->
-
-    <!-- Instantiate panel START-->
-    <div class="panel panel-success">
-      <div class="panel-heading">Instantiate a Network and Trainer</div>
-      <div class="panel-body">
-        <textarea id="newnet" style="width:100%; height:200px;"></textarea><br />
-        <input id="buttonnn" class="btn btn-default btn-xs" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
-      </div>
-    </div>
-    <!-- Instantiate panel END-->
-
-    <!-- Network Visualization panel START-->
-    <div class="divsec">
-      <h3 id="h3">Network Visualization</h3>
-      <div id="visnet"></div>
-    </div>
-    <!-- Network Visualization panel END-->
-
-    <!-- Example panel START-->
-    <div class="divsec">
-      <h3 id="h3">Example predictions on Test set</h3>
-      <div id="testset_acc"></div>
-      <div id="testset_vis"></div>
-    </div>
-    <!-- Example panel END-->
-
   </div>
   <!-- content container END-->
+
+  <!-- tab content START-->
+  <div class="container">
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade in active">
+
+        <h3>Network</h3>
+          <!-- Instantiate panel START-->
+          <div class="panel panel-success">
+            <div class="panel-heading">Instantiate a Network and Trainer</div>
+            <div class="panel-body">
+              <textarea id="newnet" style="width:100%; height:200px;"></textarea><br />
+              <input id="buttonnn" class="btn btn-default btn-xs" type="submit" value="change network" onclick="change_net();" style="width:200px;height:30px;"/>
+            </div>
+          </div>
+          <!-- Instantiate panel END-->
+      </div>
+
+      <div id="menu1" class="tab-pane fade">
+        <!-- <h3>Training</h3> -->
+        <!-- Training Stats panel START-->
+        <div class="panel panel-warning">
+          <div class="panel-heading">Training Stats</div>
+
+          <div class="panel-body">
+            <div class="divsec" style="270px;">
+              <div class="secpart">
+                <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
+
+                <div id="trainstats"></div>
+
+                <div id="controls">
+                Learning rate: <input name="lri" type="text" maxlength="20" id="lr_input"/>
+                <input id="buttonlr" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_lr();"/>
+                <br />
+
+                Momentum: <input name="momi" type="text" maxlength="20" id="momentum_input"/>
+                <input id="buttonmom" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_momentum();"/>
+                <br />
+
+                Batch size: <input name="bsi" type="text" maxlength="20" id="batch_size_input"/>
+                <input id="buttonbs" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_batch_size();"/>
+                <br />
+
+                Weight decay: <input name="wdi" type="text" maxlength="20" id="decay_input"/>
+                <input id="buttonwd" class="btn btn-default btn-xs" type="submit" value="change" onclick="change_decay();"/>
+                </div>
+
+                <input id="buttondj" class="btn btn-default btn-xs" type="submit" value="save network snapshot as JSON" onclick="dump_json();"/><br />
+                <input id="buttonlfj" class="btn btn-default btn-xs" type="submit" value="init network from JSON snapshot" onclick="load_from_json();"/><br />
+                <textarea id="dumpjson"></textarea>
+                <br>
+
+                <input id="buttonpre" type="submit" class="btn btn-default btn-xs" value="load a pretrained network (achieves ~80% accuracy)" onclick="load_pretrained();" style="height: 30px; width: 400px;"/><br />
+                </div>
+                <div class="secpart">
+                <div>
+                Loss:<br />
+                <canvas id="lossgraph">
+                </canvas>
+                <br />
+                <input id="buttoncg" class="btn btn-default btn-xs" type="submit" value="clear graph" onclick="clear_graph();"/>
+              </div>
+            </div>
+
+            <div class="secpart"> 
+              <div id="upload_box">
+              Test an image from your computer:
+              <div id="img_div">
+                  <img id="preview_img"/>
+              </div>
+              <input name="image" type="file" accept="image/*" onchange="loadFile(event)">
+
+              <input type="submit" class="btn btn-default btn-xs" value="Test Image" onclick="testImage(document.getElementById('preview_img'))">
+              </div>
+            </div>
+            <div style="clear:both;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Training Stats panel END-->
+
+      </div>
+
+      <div id="menu2" class="tab-pane fade">
+        <!-- <h3>Vis</h3> -->
+        <!-- Network Visualization panel START-->
+        <div class="divsec">
+          <h3 id="h3">Network Visualization</h3>
+          <div id="visnet"></div>
+        </div>
+        <!-- Network Visualization panel END-->
+      </div>
+
+      <div id="menu3" class="tab-pane fade">
+        <!-- <h3>Test</h3> -->
+        <!-- Example panel START-->
+        <div class="divsec">
+          <h3 id="h3">Example predictions on Test set</h3>
+          <div id="testset_acc"></div>
+          <div id="testset_vis"></div>
+        </div>
+        <!-- Example panel END-->
+      </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- tab content END-->
+
 </body>
 </html>
 
