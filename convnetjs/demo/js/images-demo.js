@@ -368,13 +368,39 @@ var visualize_activations = function(net, elt) {
     }
     layer_div.appendChild(activations_div);
 
+
+    var layer_t = L.layer_type
+    var layer_panel = document.createElement('div');
+    if(L.layer_type == 'conv') {
+      layer_panel.className = "panel panel-danger"
+    }
+    else if(L.layer_type == 'relu') {
+      layer_panel.className = "panel panel-success"
+    }
+    else if(L.layer_type == 'pool') {
+      layer_panel.className = "panel panel-info"
+    }
+    else if(L.layer_type == 'softmax') {
+      layer_panel.className = "panel panel-warning"
+    }
+    else if(L.layer_type == 'fc') {
+      layer_panel.className = "panel panel-primary"
+    }
+    else {
+      layer_panel.className = "panel panel-primary"
+    }
+
     // print some stats on left of the layer
-    layer_div.className = 'layer ' + 'lt' + L.layer_type;
+    // layer_div.className = 'layer ' + 'lt' + L.layer_type;
+    layer_div.className = 'panel-body';
+
     var title_div = document.createElement('div');
-    title_div.className = 'ltitle'
+    // title_div.className = 'ltitle'
+    title_div.className = 'panel-heading'
+
     var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
     title_div.appendChild(document.createTextNode(t));
-    layer_div.appendChild(title_div);
+    layer_panel.appendChild(title_div);
 
     if(L.layer_type==='conv') {
       var t = 'filter size ' + L.filters[0].sx + 'x' + L.filters[0].sy + 'x' + L.filters[0].depth + ', stride ' + L.stride;
@@ -417,7 +443,8 @@ var visualize_activations = function(net, elt) {
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
-    elt.appendChild(layer_div);
+    layer_panel.appendChild(layer_div);
+    elt.appendChild(layer_panel);
   }
 }
 
