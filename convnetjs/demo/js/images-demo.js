@@ -371,6 +371,17 @@ var visualize_activations = function(net, elt) {
 
     var layer_t = L.layer_type
     var layer_panel = document.createElement('div');
+    var title_div = document.createElement('div');
+    var title_icon = document.createElement('i');
+    title_icon.className = 'glyphicon glyphicon-chevron-down'
+
+    // print some stats on left of the layer
+    // layer_div.className = 'layer ' + 'lt' + L.layer_type;
+    layer_div.className = 'panel-body collapse';
+
+    // title_div.className = 'ltitle'
+    title_div.className = 'panel-heading panel-collapsed'
+
     if(L.layer_type == 'conv') {
       layer_panel.className = "panel panel-danger"
     }
@@ -381,25 +392,46 @@ var visualize_activations = function(net, elt) {
       layer_panel.className = "panel panel-info"
     }
     else if(L.layer_type == 'softmax') {
-      layer_panel.className = "panel panel-warning"
+      layer_panel.className = "panel panel-primary"
+      layer_div.className = 'panel-body';
+      title_div.className = 'panel-heading';
+      title_icon.className = 'glyphicon glyphicon-chevron-up'
     }
     else if(L.layer_type == 'fc') {
-      layer_panel.className = "panel panel-primary"
+      layer_panel.className = "panel panel-warning"
     }
     else {
       layer_panel.className = "panel panel-primary"
+      layer_div.className = 'panel-body';
+      title_div.className = 'panel-heading';
+      title_icon.className = 'glyphicon glyphicon-chevron-up'
     }
 
-    // print some stats on left of the layer
-    // layer_div.className = 'layer ' + 'lt' + L.layer_type;
-    layer_div.className = 'panel-body';
-
-    var title_div = document.createElement('div');
-    // title_div.className = 'ltitle'
-    title_div.className = 'panel-heading'
+    title_div.addEventListener('click', function(){
+      if ($(this).hasClass('panel-collapsed')) {
+          // expand the panel
+        $(this).parents('.panel').find('.panel-body').slideDown();
+        $(this).removeClass('panel-collapsed');
+        $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+      }
+      else {
+          // collapse the panel
+        $(this).parents('.panel').find('.panel-body').slideUp();
+        $(this).addClass('panel-collapsed');
+        $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+      }
+    });
 
     var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
     title_div.appendChild(document.createTextNode(t));
+
+    // <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+    var title_span = document.createElement('span');
+    title_span.className = 'pull-right clickable';
+
+    title_span.appendChild(title_icon);
+
+    title_div.appendChild(title_span);
     layer_panel.appendChild(title_div);
 
     if(L.layer_type==='conv') {
