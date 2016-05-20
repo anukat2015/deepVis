@@ -53,7 +53,8 @@ var tsnejscatter = (function(){
       //   dotrain = false;
       // }
       // $("#cost").html("iteration " + T.iter + ", cost: " + cost);
-      updateEmbedding(T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis);
+      if(T.iter % 1 == 0)
+        updateEmbedding(T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis);
     }
   }
 
@@ -238,9 +239,11 @@ var tsnejscatter = (function(){
 
     var gs = objects.selectAll(".dot")
         .data(data)
-      .enter().append("circle")
-        .classed("dot", true)
+      .enter().append("rect")
+        .classed("dots", true)
         .attr("r", function (d) { return 6 * Math.sqrt(3 / Math.PI); })
+        .attr("width", 13)
+        .attr("height", 13)
         // .attr("transform", transform(data, xscale, yscale))
         .attr("fill", color)
         // .style("fill", function(d) { return color(5); })
@@ -251,6 +254,8 @@ var tsnejscatter = (function(){
       zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
     });
 
+    // style="fill:blue;stroke:pink;stroke-width:5;opacity:0.5"
+
     // var legend = svg.selectAll(".legend")
     //     .data(color.domain())
     //   .enter().append("g")
@@ -259,8 +264,13 @@ var tsnejscatter = (function(){
 
     // legend.append("circle")
     //     .attr("r", 3.5)
+    //     .attr("width", 15)
+    //     .attr("height", 15)
+    //     // .classed("dots", true)
+    //     // .attr("style", "fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9")
     //     .attr("cx", width + 20)
     //     .attr("fill", color);
+
 
     // legend.append("text")
     //     .attr("x", width + 26)
