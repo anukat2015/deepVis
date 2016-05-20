@@ -340,25 +340,28 @@ var visualize_activations = function(net, elt) {
         filters_div.appendChild(document.createTextNode('Filters list:'));
         filters_div.appendChild(document.createElement('br'));
 
-        var filterstring = "";
+        var filter_data = [];
+        for(var j=0; j<L.filters.length; j++) {          
+            //
+            // filterstring = filterstring.concat(L.filters[j].w);
+            // filterstring = filterstring.concat("\n");
+            //
+            var afilter = [];
+            for(var k=0; k<L.filters[j].w.length; k++) {
 
-        for(var j=0;j<L.filters.length;j++) {
-          
-            // filters_div.appendChild(document.createTextNode('('));
-            filterstring = filterstring.concat(L.filters[j].w);
-            filterstring = filterstring.concat("\n");
+              var f_gd = L.filters[j].w[k];
+              afilter.push(f_gd);
+            }
+
+            filter_data.push(afilter);
+
             // filters_div.appendChild(document.createTextNode(L.filters[j].w));
-            // filters_div.appendChild(document.createElement('br'));
-            // filters_div.appendChild(document.createTextNode(')'));
         }
-
-        // filters_div.appendChild(document.createTextNode(filterstring));
-        // filters_div.appendChild(document.createElement('br'));
 
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      var tsnescatter = new tsnejscatter($, filterstring, scatterplot); // create a scatterjs instance
+      var tsnescatter = new tsnejscatter($, filter_data, scatterplot, false); // create a scatterjs instance
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);
