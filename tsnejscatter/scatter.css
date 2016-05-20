@@ -17,8 +17,11 @@ rect {
   stroke-width: 2px;
 }
 
-.dot {
-  fill-opacity: .7;
+.dots {
+  /*fill-opacity: .7;*/
+  fill: white;
+  stroke-width: 1;
+  stroke: red;
 }
 
 .d3-tip {
