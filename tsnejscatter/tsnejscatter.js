@@ -273,7 +273,7 @@ var tsnejscatter = (function(){
         .attr('height', 18)
         // .attr("xlink:href", canv_img.toDataURL())
         .attr("xlink:href", function(d, i) {
-            return get_activation_img(Lfilter, 2, false, i).toDataURL(); 
+            return get_filter_canvas(Lfilter[i], false).toDataURL(); 
         })
         // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)

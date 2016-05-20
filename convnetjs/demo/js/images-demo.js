@@ -198,13 +198,13 @@ var draw_activations = function(elt, A, scale, grads) {
   }  
 }
 
-var get_activation_img = function(Lfilter, scale, grads, index) {
+var get_filter_canvas = function(Lfilteri, grads) {
 
-  var A = Lfilter[index];
-  var s = scale || 2; // scale
+  var A = Lfilteri;
+  var s = 2; // scale
   var draw_grads = false;
   if(typeof(grads) !== 'undefined') draw_grads = grads;
-
+  
   // get max and min activation to scale the maps automatically
   var w = draw_grads ? A.dw : A.w;
   var mm = maxmin(w);
@@ -218,26 +218,45 @@ var get_activation_img = function(Lfilter, scale, grads, index) {
   var ctx = canv.getContext('2d');
   var g = ctx.createImageData(W, H);
 
-  for(var x=0;x<A.sx;x++) {
-    for(var y=0;y<A.sy;y++) {
-
-      var dval = 0
-      //calculate average of the filter weights
-      for(var d=0;d<A.depth;d++) {
-        if(draw_grads) {
-          dval += Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
-        } else {
-          dval += Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+  if(A.depth === 3) { // draw a color img
+    for(var d=0;d<3;d++) {
+      for(var x=0;x<A.sx;x++) {
+        for(var y=0;y<A.sy;y++) {
+          if(draw_grads) {
+            var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
+          } else {
+            var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+          }
+          for(var dx=0;dx<s;dx++) {
+            for(var dy=0;dy<s;dy++) {
+              var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
+              g.data[pp + d] = dval;
+              if(d===0) g.data[pp+3] = 255; // alpha channel
+            }
+          }
         }
       }
-
-      dval = dval/A.depth;
-
-      for(var dx=0;dx<s;dx++) {
-        for(var dy=0;dy<s;dy++) {
-          var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
-          for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
-          g.data[pp+3] = 255; // alpha channel
+    }
+  }
+  else { //draw a black and white img
+    for(var x=0;x<A.sx;x++) {
+      for(var y=0;y<A.sy;y++) {
+        var dval = 0
+        //calculate average of the filter weights
+        for(var d=0;d<A.depth;d++) {
+          if(draw_grads) {
+            dval += Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
+          } else {
+            dval += Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+          }
+        }
+        dval = dval/A.depth;
+        for(var dx=0;dx<s;dx++) {
+          for(var dy=0;dy<s;dy++) {
+            var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
+            for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
+            g.data[pp+3] = 255; // alpha channel
+          }
         }
       }
     }
@@ -702,7 +721,7 @@ var step = function(sample) {
   train_elt.appendChild(document.createElement('br'));
 
   // visualize activations
-  if(step_num % 500 === 0) {
+  if(step_num % 700 === 0) {
     var vis_elt = document.getElementById("visnet");
     visualize_activations(net, vis_elt);
   }
