@@ -198,6 +198,55 @@ var draw_activations = function(elt, A, scale, grads) {
   }  
 }
 
+var get_activation_img = function(Lfilter, scale, grads, index) {
+
+  var A = Lfilter[index];
+  var s = scale || 2; // scale
+  var draw_grads = false;
+  if(typeof(grads) !== 'undefined') draw_grads = grads;
+
+  // get max and min activation to scale the maps automatically
+  var w = draw_grads ? A.dw : A.w;
+  var mm = maxmin(w);
+
+  var canv = document.createElement('canvas');
+  canv.className = 'actmap';
+  var W = A.sx * s;
+  var H = A.sy * s;
+  canv.width = W;
+  canv.height = H;
+  var ctx = canv.getContext('2d');
+  var g = ctx.createImageData(W, H);
+
+  for(var x=0;x<A.sx;x++) {
+    for(var y=0;y<A.sy;y++) {
+
+      var dval = 0
+      //calculate average of the filter weights
+      for(var d=0;d<A.depth;d++) {
+        if(draw_grads) {
+          dval += Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
+        } else {
+          dval += Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+        }
+      }
+
+      dval = dval/A.depth;
+
+      for(var dx=0;dx<s;dx++) {
+        for(var dy=0;dy<s;dy++) {
+          var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
+          for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
+          g.data[pp+3] = 255; // alpha channel
+        }
+      }
+    }
+  }
+  
+  ctx.putImageData(g, 0, 0);
+  return canv;
+}
+
 var draw_activations_COLOR = function(elt, A, scale, grads) {
 
   var s = scale || 2; // scale
@@ -340,28 +389,30 @@ var visualize_activations = function(net, elt) {
         filters_div.appendChild(document.createTextNode('Filters list:'));
         filters_div.appendChild(document.createElement('br'));
 
-        var filter_data = [];
-        for(var j=0; j<L.filters.length; j++) {          
-            //
-            // filterstring = filterstring.concat(L.filters[j].w);
-            // filterstring = filterstring.concat("\n");
-            //
-            var afilter = [];
-            for(var k=0; k<L.filters[j].w.length; k++) {
+        //
+        // var filter_data = [];
+        // for(var j=0; j<L.filters.length; j++) {          
+        //     //
+        //     // filterstring = filterstring.concat(L.filters[j].w);
+        //     // filterstring = filterstring.concat("\n");
+        //     //
+        //     var afilter = [];
+        //     for(var k=0; k<L.filters[j].w.length; k++) {
 
-              var f_gd = L.filters[j].w[k];
-              afilter.push(f_gd);
-            }
+        //       var f_gd = L.filters[j].w[k];
+        //       afilter.push(f_gd);
+        //     }
 
-            filter_data.push(afilter);
+        //     filter_data.push(afilter);
 
-            // filters_div.appendChild(document.createTextNode(L.filters[j].w));
-        }
+        //     // filters_div.appendChild(document.createTextNode(L.filters[j].w));
+        // }
+        //
 
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      var tsnescatter = new tsnejscatter($, filter_data, scatterplot, false, true); // create a scatterjs instance
+      var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true); // create a scatterjs instance
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);

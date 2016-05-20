@@ -76,15 +76,14 @@ var tsnejscatter = (function(){
       zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
     });
 
-    // svg.attr("d", data);
-    // svg.select(".x.axis").call(xAxis).select(".label").text(0);
-    // svg.select(".y.axis").call(yAxis).select(".label").text(1);
+    svg.attr("d", data);
+    svg.select(".x.axis").call(xAxis);
+    svg.select(".y.axis").call(yAxis);
 
     gs.attr("d", data)
       .attr("transform", function(d, i) {
       return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
     });
-
   }
 
   // var change_p = function(data) {
@@ -92,20 +91,35 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, isArrData, showImg) {
+  var init_tSNE = function(data, outdom, isArrData, showImg, Lfilter) {
 
     console.log('init');
 
     var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
     var T = new tsnejs.tSNE(opt); // create a tSNE instance
 
-    if(isArrData)
+    if(isArrData) {
       data = preProData(data);
+    }
+    else if(showImg) {
+
+      var filter_data = [];
+      for(var j=0; j< Lfilter.length; j++) {          
+          var afilter = [];
+          for(var k=0; k< Lfilter[j].w.length; k++) {
+            var f_gd = Lfilter[j].w[k];
+            afilter.push(f_gd);
+          }
+          filter_data.push(afilter);
+      }
+      data = filter_data;
+    }
+
     // console.log(data);
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom, showImg);
+    var svgc = drawEmbedding(data, outdom, showImg, Lfilter);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -134,7 +148,7 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom, showImg) {
+  var drawEmbedding = function(data, outdom, showImg, Lfilter) {
 
     var margin = { top: 50, right: 50, bottom: 50, left: 50 },
         outerWidth = 500,
@@ -240,19 +254,28 @@ var tsnejscatter = (function(){
       .enter().append("g")
 
     if(showImg) {
+
+      // var canv_img = document.createElement('canvas');
+      // var get_activation_img = function(A, scale, grads, d) {
+
+      // canv_img = get_activation_img(Lfilter, 2, false, 10);
+
       gs.append("rect")
           .classed("dot_rect", true)
-          .attr("width", 15)
-          .attr("height", 15)
+          .attr("width", 18)
+          .attr("height", 18)
           // .attr("transform", transform(data, xscale, yscale))
           // .attr("fill", color)
-
       gs.append("svg:image")
         .attr('x', 0)
         .attr('y', 0)
         .attr('width', 18)
         .attr('height', 18)
-        .attr("xlink:href", function(d) { return "./download1.png"; })
+        // .attr("xlink:href", canv_img.toDataURL())
+        .attr("xlink:href", function(d, i) {
+            return get_activation_img(Lfilter, 2, false, i).toDataURL(); 
+        })
+        // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide);
     }
@@ -347,11 +370,13 @@ var tsnejscatter = (function(){
     console.log('start tsnejsc');
 
     var data = inputdata || {};
+    var Lfilter = data;
+
     var outdom = out;
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg);
+    init_tSNE(data, outdom, isArrData, showImg, Lfilter);
   }
 
   tsnejsc.prototype = {
