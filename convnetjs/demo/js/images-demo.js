@@ -361,7 +361,7 @@ var visualize_activations = function(net, elt) {
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      var tsnescatter = new tsnejscatter($, filter_data, scatterplot, false); // create a scatterjs instance
+      var tsnescatter = new tsnejscatter($, filter_data, scatterplot, false, true); // create a scatterjs instance
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);

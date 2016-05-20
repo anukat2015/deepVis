@@ -17,11 +17,15 @@ rect {
   stroke-width: 2px;
 }
 
-.dots {
+.dot_rect {
   /*fill-opacity: .7;*/
   fill: white;
   stroke-width: 1;
   stroke: red;
+}
+
+.dot_circle {
+  fill-opacity: .7;
 }
 
 .d3-tip {

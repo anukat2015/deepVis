@@ -2,7 +2,7 @@ var tsnejscatter = (function(){
   "use strict";
  
   var dotrain =  true;
-  var dataok = false;
+  // var dataok = false;
 
   var preProData = function(data) {
 
@@ -11,7 +11,7 @@ var tsnejscatter = (function(){
     var lines = txt.split("\n");
     var raw_data = [];
     var dlen = -1;
-    dataok = true;
+    // dataok = true;
     for(var i=0;i<lines.length;i++) {
       var row = lines[i];
       if (! /\S/.test(row)) {
@@ -31,7 +31,7 @@ var tsnejscatter = (function(){
         // TROUBLE. Not all same length.
         console.log('TROUBLE: row ' + i + ' has bad length ' + dlen);
         dlen = dl; // hmmm... 
-        dataok = false;
+        // dataok = false;
       }
       raw_data.push(data_point);
     }
@@ -59,33 +59,31 @@ var tsnejscatter = (function(){
 
   var updateEmbedding = function(T, xscale, yscale, zoomBeh, svg, gs, xAxis, yAxis) {
 
-    if(T.iter % 1 == 0) {
-      // get current solution
-      var data = T.getSolution();
+    // get current solution
+    var data = T.getSolution();
 
-      //update
-      var xMax = d3.max(data, function(d) { return d[0]; }) * 1.2;
-      var xMin = d3.min(data, function(d) { return d[0]; }) * 1.2;
-      var yMax = d3.max(data, function(d) { return d[1]; }) * 1.2;
-      var yMin = d3.min(data, function(d) { return d[1]; }) * 1.2;
+    //update
+    var xMax = d3.max(data, function(d) { return d[0]; }) * 1.2;
+    var xMin = d3.min(data, function(d) { return d[0]; }) * 1.2;
+    var yMax = d3.max(data, function(d) { return d[1]; }) * 1.2;
+    var yMin = d3.min(data, function(d) { return d[1]; }) * 1.2;
 
-      xscale.domain([xMin, xMax]);
-      yscale.domain([yMin, yMax]);
+    xscale.domain([xMin, xMax]);
+    yscale.domain([yMin, yMax]);
 
-      zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
-      zoomBeh.on("zoom", function () {
-        zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
-      });
+    zoomBeh.x(xscale.domain([xMin, xMax])).y(yscale.domain([yMin, yMax]));
+    zoomBeh.on("zoom", function () {
+      zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
+    });
 
-      svg.attr("d", data);
-      svg.select(".x.axis").call(xAxis).select(".label").text(0);
-      svg.select(".y.axis").call(yAxis).select(".label").text(1);
+    // svg.attr("d", data);
+    // svg.select(".x.axis").call(xAxis).select(".label").text(0);
+    // svg.select(".y.axis").call(yAxis).select(".label").text(1);
 
-      gs.attr("d", data)
-        .attr("transform", function(d, i) {
-        return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
-      });
-    }
+    gs.attr("d", data)
+      .attr("transform", function(d, i) {
+      return "translate(" + xscale(data[i][0]) + "," + yscale(data[i][1]) + ")";
+    });
 
   }
 
@@ -94,20 +92,20 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, preprodata) {
+  var init_tSNE = function(data, outdom, isArrData, showImg) {
 
     console.log('init');
 
     var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
     var T = new tsnejs.tSNE(opt); // create a tSNE instance
 
-    if(preprodata)
+    if(isArrData)
       data = preProData(data);
     // console.log(data);
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom);
+    var svgc = drawEmbedding(data, outdom, showImg);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -115,8 +113,10 @@ var tsnejscatter = (function(){
       step(data, T, svgc.xscale, svgc.yscale, svgc.zoomBeh, 
         svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
 
-      if(T.iter > 700)
+      if(T.iter > 700) {
         clearInterval(iid);
+      }
+
     }, 0);
 
     $("#run").click(function() {
@@ -134,7 +134,7 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom) {
+  var drawEmbedding = function(data, outdom, showImg) {
 
     var margin = { top: 50, right: 50, bottom: 50, left: 50 },
         outerWidth = 500,
@@ -200,7 +200,7 @@ var tsnejscatter = (function(){
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text(0);
+        .text('x');
 
     svg.append("g")
         .classed("y axis", true)
@@ -211,7 +211,7 @@ var tsnejscatter = (function(){
         .attr("y", -margin.left)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text(1);
+        .text('y');
 
     var objects = svg.append("svg")
         .classed("objects", true)
@@ -238,24 +238,34 @@ var tsnejscatter = (function(){
     var gs = objects.selectAll(".dot")
         .data(data)
       .enter().append("g")
-        .classed("dots", true)
 
-    gs.append("rect")
-        // .attr("r", function (d) { return 6 * Math.sqrt(3 / Math.PI); })
-        .attr("width", 15)
-        .attr("height", 15)
-        // .attr("transform", transform(data, xscale, yscale))
-        // .attr("fill", color)
-        // .style("fill", function(d) { return color(5); })
+    if(showImg) {
+      gs.append("rect")
+          .classed("dot_rect", true)
+          .attr("width", 15)
+          .attr("height", 15)
+          // .attr("transform", transform(data, xscale, yscale))
+          // .attr("fill", color)
 
-    gs.append("svg:image")
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', 15)
-      .attr('height', 15)
-      .attr("xlink:href", function(d) { return "./download1.png"; })
+      gs.append("svg:image")
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 18)
+        .attr('height', 18)
+        .attr("xlink:href", function(d) { return "./download1.png"; })
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide);
+    }
+    else {
+      gs.append("circle")
+      .classed("dot_circle", true)
+      .attr("r", 7)
+      // .attr("r", function (d) { return 7 * Math.sqrt(3 / Math.PI); })
+      // .attr("transform", transform(data, xscale, yscale))
+      .attr("fill", color)
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide);
+    }
 
     ///////////////////////////
     // g.append("text")
@@ -268,8 +278,6 @@ var tsnejscatter = (function(){
     zoomBeh.on("zoom", function () {
       zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);
     });
-
-    // style="fill:blue;stroke:pink;stroke-width:5;opacity:0.5"
 
     // var legend = svg.selectAll(".legend")
     //     .data(color.domain())
@@ -334,7 +342,7 @@ var tsnejscatter = (function(){
     return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  var tsnejsc = function($, inputdata, out, preprodata) {
+  var tsnejsc = function($, inputdata, out, isArrData, showImg) {
     //constructor 
     console.log('start tsnejsc');
 
@@ -343,7 +351,7 @@ var tsnejscatter = (function(){
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, preprodata);
+    init_tSNE(data, outdom, isArrData, showImg);
   }
 
   tsnejsc.prototype = {
