@@ -3,7 +3,6 @@ var tsnejscatter = (function(){
  
   var dotrain =  true;
   var dataok = false;
-  var T;
 
   var preProData = function(data) {
 
@@ -100,7 +99,7 @@ var tsnejscatter = (function(){
     console.log('init');
 
     var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
-    T = new tsnejs.tSNE(opt); // create a tSNE instance
+    var T = new tsnejs.tSNE(opt); // create a tSNE instance
 
     if(preprodata)
       data = preProData(data);
@@ -351,7 +350,7 @@ var tsnejscatter = (function(){
 
     change_p: function(data) {
       var data = preProData(data);
-      T.changeP(data);
+      // T.changeP(data);
       //console.log('changeP');
     }
 
