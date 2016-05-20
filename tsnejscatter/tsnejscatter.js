@@ -64,10 +64,10 @@ var tsnejscatter = (function(){
       var data = T.getSolution();
 
       //update
-      var xMax = d3.max(data, function(d) { return d[0]; });
-      var xMin = d3.min(data, function(d) { return d[0]; });
-      var yMax = d3.max(data, function(d) { return d[1]; });
-      var yMin = d3.min(data, function(d) { return d[1]; });
+      var xMax = d3.max(data, function(d) { return d[0]; }) * 1.2;
+      var xMin = d3.min(data, function(d) { return d[0]; }) * 1.2;
+      var yMax = d3.max(data, function(d) { return d[1]; }) * 1.2;
+      var yMin = d3.min(data, function(d) { return d[1]; }) * 1.2;
 
       xscale.domain([xMin, xMax]);
       yscale.domain([yMin, yMax]);
@@ -145,10 +145,10 @@ var tsnejscatter = (function(){
     var xscale = d3.scale.linear().range([0, width]).nice();
     var yscale = d3.scale.linear().range([height, 0]).nice();
 
-    var xMax = d3.max(data, function(d) { return d[0]; }) * 1.05;
+    var xMax = d3.max(data, function(d) { return d[0]; }) * 1.2;
     var xMin = d3.min(data, function(d) { return d[0]; });
     // xMin = xMin > 0 ? 0 : xMin,
-    var yMax = d3.max(data, function(d) { return d[1]; }) * 1.05;
+    var yMax = d3.max(data, function(d) { return d[1]; }) * 1.2;
     var yMin = d3.min(data, function(d) { return d[1]; });
     // yMin = yMin > 0 ? 0 : yMin;
 
