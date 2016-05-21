@@ -531,8 +531,8 @@ var visualize_activations = function(net, elt) {
     
     // HACK to draw in color in input layer
     if(i===0) {
-      draw_activations_COLOR(activations_div, L.out_act, scale);
-      draw_activations_COLOR(activations_div, L.out_act, scale, true);
+      // draw_activations_COLOR(activations_div, L.out_act, scale);
+      // draw_activations_COLOR(activations_div, L.out_act, scale, true);
 
       /*
       // visualize positive and negative components of the gradient separately
@@ -561,7 +561,7 @@ var visualize_activations = function(net, elt) {
       */
 
     } else {
-      draw_activations(activations_div, L.out_act, scale);
+      // draw_activations(activations_div, L.out_act, scale);
     } 
 
     // visualize data gradients
@@ -572,8 +572,8 @@ var visualize_activations = function(net, elt) {
       grad_div.className = 'layer_grad';
       var scale = 2;
       if(L.layer_type==='softmax' || L.layer_type==='fc') scale = 10; // for softmax
-      draw_activations(grad_div, L.out_act, scale, true);
-      activations_div.appendChild(grad_div);
+      // draw_activations(grad_div, L.out_act, scale, true);
+      // activations_div.appendChild(grad_div);
     }
 
     // visualize filters if they are of reasonable size
