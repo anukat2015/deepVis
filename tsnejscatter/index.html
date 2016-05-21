@@ -21,8 +21,10 @@
       var datafield = document.getElementById("incsv");
       var out = document.getElementById("scatter");
 
-      S = new tsnejscatter($, $(datafield).val(), out, true, false); // create a scatterjs instance
-      S1 = new tsnejscatter($, $(datafield).val(), out, true, false); // create a scatterjs instance
+      // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter) {
+
+      S = new tsnejscatter($, $(datafield).val(), out, true, false, false); // create a scatterjs instance
+      S1 = new tsnejscatter($, $(datafield).val(), out, true, false, false); // create a scatterjs instance
       
     });
     </script>

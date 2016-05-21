@@ -506,8 +506,8 @@ var visualize_activations = function(net, elt) {
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      // var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true);
-      var tsnescatter = new tsnejscatter($, L.out_act, scatterplot, false, true, false); // create a sc
+    // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter) 
+      var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true, true);
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);

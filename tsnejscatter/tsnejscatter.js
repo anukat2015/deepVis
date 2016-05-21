@@ -100,20 +100,48 @@ var tsnejscatter = (function(){
 
     if(isArrData) {
       data = preProData(data);
-    } else if(showImg) {
+    } else {
 
       if(isFilter) {
+        // var filter_data1 = [];
+        // for(var j=0; j< Lfilter.length; j++) {          
+        //     var afilter = [];
+        //     // console.log(Lfilter[j].w.length); //75(5x5x3) 400(5x5x16) 500(5x5x20)
+
+        //     // same as
+        //     // for(var y=0;y<A.sy;y++) {
+        //     //  for(var x=0;x<A.sx;x++) {
+        //     //    for(var d=0;d<A.depth;d++) {
+
+        //     for(var k=0; k< Lfilter[j].w.length; k++) {
+        //       var f_gd = Lfilter[j].w[k];
+        //       afilter.push(f_gd);
+        //     }
+        //     filter_data1.push(afilter);
+        // }
+        // var data1 = filter_data1;
+
         var filter_data = [];
-        for(var j=0; j< Lfilter.length; j++) {          
-            var afilter = [];
-            // console.log(Lfilter[j].w.length); //75(5x5x3) 400(5x5x16) 500(5x5x20)
-            for(var k=0; k< Lfilter[j].w.length; k++) {
-              var f_gd = Lfilter[j].w[k];
-              afilter.push(f_gd);
+        for(var j=0; j< Lfilter.length; j++) {  
+
+          var A = Lfilter[j];
+
+          var afilter = [];
+          
+          for(var d=0;d<A.depth;d++) {
+            for(var y=0;y<A.sy;y++) {
+              for(var x=0;x<A.sx;x++) {
+                var f_gd = A.get(x,y,d);
+                afilter.push(f_gd);
+              }
             }
-            filter_data.push(afilter);
+          }
+          filter_data.push(afilter);
         }
+
         data = filter_data;
+        // debugger;
+
       } else {
         var A = Lfilter;
         var filter_data = [];
@@ -133,10 +161,10 @@ var tsnejscatter = (function(){
 
         data = filter_data;
       }
-      
-    }
 
-    console.log(data);
+    }//else if showImg end
+
+    // console.log(data);
     
     T.initDataRaw(data);
 
@@ -155,13 +183,11 @@ var tsnejscatter = (function(){
     }, 0);
 
     $("#run").click(function() {
-
       console.log('run');
       dotrain = true;
     });
 
     $("#stop").click(function() {
-
       console.log('stop');
       // clearInterval(iid);
       dotrain = false;
