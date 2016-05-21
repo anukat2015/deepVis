@@ -91,9 +91,9 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, isArrData, showImg, Lfilter, isFilter) {
+  var init_tSNE = function(data, outdom, isArrData, showImg, L, isFilter, layer_num) {
 
-    console.log('init');
+    console.log('init' + layer_num);
 
     var opt = {epsilon: parseFloat(10), perplexity: parseInt(3)};
     var T = new tsnejs.tSNE(opt); // create a tSNE instance
@@ -103,6 +103,7 @@ var tsnejscatter = (function(){
     } else {
 
       if(isFilter) {
+
         // var filter_data1 = [];
         // for(var j=0; j< Lfilter.length; j++) {          
         //     var afilter = [];
@@ -122,9 +123,9 @@ var tsnejscatter = (function(){
         // var data1 = filter_data1;
 
         var filter_data = [];
-        for(var j=0; j< Lfilter.length; j++) {  
+        for(var j=0; j< L.filters.length; j++) {  
 
-          var A = Lfilter[j];
+          var A = L.filters[j];
 
           var afilter = [];
           
@@ -143,7 +144,7 @@ var tsnejscatter = (function(){
         // debugger;
 
       } else {
-        var A = Lfilter;
+        var A = L.out_act;
         var filter_data = [];
 
         for(var d=0;d<A.depth;d++) {
@@ -168,7 +169,7 @@ var tsnejscatter = (function(){
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom, showImg, Lfilter, isFilter);
+    var svgc = drawEmbedding(data, outdom, showImg, L, isFilter);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -195,7 +196,7 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom, showImg, Lfilter, isFilter) {
+  var drawEmbedding = function(data, outdom, showImg, L, isFilter) {
 
     var margin = { top: 50, right: 50, bottom: 50, left: 50 },
         outerWidth = 500,
@@ -320,7 +321,7 @@ var tsnejscatter = (function(){
         .attr('height', 18)
         // .attr("xlink:href", canv_img.toDataURL())
         .attr("xlink:href", function(d, i) {
-            return get_filter_canvas(Lfilter, isFilter, false, i).toDataURL(); 
+            return get_layer_canvas(L, isFilter, false, i, 2).toDataURL(); 
         })
         // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)
@@ -412,18 +413,18 @@ var tsnejscatter = (function(){
     return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter) {
+  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
     //constructor 
     console.log('start tsnejsc');
 
     var data = inputdata || {};
-    var Lfilter = data;
+    var L = data;
 
     var outdom = out;
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg, Lfilter, isFilter);
+    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num);
   }
 
   tsnejsc.prototype = {

@@ -198,18 +198,15 @@ var draw_activations = function(elt, A, scale, grads) {
   }  
 }
 
-var get_activation_canvas = function(A, grads, index) {
+var draw_activations_COLOR = function(elt, A, scale, grads) {
 
-  var s = 2; // scale
+  var s = scale || 2; // scale
   var draw_grads = false;
   if(typeof(grads) !== 'undefined') draw_grads = grads;
 
   // get max and min activation to scale the maps automatically
   var w = draw_grads ? A.dw : A.w;
   var mm = maxmin(w);
-
-  // create the canvas elements, draw and add to DOM
-  d = index;
 
   var canv = document.createElement('canvas');
   canv.className = 'actmap';
@@ -219,41 +216,41 @@ var get_activation_canvas = function(A, grads, index) {
   canv.height = H;
   var ctx = canv.getContext('2d');
   var g = ctx.createImageData(W, H);
-
-  for(var x=0;x<A.sx;x++) {
-    for(var y=0;y<A.sy;y++) {
-      if(draw_grads) {
-        var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
-      } else {
-        var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
-      }
-      for(var dx=0;dx<s;dx++) {
-        for(var dy=0;dy<s;dy++) {
-          var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
-          for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
-          g.data[pp+3] = 255; // alpha channel
+  for(var d=0;d<3;d++) {
+    for(var x=0;x<A.sx;x++) {
+      for(var y=0;y<A.sy;y++) {
+        if(draw_grads) {
+          var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
+        } else {
+          var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+        }
+        for(var dx=0;dx<s;dx++) {
+          for(var dy=0;dy<s;dy++) {
+            var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
+            g.data[pp + d] = dval;
+            if(d===0) g.data[pp+3] = 255; // alpha channel
+          }
         }
       }
     }
   }
-  
   ctx.putImageData(g, 0, 0);
-  return canv; 
+  elt.appendChild(canv);
 }
 
-var get_filter_canvas = function(Lfilter, isFilter, grads, index) {
+var get_layer_canvas = function(L, isFilter, grads, index, scale) {
 
   var A = {};
   if(isFilter) {
-    A = Lfilter[index];
+    A = L.filters[index];
   } else {
-    A = Lfilter;
+    A = L.out_act;
   }
 
   var isColor = false;
   if(A.depth == 3) { isColor = true; }
   
-  var s = 2; // scale
+  var s = scale || 2; // scale
   var draw_grads = false;
   if(typeof(grads) !== 'undefined') draw_grads = grads;
 
@@ -341,54 +338,185 @@ var get_filter_canvas = function(Lfilter, isFilter, grads, index) {
   return canv;
 }
 
-var draw_activations_COLOR = function(elt, A, scale, grads) {
-
-  var s = scale || 2; // scale
-  var draw_grads = false;
-  if(typeof(grads) !== 'undefined') draw_grads = grads;
-
-  // get max and min activation to scale the maps automatically
-  var w = draw_grads ? A.dw : A.w;
-  var mm = maxmin(w);
-
-  var canv = document.createElement('canvas');
-  canv.className = 'actmap';
-  var W = A.sx * s;
-  var H = A.sy * s;
-  canv.width = W;
-  canv.height = H;
-  var ctx = canv.getContext('2d');
-  var g = ctx.createImageData(W, H);
-  for(var d=0;d<3;d++) {
-    for(var x=0;x<A.sx;x++) {
-      for(var y=0;y<A.sy;y++) {
-        if(draw_grads) {
-          var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
-        } else {
-          var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
-        }
-        for(var dx=0;dx<s;dx++) {
-          for(var dy=0;dy<s;dy++) {
-            var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
-            g.data[pp + d] = dval;
-            if(d===0) g.data[pp+3] = 255; // alpha channel
-          }
-        }
-      }
-    }
-  }
-  ctx.putImageData(g, 0, 0);
-  elt.appendChild(canv);
-}
-
 var visualize_activations = function(net, elt) {
 
   // clear the element
   elt.innerHTML = "";
 
+  //////////////////////////////////////////////////////////
+  // create test panel
+  var test_panel = document.createElement('div');
+  var test_title_div = document.createElement('div');
+  var test_layer_div = document.createElement('div');
+
+  test_panel.className = "panel panel-primary"
+  test_layer_div.className = 'panel-body';
+  test_title_div.className = 'panel-heading';
+  test_title_div.appendChild(document.createTextNode('get_layer_canvas API Example'));
+
+  var N = net.layers.length;
+
+  //   console.log(L.out_act.depth);
+  // if(L.layer_type === 'conv')
+  //   console.log(L.filters.length);
+
+  var scale = 2;
+  // layer 0 start
+  test_layer_div.appendChild(document.createTextNode('layer: 0'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[0];
+  var layer_canvas = get_layer_canvas(L, false, false, 0, scale);
+
+  test_layer_div.appendChild(layer_canvas);
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 0 end
+
+  // layer 1 start
+  test_layer_div.appendChild(document.createTextNode('layer: 1'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[1];
+
+  for (var i=0; i<L.filters.length; i++) {
+    var layer_canvas = get_layer_canvas(L, true, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 1 end
+
+  // layer 2 start
+  test_layer_div.appendChild(document.createTextNode('layer: 2'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[1];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 2 end
+
+  // layer 3 start
+  test_layer_div.appendChild(document.createTextNode('layer: 3'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[3];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 3 end
+
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+
+  // layer 4 start
+  test_layer_div.appendChild(document.createTextNode('layer: 4'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[4];
+
+  for (var i=0; i<L.filters.length; i++) {
+    var layer_canvas = get_layer_canvas(L, true, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 4 end
+
+  // layer 5 start
+  test_layer_div.appendChild(document.createTextNode('layer: 5'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[4];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 5 end
+
+  // layer 6 start
+  test_layer_div.appendChild(document.createTextNode('layer: 6'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[6];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 6 end
+
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+
+  // layer 7 start
+  test_layer_div.appendChild(document.createTextNode('layer: 7'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[7];
+
+  for (var i=0; i<L.filters.length; i++) {
+    var layer_canvas = get_layer_canvas(L, true, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 7 end
+
+  // layer 8 start
+  test_layer_div.appendChild(document.createTextNode('layer: 8'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[7];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 8 end
+
+  // layer 9 start
+  test_layer_div.appendChild(document.createTextNode('layer: 9'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[9];
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 9 end
+
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+  test_layer_div.appendChild(document.createElement('br'));
+
+  // layer 10 start
+  test_layer_div.appendChild(document.createTextNode('layer: 10'));
+  test_layer_div.appendChild(document.createElement('br'));
+  var L = net.layers[11];
+  if(L.layer_type==='softmax' || L.layer_type==='fc') scale = 10; // create larger canvas
+
+  for (var i=0; i<L.out_act.depth; i++) {
+    var layer_canvas = get_layer_canvas(L, false, false, i, scale);
+    test_layer_div.appendChild(layer_canvas);
+  }
+  test_layer_div.appendChild(document.createElement('br'));
+  // layer 10 end
+
+  test_layer_div.appendChild(document.createElement('br'));
+  
+
+  test_panel.appendChild(test_title_div);
+  test_panel.appendChild(test_layer_div);
+  elt.appendChild(test_panel);
+  // end test panel
+  //////////////////////////////////////////////////////////
+
   // show activations in each layer
   var N = net.layers.length;
   for(var i=0;i<N;i++) {
+
     var L = net.layers[i];
 
     var layer_div = document.createElement('div');
@@ -483,34 +611,28 @@ var visualize_activations = function(net, elt) {
         filters_div.appendChild(document.createTextNode('Filters list:'));
         filters_div.appendChild(document.createElement('br'));
 
-        //
-        // var filter_data = [];
-        // for(var j=0; j<L.filters.length; j++) {          
-        //     //
-        //     // filterstring = filterstring.concat(L.filters[j].w);
-        //     // filterstring = filterstring.concat("\n");
-        //     //
-        //     var afilter = [];
-        //     for(var k=0; k<L.filters[j].w.length; k++) {
+         
+        
+        // filterstring = filterstring.concat(L.filters[j].w);
+        // filterstring = filterstring.concat("\n");
 
-        //       var f_gd = L.filters[j].w[k];
-        //       afilter.push(f_gd);
-        //     }
-
-        //     filter_data.push(afilter);
-
-        //     // filters_div.appendChild(document.createTextNode(L.filters[j].w));
-        // }
-        //
+        // filters_div.appendChild(document.createTextNode(L.filters[j].w));
+  
 
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-    // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter) 
-      var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true, true);
+
+      // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
+      // i = layer_num
+      var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i);
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);
+
+      //create drop down menu
+
+
 
       } else {
         filters_div.appendChild(document.createTextNode('Weights hidden, too small'));
