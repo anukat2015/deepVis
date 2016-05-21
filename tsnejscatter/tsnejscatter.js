@@ -91,7 +91,7 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, isArrData, showImg, Lfilter) {
+  var init_tSNE = function(data, outdom, isArrData, showImg, Lfilter, isFilter) {
 
     console.log('init');
 
@@ -100,26 +100,47 @@ var tsnejscatter = (function(){
 
     if(isArrData) {
       data = preProData(data);
-    }
-    else if(showImg) {
+    } else if(showImg) {
 
-      var filter_data = [];
-      for(var j=0; j< Lfilter.length; j++) {          
+      if(isFilter) {
+        var filter_data = [];
+        for(var j=0; j< Lfilter.length; j++) {          
+            var afilter = [];
+            // console.log(Lfilter[j].w.length); //75(5x5x3) 400(5x5x16) 500(5x5x20)
+            for(var k=0; k< Lfilter[j].w.length; k++) {
+              var f_gd = Lfilter[j].w[k];
+              afilter.push(f_gd);
+            }
+            filter_data.push(afilter);
+        }
+        data = filter_data;
+      } else {
+        var A = Lfilter;
+        var filter_data = [];
+
+        for(var d=0;d<A.depth;d++) {
+
           var afilter = [];
-          for(var k=0; k< Lfilter[j].w.length; k++) {
-            var f_gd = Lfilter[j].w[k];
-            afilter.push(f_gd);
+
+          for(var x=0;x<A.sx;x++) {
+            for(var y=0;y<A.sy;y++) {
+              var f_gd = A.get(x,y,d);
+              afilter.push(f_gd);
+            }
           }
           filter_data.push(afilter);
+        }
+
+        data = filter_data;
       }
-      data = filter_data;
+      
     }
 
-    // console.log(data);
+    console.log(data);
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom, showImg, Lfilter);
+    var svgc = drawEmbedding(data, outdom, showImg, Lfilter, isFilter);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -148,7 +169,7 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom, showImg, Lfilter) {
+  var drawEmbedding = function(data, outdom, showImg, Lfilter, isFilter) {
 
     var margin = { top: 50, right: 50, bottom: 50, left: 50 },
         outerWidth = 500,
@@ -273,7 +294,7 @@ var tsnejscatter = (function(){
         .attr('height', 18)
         // .attr("xlink:href", canv_img.toDataURL())
         .attr("xlink:href", function(d, i) {
-            return get_filter_canvas(Lfilter, true, false, i).toDataURL(); 
+            return get_filter_canvas(Lfilter, isFilter, false, i).toDataURL(); 
         })
         // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)
@@ -365,7 +386,7 @@ var tsnejscatter = (function(){
     return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  var tsnejsc = function($, inputdata, out, isArrData, showImg) {
+  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter) {
     //constructor 
     console.log('start tsnejsc');
 
@@ -376,7 +397,7 @@ var tsnejscatter = (function(){
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg, Lfilter);
+    init_tSNE(data, outdom, isArrData, showImg, Lfilter, isFilter);
   }
 
   tsnejsc.prototype = {

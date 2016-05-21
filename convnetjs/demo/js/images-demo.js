@@ -317,7 +317,7 @@ var get_filter_canvas = function(Lfilter, isFilter, grads, index) {
     } else {
 
       d = index;
-      
+
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           if(draw_grads) {
@@ -506,7 +506,8 @@ var visualize_activations = function(net, elt) {
       // tSNE plot
       var scatterplot = document.createElement('scatter');
 
-      var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true); // create a scatterjs instance
+      // var tsnescatter = new tsnejscatter($, L.filters, scatterplot, false, true);
+      var tsnescatter = new tsnejscatter($, L.out_act, scatterplot, false, true, false); // create a sc
         // tsnescatter.change_p(filterstring);
       
       filters_div.appendChild(scatterplot);
