@@ -194,13 +194,17 @@ var tsnejscatter = (function(){
       dotrain = false;
     });
 
+    $("#option1").click(function() {
+      console.log('option1');
+    });
+
   }
 
   var drawEmbedding = function(data, outdom, showImg, L, isFilter) {
 
-    var margin = { top: 50, right: 50, bottom: 50, left: 50 },
-        outerWidth = 500,
-        outerHeight = 400,
+    var margin = { top: 0, right: 50, bottom: 50, left: 100 },
+        outerWidth = 600,
+        outerHeight = 450,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
 
@@ -262,7 +266,7 @@ var tsnejscatter = (function(){
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text('x');
+        // .text('x');
 
     svg.append("g")
         .classed("y axis", true)
@@ -270,10 +274,10 @@ var tsnejscatter = (function(){
       .append("text")
         .classed("label", true)
         .attr("transform", "rotate(-90)")
-        .attr("y", -margin.left)
+        .attr("y", -margin.left + margin.right)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text('y');
+        // .text('y');
 
     var objects = svg.append("svg")
         .classed("objects", true)
@@ -369,7 +373,7 @@ var tsnejscatter = (function(){
     // legend.append("text")
     //     .attr("x", width + 26)
     //     .attr("dy", ".35em")
-    //     .text(function(d) { return d; });
+        // .text(function(d) { return d; });
 
     // d3.select("#plotbtn").on("click", change);
     return {
