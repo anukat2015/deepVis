@@ -167,13 +167,13 @@ var visualize_tsne = function(net, elt) {
     title_div.className = 'panel-heading panel-collapsed'
 
     if(L.layer_type == 'conv') {
-      layer_panel.className = "panel panel-danger"
+      layer_panel.className = "panel panel-info"
     }
     else if(L.layer_type == 'relu') {
-      layer_panel.className = "panel panel-success"
+      layer_panel.className = "panel panel-danger"
     }
     else if(L.layer_type == 'pool') {
-      layer_panel.className = "panel panel-info"
+      layer_panel.className = "panel panel-success"
     }
     else if(L.layer_type == 'softmax') {
       layer_panel.className = "panel panel-primary"

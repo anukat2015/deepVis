@@ -59,9 +59,9 @@ h2 {
 }*/
 
 /* Custom panel-heading colors in the panel components*/
-.panel-default > .panel-heading-custom{
+.panel-default > .panel-heading-custom1{
   background-image: none;
-  background-color: #cf5b95;
+  background-color: #28bc9d;
   color: #ffffff;
 }
 .panel-default > .panel-heading-custom2{
