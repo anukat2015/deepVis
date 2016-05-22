@@ -108,11 +108,8 @@ var visualize_tsne = function(net, elt) {
 
         // gradients
 
-
         //show filters
-        filters_div.appendChild(document.createElement('br'));
-        filters_div.appendChild(document.createTextNode('Filters list:'));
-        filters_div.appendChild(document.createElement('br'));
+        // filters_div.appendChild(document.createTextNode('Filters list:'));
 
         // filterstring = filterstring.concat(L.filters[j].w);
         // filterstring = filterstring.concat("\n");
@@ -139,6 +136,7 @@ var visualize_tsne = function(net, elt) {
 
       // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
       // i = layer_num
+            
       var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i);
         // tsnescatter.change_p(filterstring);
       
@@ -150,7 +148,7 @@ var visualize_tsne = function(net, elt) {
       }
       activations_div.appendChild(filters_div);
     }
-    layer_div.appendChild(activations_div);
+    // layer_div.appendChild(activations_div);
 
 
     var layer_t = L.layer_type
@@ -177,18 +175,18 @@ var visualize_tsne = function(net, elt) {
     }
     else if(L.layer_type == 'softmax') {
       layer_panel.className = "panel panel-primary"
-      layer_div.className = 'panel-body';
-      title_div.className = 'panel-heading';
-      title_icon.className = 'glyphicon glyphicon-chevron-up'
+      // layer_div.className = 'panel-body';
+      // title_div.className = 'panel-heading';
+      // title_icon.className = 'glyphicon glyphicon-chevron-up'
     }
     else if(L.layer_type == 'fc') {
       layer_panel.className = "panel panel-warning"
     }
     else {
       layer_panel.className = "panel panel-primary"
-      layer_div.className = 'panel-body';
-      title_div.className = 'panel-heading';
-      title_icon.className = 'glyphicon glyphicon-chevron-up'
+      // layer_div.className = 'panel-body';
+      // title_div.className = 'panel-heading';
+      // title_icon.className = 'glyphicon glyphicon-chevron-up'
     }
 
     title_div.addEventListener('click', function(){

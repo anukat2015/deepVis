@@ -257,7 +257,7 @@ var tsnejscatter = (function(){
                   tip_div.appendChild(document.createElement('br'));
                 }
                 // var get_filter_canvas = function(A, scale, grads, index)
-                var fimg =  get_filter_canvas(L.filters[i], 4, false, j).toDataURL();
+                var fimg =  get_filter_canvas(L.filters[i], 5, false, j).toDataURL();
                 var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
                 
                 var img_tag = document.createElement('img');

@@ -550,6 +550,10 @@ var step = function(sample) {
   train_elt.appendChild(document.createTextNode(t));
   train_elt.appendChild(document.createElement('br'));
 
+  var run_pause_div = document.getElementById("run_pause_div");
+  run_pause_div.innerHTML = '';
+  run_pause_div.appendChild(document.createTextNode(t));
+
   // visualize activations
   if(step_num % 700 === 0) {
     var vis_elt = document.getElementById("visnet");
