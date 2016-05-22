@@ -3,7 +3,11 @@ var visualize_tsne = function(net, elt) {
 
   // clear the element
   elt.innerHTML = "";
-
+  var row_div = document.createElement('div');
+  row_div.className = 'row';
+  var col1_div = document.createElement('div');
+  col1_div.className = 'col-sm-3';
+  
   // show activations in each layer
   var N = net.layers.length;
   for(var i=0;i<N;i++) {
@@ -22,18 +26,8 @@ var visualize_tsne = function(net, elt) {
     
     // HACK to draw in color in input layer
     if(i===0) {
-      // draw_activations_COLOR(activations_div, L.out_act, scale);
-      // draw_activations_COLOR(activations_div, L.out_act, scale, true);
-
-      /*
-      // visualize positive and negative components of the gradient separately
-      var dd = L.out_act.clone();
-      var ni = L.out_act.w.length;
-      for(var q=0;q<ni;q++) { var dwq = L.out_act.dw[q]; dd.w[q] = dwq > 0 ? dwq : 0.0; }
-      draw_activations_COLOR(activations_div, dd, scale);
-      for(var q=0;q<ni;q++) { var dwq = L.out_act.dw[q]; dd.w[q] = dwq < 0 ? -dwq : 0.0; }
-      draw_activations_COLOR(activations_div, dd, scale);
-      */
+      draw_activations_COLOR(activations_div, L.out_act, scale);
+      draw_activations_COLOR(activations_div, L.out_act, scale, true);
 
       /*
       // visualize what the network would like the image to look like more
@@ -72,38 +66,15 @@ var visualize_tsne = function(net, elt) {
       var filters_div = document.createElement('div');
       if(L.filters[0].sx>3) {
         // actual weights
-        // filters_div.appendChild(document.createTextNode('Weights:'));
-        // filters_div.appendChild(document.createElement('br'));
-        // for(var j=0;j<L.filters.length;j++) {
-        //   // HACK to draw in color for first layer conv filters
-        //   if(i===1) {
-        //     draw_activations_COLOR(filters_div, L.filters[j], 2);
-        //   } else {
-        //     filters_div.appendChild(document.createTextNode('('));
-        //     draw_activations(filters_div, L.filters[j], 2);
-        //     filters_div.appendChild(document.createTextNode(')'));
-        //   }
-        // }
+
         // gradients
-        // filters_div.appendChild(document.createElement('br'));
-        // filters_div.appendChild(document.createTextNode('Weight Gradients:'));
-        // filters_div.appendChild(document.createElement('br'));
-        // for(var j=0;j<L.filters.length;j++) {
-        //   if(i===1) { draw_activations_COLOR(filters_div, L.filters[j], 2, true); }
-        //   else {
-        //     filters_div.appendChild(document.createTextNode('('));
-        //     draw_activations(filters_div, L.filters[j], 2, true);
-        //     filters_div.appendChild(document.createTextNode(')'));
-        //   }
-        // }
+
 
         //show filters
         filters_div.appendChild(document.createElement('br'));
         filters_div.appendChild(document.createTextNode('Filters list:'));
         filters_div.appendChild(document.createElement('br'));
 
-         
-        
         // filterstring = filterstring.concat(L.filters[j].w);
         // filterstring = filterstring.concat("\n");
 
@@ -126,7 +97,6 @@ var visualize_tsne = function(net, elt) {
 
 
       var scatterplot = document.createElement('scatter');
-
 
       // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
       // i = layer_num
@@ -250,8 +220,13 @@ var visualize_tsne = function(net, elt) {
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
+
+    //close divs
     layer_panel.appendChild(layer_div);
-    elt.appendChild(layer_panel);
+    col1_div.appendChild(layer_panel)
+    row_div.appendChild(col1_div);
+    elt.appendChild(row_div);
+
   }
 }
 
