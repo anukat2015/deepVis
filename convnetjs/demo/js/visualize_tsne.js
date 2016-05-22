@@ -45,7 +45,6 @@ var visualize_tsne = function(net, elt) {
     }
 
   });
-  var L = net.layers[4];
 
   // show activations in each layer
   var N = net.layers.length;
@@ -133,11 +132,10 @@ var visualize_tsne = function(net, elt) {
 
 
       var scatterplot = document.createElement('scatter');
-
       // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
       // i = layer_num
-            
-      var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i);
+      var tsne_width = $(window).width();
+      var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
         // tsnescatter.change_p(filterstring);
       
       tsne_body_div.appendChild(scatterplot);

@@ -91,7 +91,7 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, isArrData, showImg, L, isFilter, layer_num) {
+  var init_tSNE = function(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width) {
 
     console.log('init' + layer_num);
 
@@ -169,7 +169,7 @@ var tsnejscatter = (function(){
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom, showImg, L, isFilter);
+    var svgc = drawEmbedding(data, outdom, showImg, L, isFilter, tsne_width);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -200,11 +200,11 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom, showImg, L, isFilter) {
+  var drawEmbedding = function(data, outdom, showImg, L, isFilter, tsne_width) {
 
-    var margin = { top: 0, right: 50, bottom: 50, left: 100 },
-        outerWidth = 600,
-        outerHeight = 450,
+    var margin = { top: 0, right: 50, bottom: 50, left: 50 },
+        outerWidth = tsne_width * 0.6,
+        outerHeight = outerWidth * 0.8,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
 
@@ -243,7 +243,7 @@ var tsnejscatter = (function(){
 
             if(L.filters[0].depth == 3) {
 
-              var fimg =  get_layer_canvas(L, isFilter, false, i, 2).toDataURL();
+              var fimg =  get_layer_canvas(L, isFilter, false, i, 20).toDataURL();
               var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
               return img_eval;
             }
@@ -257,7 +257,7 @@ var tsnejscatter = (function(){
                   tip_div.appendChild(document.createElement('br'));
                 }
                 // var get_filter_canvas = function(A, scale, grads, index)
-                var fimg =  get_filter_canvas(L.filters[i], 5, false, j).toDataURL();
+                var fimg =  get_filter_canvas(L.filters[i], 6, false, j).toDataURL();
                 var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
                 
                 var img_tag = document.createElement('img');
@@ -271,7 +271,7 @@ var tsnejscatter = (function(){
 
           }
           else {
-            var fimg =  get_layer_canvas(L, isFilter, false, i, 2).toDataURL();
+            var fimg =  get_layer_canvas(L, isFilter, false, i, 10).toDataURL();
             var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
             return img_eval;
           }
@@ -360,7 +360,7 @@ var tsnejscatter = (function(){
         .attr('height', 18)
         // .attr("xlink:href", canv_img.toDataURL())
         .attr("xlink:href", function(d, i) {
-            return get_layer_canvas(L, isFilter, false, i, 2).toDataURL(); 
+            return get_layer_canvas(L, isFilter, false, i, 5).toDataURL(); 
         })
         // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)
@@ -452,7 +452,7 @@ var tsnejscatter = (function(){
     return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
+  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
     //constructor 
     console.log('start tsnejsc');
 
@@ -463,7 +463,7 @@ var tsnejscatter = (function(){
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num);
+    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width);
   }
 
   tsnejsc.prototype = {

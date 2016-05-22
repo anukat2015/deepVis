@@ -87,35 +87,38 @@
   <!-- content container START-->
   <div class="container">
 
-    <!-- Visualization panel START-->
-    <div class="panel panel-primary">
-      <div class="panel-heading ">
-        Visualization
-        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-      </div>
-      <div class="panel-collapse">
-        <div class="panel-body">
-          <div id="deepVis"></div>
+    <!-- panel-group START-->
+    <div class="panel-group">
+      <!-- Visualization panel START-->
+      <div class="panel panel-primary">
+        <div class="panel-heading ">
+          Visualization
+          <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+        </div>
+        <div class="panel-collapse">
+          <div class="panel-body">
+            <div id="deepVis"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Visualization panel END-->
+      <!-- Visualization panel END-->
 
-    <!-- Run_Pause panel START-->
-    <div class="panel panel-default">
-      <div class="panel-heading panel-heading-custom3">
-        Run / Pause
-        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
-      </div>
-      <div class="panel-collapse">
-        <div class="panel-body">
-          <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
-          <span id="run_pause_div"></span>
+      <!-- Run_Pause panel START-->
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-custom3">
+          Run / Pause
+          <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+        </div>
+        <div class="panel-collapse">
+          <div class="panel-body">
+            <input id="buttontp" type="submit" value="pause" onclick="toggle_pause();" class="btn btn-danger btn-md"/>
+            <span id="run_pause_div"></span>
+          </div>
         </div>
       </div>
+      <!-- Run_Pause panel END-->
     </div>
-    <!-- Run_Pause panel END-->
-
+    <!-- panel-group END-->
   </div>
   <!-- content container END-->
 
