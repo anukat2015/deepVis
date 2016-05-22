@@ -3,11 +3,50 @@ var visualize_tsne = function(net, elt) {
 
   // clear the element
   elt.innerHTML = "";
+
   var row_div = document.createElement('div');
   row_div.className = 'row';
+
   var col1_div = document.createElement('div');
   col1_div.className = 'col-sm-3';
+  var col2_div = document.createElement('div');
+  col2_div.className = 'col-sm-9';
+
+    // create tsne panel
+  var tsne_panel = document.createElement('div');
+  var tsne_title_div = document.createElement('div');
+  var tsne_body_div = document.createElement('div');
+
+  tsne_panel.className = "panel panel-default"
+  tsne_body_div.className = 'panel-body';
+  tsne_title_div.className = 'panel-heading panel-heading-custom2';
+  tsne_title_div.appendChild(document.createTextNode('t-SNE'));
+
+  //chevron 
+  var tsne_title_icon = document.createElement('i');
+  tsne_title_icon.className = 'glyphicon glyphicon-chevron-up'
+  var tsne_title_span = document.createElement('span');
+  tsne_title_span.className = 'pull-right clickable';
+  tsne_title_span.appendChild(tsne_title_icon);
+  tsne_title_div.appendChild(tsne_title_span);
+  tsne_title_div.addEventListener('click', function(){
   
+  if ($(this).hasClass('panel-collapsed')) {
+    // expand the panel
+    $(this).parents('.panel').find('.panel-body').slideDown();
+    $(this).removeClass('panel-collapsed');
+    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+  }
+  else {
+    // collapse the panel
+    $(this).parents('.panel').find('.panel-body').slideUp();
+    $(this).addClass('panel-collapsed');
+    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+}
+
+});
+
+
   // show activations in each layer
   var N = net.layers.length;
   for(var i=0;i<N;i++) {
@@ -103,7 +142,7 @@ var visualize_tsne = function(net, elt) {
       var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i);
         // tsnescatter.change_p(filterstring);
       
-      filters_div.appendChild(scatterplot);
+      tsne_body_div.appendChild(scatterplot);
 
 
       } else {
@@ -153,18 +192,20 @@ var visualize_tsne = function(net, elt) {
     }
 
     title_div.addEventListener('click', function(){
+      
       if ($(this).hasClass('panel-collapsed')) {
-          // expand the panel
+        // expand the panel
         $(this).parents('.panel').find('.panel-body').slideDown();
         $(this).removeClass('panel-collapsed');
         $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
       }
       else {
-          // collapse the panel
+        // collapse the panel
         $(this).parents('.panel').find('.panel-body').slideUp();
         $(this).addClass('panel-collapsed');
         $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-      }
+    }
+
     });
 
     var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
@@ -223,8 +264,15 @@ var visualize_tsne = function(net, elt) {
 
     //close divs
     layer_panel.appendChild(layer_div);
-    col1_div.appendChild(layer_panel)
+
+    tsne_panel.appendChild(tsne_title_div);
+    tsne_panel.appendChild(tsne_body_div);
+
+    col1_div.appendChild(layer_panel);
+    col2_div.appendChild(tsne_panel);
+
     row_div.appendChild(col1_div);
+    row_div.appendChild(col2_div);
     elt.appendChild(row_div);
 
   }

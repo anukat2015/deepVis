@@ -57,6 +57,25 @@
 h2 {
   text-align: center;
 }*/
+
+/* Custom panel-heading colors in the panel components*/
+.panel-default > .panel-heading-custom{
+  background-image: none;
+  background-color: #cf5b95;
+  color: #ffffff;
+}
+.panel-default > .panel-heading-custom2{
+  background-image: none;
+  background-color: #ed6b71;
+  color: #ffffff;
+}
+.panel-default > .panel-heading-custom3{
+  background-image: none;
+  background-color: #f07c4a;
+  color: #ffffff;
+}
+/* End custom panel-heading colors */
+
 .secpart {
   width: 400px;
   float: left;

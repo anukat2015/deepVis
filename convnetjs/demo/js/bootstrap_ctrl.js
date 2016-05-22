@@ -1,6 +1,10 @@
 $(document).ready(function(){
-// $('.panel-heading span.clickable').on("click", function (e) {
-  $('.panel-heading').on("click", function (e) {
+    control_panel();
+});
+
+var control_panel = function() {
+    // $('.panel-heading span.clickable').on("click", function (e) {
+  $('.panel-heading').on("click", function () {
     console.log('onClick');
     if ($(this).hasClass('panel-collapsed')) {
         // expand the panel
@@ -15,4 +19,4 @@ $(document).ready(function(){
         $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     }
   });
-});
+}
