@@ -233,9 +233,49 @@ var tsnejscatter = (function(){
 
     var tip = d3.tip()
         .attr("class", "d3-tip")
-        .offset([-10, 0])
-        .html(function(d) {
-          return 0 + ": " + d[0] + "<br>" + 1 + ": " + d[1];
+        .offset([0, 0])
+        // .append(div)
+        .html(function(d, i) {
+          // return 'x' + ": " + d[0] + "<br>" + 'y' + ": " + d[1];
+          // return '<img src="./download1.png" alt="Mountain View" style="width:100px;height:100px;">';
+// var draw_activations = function(elt, A, scale, grads) {
+          if(isFilter) {
+
+            if(L.filters[0].depth == 3) {
+
+              var fimg =  get_layer_canvas(L, isFilter, false, i, 2).toDataURL();
+              var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
+              return img_eval;
+            }
+            else {
+
+              var tip_div = document.createElement('div');
+
+              for(var j=0; j<L.filters.length; j++) {
+
+                if(j>3 && j%5 == 0) {
+                  tip_div.appendChild(document.createElement('br'));
+                }
+                // var get_filter_canvas = function(A, scale, grads, index)
+                var fimg =  get_filter_canvas(L.filters[i], 4, false, j).toDataURL();
+                var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
+                
+                var img_tag = document.createElement('img');
+                img_tag.className = 'actmap';
+                img_tag.setAttribute('src', fimg);
+                tip_div.appendChild(img_tag);         
+              }
+
+              return tip_div.innerHTML;
+            }
+
+          }
+          else {
+            var fimg =  get_layer_canvas(L, isFilter, false, i, 2).toDataURL();
+            var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
+            return img_eval;
+          }
+
         });
 
     var zoomBeh = d3.behavior.zoom()
@@ -306,11 +346,6 @@ var tsnejscatter = (function(){
       .enter().append("g")
 
     if(showImg) {
-
-      // var canv_img = document.createElement('canvas');
-      // var get_activation_img = function(A, scale, grads, d) {
-
-      // canv_img = get_activation_img(Lfilter, 2, false, 10);
 
       gs.append("rect")
           .classed("dot_rect", true)

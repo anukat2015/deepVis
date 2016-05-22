@@ -31,21 +31,21 @@ var visualize_tsne = function(net, elt) {
   tsne_title_div.appendChild(tsne_title_span);
   tsne_title_div.addEventListener('click', function(){
   
-  if ($(this).hasClass('panel-collapsed')) {
-    // expand the panel
-    $(this).parents('.panel').find('.panel-body').slideDown();
-    $(this).removeClass('panel-collapsed');
-    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-  }
-  else {
-    // collapse the panel
-    $(this).parents('.panel').find('.panel-body').slideUp();
-    $(this).addClass('panel-collapsed');
-    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-}
+    if ($(this).hasClass('panel-collapsed')) {
+      // expand the panel
+      $(this).parents('.panel').find('.panel-body').slideDown();
+      $(this).removeClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    }
+    else {
+      // collapse the panel
+      $(this).parents('.panel').find('.panel-body').slideUp();
+      $(this).addClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    }
 
-});
-
+  });
+  var L = net.layers[4];
 
   // show activations in each layer
   var N = net.layers.length;
