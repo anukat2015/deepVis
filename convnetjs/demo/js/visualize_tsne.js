@@ -46,11 +46,13 @@ var visualize_tsne = function(net, elt) {
 
   });
 
+  //////////////////////
   // test api
-  for(var m=0; m<12; m++) {
-    var ttst = get_path_intensity(net.layers[11], false, m);
-    console.log(ttst);
-  }
+  // for(var m=0; m<12; m++) {
+  //   var ttst = get_path_intensity(net.layers[11], false, m);
+  //   console.log(ttst);
+  // }
+  //////////////////////
 
   // show activations in each layer
   var N = net.layers.length;
@@ -123,19 +125,6 @@ var visualize_tsne = function(net, elt) {
   
 
       // tSNE plot
-      var radio_div = document.createElement('div');
-      radio_div.setAttribute('class', 'radio');
-
-      var radio_label = document.createElement('label');
-      var radio_input = document.createElement('input');
-      radio_input.setAttribute('type', 'radio');
-      radio_input.setAttribute('id', 'option1');
-      radio_label.appendChild(radio_input);
-
-      radio_label.appendChild(document.createTextNode(' Filters'));
-      radio_label.appendChild(radio_div);
-      filters_div.appendChild(radio_label);
-
 
       var scatterplot = document.createElement('scatter');
       // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
@@ -259,10 +248,28 @@ var visualize_tsne = function(net, elt) {
     }
 
     // css madness needed here...
-    var clear = document.createElement('div');
+    var clear = document.createElement('hr');
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
+
+    ///////////////////////////////////
+    //create option box
+
+    create_checkbox(layer_div, 'checkbox_id1', 'Show t-SNE');
+    create_checkbox(layer_div, 'checkbox_id2', 'Image / Dot');
+
+    // var create_radio_btn = function(out_to, name, id, title)
+    var radio_name = 'radio_name'+i;
+
+    if(L.layer_type==='conv') {
+      create_radio_btn(layer_div, radio_name, 'option1', 'filter weight');
+      create_radio_btn(layer_div, radio_name, 'option1', 'filter grad');
+    }
+    create_radio_btn(layer_div, radio_name, 'option1', 'activation');
+    create_radio_btn(layer_div, radio_name, 'option1', 'activation grad');
+
+    ///////////////////////////////////
 
     //close divs
     layer_panel.appendChild(layer_div);
@@ -278,5 +285,39 @@ var visualize_tsne = function(net, elt) {
     elt.appendChild(row_div);
 
   }
+}
+
+var create_radio_btn = function(out_to, name, id, title) {
+
+  var radio_div = document.createElement('div');
+  radio_div.setAttribute('class', 'radio');
+  var radio_label = document.createElement('label');
+  var radio_input = document.createElement('input');
+  radio_input.setAttribute('type', 'radio');
+  radio_input.setAttribute('name', name);
+  radio_input.setAttribute('id', id);
+  radio_label.appendChild(radio_input);
+  
+  radio_label.appendChild(document.createTextNode(title));
+  radio_div.appendChild(radio_label);
+  out_to.appendChild(radio_div);
+
+}
+
+var create_checkbox = function(out_to, id, title) {
+
+  var radio_div = document.createElement('div');
+  radio_div.setAttribute('class', 'checkbox');
+  var radio_label = document.createElement('label');
+  var radio_input = document.createElement('input');
+  radio_input.setAttribute('type', 'checkbox');
+  radio_input.setAttribute('value', '');
+  radio_input.setAttribute('id', id);
+  radio_label.appendChild(radio_input);
+  
+  radio_label.appendChild(document.createTextNode(title));
+  radio_div.appendChild(radio_label);
+  out_to.appendChild(radio_div);
+
 }
 
