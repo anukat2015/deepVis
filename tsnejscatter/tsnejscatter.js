@@ -130,8 +130,8 @@ var tsnejscatter = (function(){
           var afilter = [];
           
           for(var d=0;d<A.depth;d++) {
-            for(var y=0;y<A.sy;y++) {
-              for(var x=0;x<A.sx;x++) {
+            for(var x=0;x<A.sx;x++) {
+              for(var y=0;y<A.sy;y++) {
                 var f_gd = A.get(x,y,d);
                 afilter.push(f_gd);
               }

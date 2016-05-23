@@ -351,38 +351,39 @@ var get_filter_canvas = function(A, scale, grads, index) {
   // create the canvas elements, draw and add to DOM
   d = index;
 
-    var canv = document.createElement('canvas');
-    canv.className = 'actmap';
-    var W = A.sx * s;
-    var H = A.sy * s;
-    canv.width = W;
-    canv.height = H;
-    var ctx = canv.getContext('2d');
-    var g = ctx.createImageData(W, H);
+  var canv = document.createElement('canvas');
+  canv.className = 'actmap';
+  var W = A.sx * s;
+  var H = A.sy * s;
+  canv.width = W;
+  canv.height = H;
+  var ctx = canv.getContext('2d');
+  var g = ctx.createImageData(W, H);
 
-    for(var x=0;x<A.sx;x++) {
-      for(var y=0;y<A.sy;y++) {
-        if(draw_grads) {
-          var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
-        } else {
-          var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
-        }
-        for(var dx=0;dx<s;dx++) {
-          for(var dy=0;dy<s;dy++) {
-            var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
-            for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
-            g.data[pp+3] = 255; // alpha channel
-          }
+  for(var x=0;x<A.sx;x++) {
+    for(var y=0;y<A.sy;y++) {
+      if(draw_grads) {
+        var dval = Math.floor((A.get_grad(x,y,d)-mm.minv)/mm.dv*255);
+      } else {
+        var dval = Math.floor((A.get(x,y,d)-mm.minv)/mm.dv*255);  
+      }
+      for(var dx=0;dx<s;dx++) {
+        for(var dy=0;dy<s;dy++) {
+          var pp = ((W * (y*s+dy)) + (dx + x*s)) * 4;
+          for(var i=0;i<3;i++) { g.data[pp + i] = dval; } // rgb
+          g.data[pp+3] = 255; // alpha channel
         }
       }
     }
-    ctx.putImageData(g, 0, 0);
-    return canv;
+  }
+  ctx.putImageData(g, 0, 0);
+  return canv;
 }
 
 var visualize_activations = function(net, elt) {
   //visualize_tsne.js
   visualize_tsne(net, elt);
+
 }
 
 // loads a training image and trains on it with the network
@@ -651,17 +652,34 @@ var change_net = function() {
   reset_all();
 }
 
-/*We addtional implemented*/
-var calculate_filtercost = function(A){
- // this moudle calculate square sum of  cost at each filter 
+var get_grad_magnitude = function(L, isFilter, index){
 
-  for(var d=0;d<A.dept ; d++) {
+  var A = {};
+  if(isFilter) {
+    A = L.filters[index];
+  } else {
+    A = L.out_act;
+  }
+  var grad_magnitude = 0.0;
+
+  if(isFilter) {
+    for(var d=0;d<A.depth ; d++) {
+      for(var x=0;x<A.sx;x++) {
+        for(var y=0;y<A.sy;y++) {
+          var A_grad=A.get_grad(x,y,d);
+          grad_magnitude+=A_grad*A_grad;  
+        }
+      }
+    }
+  }else {
+    d = index;
     for(var x=0;x<A.sx;x++) {
       for(var y=0;y<A.sy;y++) {
-        grad_cost=A.get_grad(x,y,d);
-        filters_cost+=grad_cost*grad_cost;  
+        var A_grad=A.get_grad(x,y,d);
+        grad_magnitude+=A_grad*A_grad;  
       }
     }
   }
-  return filters_cost;
+
+  return grad_magnitude;
 }
