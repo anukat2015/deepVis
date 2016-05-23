@@ -683,3 +683,37 @@ var get_grad_magnitude = function(L, isFilter, index){
 
   return grad_magnitude;
 }
+
+var get_path_intensity = function(L, isFilter, index){
+
+  var A = {};
+  if(isFilter) {
+    A = L.filters[index];
+  } else {
+    A = L.out_act;
+  }
+  var path_intensity = 0.0;
+
+  if(isFilter) {
+    for(var d=0;d<A.depth ; d++) {
+      for(var x=0;x<A.sx;x++) {
+        for(var y=0;y<A.sy;y++) {
+          var act=A.get(x,y,d);
+          if(act < 0) act = 0;
+          path_intensity+=act;  
+        }
+      }
+    }
+  }else {
+    var d = index;
+    for(var x=0;x<A.sx;x++) {
+      for(var y=0;y<A.sy;y++) {
+        var act=A.get(x,y,d);
+        if(act < 0) act = 0;
+        path_intensity+=act;
+      }
+    }
+  }
+
+  return path_intensity;
+}

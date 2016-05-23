@@ -46,6 +46,12 @@ var visualize_tsne = function(net, elt) {
 
   });
 
+  // test api
+  for(var m=0; m<12; m++) {
+    var ttst = get_path_intensity(net.layers[11], false, m);
+    console.log(ttst);
+  }
+
   // show activations in each layer
   var N = net.layers.length;
   for(var i=0;i<N;i++) {
