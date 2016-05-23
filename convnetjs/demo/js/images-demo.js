@@ -313,7 +313,7 @@ var get_layer_canvas = function(L, isFilter, grads, index, scale) {
       }
     } else {
 
-      d = index;
+      var d = index;
 
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
@@ -349,7 +349,7 @@ var get_filter_canvas = function(A, scale, grads, index) {
   var mm = maxmin(w);
 
   // create the canvas elements, draw and add to DOM
-  d = index;
+  var d = index;
 
   var canv = document.createElement('canvas');
   canv.className = 'actmap';
@@ -672,7 +672,7 @@ var get_grad_magnitude = function(L, isFilter, index){
       }
     }
   }else {
-    d = index;
+    var d = index;
     for(var x=0;x<A.sx;x++) {
       for(var y=0;y<A.sy;y++) {
         var A_grad=A.get_grad(x,y,d);
