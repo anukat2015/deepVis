@@ -13,13 +13,12 @@ var api_example = function(net, elt) {
   example_layer_div.appendChild(document.createElement('br'));
 
   var N = net.layers.length;
+  N = N - 1; // do not show last layer
 
   // get_canvas_img API example START
   for(var i=0; i<N; i++) {
     // layer start
     var L = net.layers[i];
-    if(L.layer_type == 'fc') // do not show fc layer
-      continue;
 
     example_layer_div.appendChild(document.createTextNode('layer: ' + i));
     example_layer_div.appendChild(document.createElement('br'));
@@ -86,8 +85,6 @@ var api_example = function(net, elt) {
   for(var i=0; i<N; i++) {
     // layer start
     var L = net.layers[i];
-    if(L.layer_type == 'fc') // do not show fc layer
-      continue;
 
     example_layer_div.appendChild(document.createTextNode('layer: ' + i));
     example_layer_div.appendChild(document.createElement('br'));
@@ -95,7 +92,7 @@ var api_example = function(net, elt) {
     var num_element = get_number_of_elements_in_layer(L);
 
     for(var j=0; j<num_element; j++) {
-      
+
       var grad_mag = get_path_intensity(L, j);
       example_layer_div.appendChild(document.createTextNode(grad_mag + ', '));
     }
