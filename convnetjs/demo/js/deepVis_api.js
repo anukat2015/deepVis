@@ -126,16 +126,21 @@ var get_canvas_img = function(L, index) {
 }
 
 var get_number_of_elements_in_layer = function(L) {
+
   if(L.layer_type == 'conv') {
       return L.filters.length;
   }
   else {
-    return L.out_act.depth;
+    if(L.layer_type == 'input')
+      return 1;
+    else 
+      return L.out_act.depth;
   }
-
 }
 
-var get_grad_magnitude = function(L, isFilter, index){
+var get_grad_magnitude = function(L, index){
+
+  var isFilter = true;
 
   var A = {};
   if(isFilter) {
