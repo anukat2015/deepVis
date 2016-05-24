@@ -458,9 +458,10 @@ var testImage = function(img) {
   var x = convnetjs.img_to_vol(img);
   var out_p = net.forward(x);
 
-
+  console.log("d");
   var vis_elt = document.getElementById("visnet");
-  visualize_activations(net, vis_elt);
+  var tsneArray = visualize_activations(net, vis_elt);
+  console.log(tsneArray);
 
   var preds =[]
   for(var k=0;k<out_p.w.length;k++) { preds.push({k:k,p:out_p.w[k]}); }
@@ -500,6 +501,7 @@ var trainAccWindow = new cnnutil.Window(100);
 var valAccWindow = new cnnutil.Window(100);
 var testAccWindow = new cnnutil.Window(50, 1);
 var step_num = 0;
+var tsneArray;
 var step = function(sample) {
 
   var x = sample.x;
@@ -558,7 +560,16 @@ var step = function(sample) {
   // visualize activations
   if(step_num % 700 === 0) {
     var vis_elt = document.getElementById("visnet");
-    visualize_activations(net, vis_elt);
+
+    
+    if(step_num===0){
+      tsneArray = visualize_activations(net, vis_elt);
+    }
+    else {
+      for(var i=0;i++;i<net.length) {
+        tsneArray[i].change_p(net[i]);
+      }
+    }
   }
 
   // log progress to graph, (full loss)

@@ -48,6 +48,7 @@ var visualize_tsne = function(net, elt) {
 
   // show activations in each layer
   var N = net.layers.length;
+  var tsneArray = [];
   for(var i=0;i<N;i++) {
 
     var L = net.layers[i];
@@ -136,6 +137,7 @@ var visualize_tsne = function(net, elt) {
       // i = layer_num
       var tsne_width = $(window).width();
       var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
+      tsneArray.push(tsnescatter);
         // tsnescatter.change_p(filterstring);
       
       tsne_body_div.appendChild(scatterplot);
@@ -272,5 +274,6 @@ var visualize_tsne = function(net, elt) {
     elt.appendChild(row_div);
 
   }
+  return tsneArray;
 }
 

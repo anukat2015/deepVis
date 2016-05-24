@@ -177,7 +177,7 @@ var tsnejscatter = (function(){
       step(data, T, svgc.xscale, svgc.yscale, svgc.zoomBeh, 
         svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
 
-      if(T.iter > 700) {
+      if(T.iter > 1000) {
         clearInterval(iid);
       }
 
@@ -470,8 +470,7 @@ var tsnejscatter = (function(){
 
     change_p: function(data) {
       var data = preProData(data);
-      // T.changeP(data);
-      //console.log('changeP');
+      T.changeP(data);
     }
 
   }
