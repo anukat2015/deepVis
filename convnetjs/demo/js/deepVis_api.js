@@ -195,7 +195,7 @@ var get_path_intensity = function(L1, L2, index){
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           var act=A.get(x,y,d);
-          if(act < 0) act = -1 * act;
+          // if(act < 0) act = -1 * act;
           path_intensity+=act;  
         }
       }
@@ -231,7 +231,7 @@ var get_path_intensity = function(L1, L2, index){
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           var act=A.get(x,y,d);
-          if(act < 0) act = -1 * act;
+          // if(act < 0) act = -1 * act;
           path_intensity+=act;
         }
       }
