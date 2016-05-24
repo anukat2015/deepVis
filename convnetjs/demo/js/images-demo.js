@@ -400,6 +400,7 @@ var trainAccWindow = new cnnutil.Window(100);
 var valAccWindow = new cnnutil.Window(100);
 var testAccWindow = new cnnutil.Window(50, 1);
 var step_num = 0;
+
 var step = function(sample) {
 
   var x = sample.x;
@@ -475,6 +476,15 @@ var step = function(sample) {
   if((step_num % 100 === 0 && step_num > 0) || step_num===100) {
     test_predict();
   }
+
+  ///////////////////////////////////////////////////////
+  //api_example
+  if(step_num % 500 === 0) {
+    var deepVis_div = document.getElementById("deepVis_div");
+    api_example(net, deepVis_div); //input net, dom-element
+  }
+  ///////////////////////////////////////////////////////
+
   step_num++;
 }
 
