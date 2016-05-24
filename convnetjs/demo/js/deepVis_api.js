@@ -216,7 +216,7 @@ var get_path_intensity = function(L1, L2, index){
               for(var fy=0;fy<B.sy;fy++) {
 
                 var act=A.get(x,y,d);
-                var weights = B.get(fx,fy,i);
+                var weights = B.get(fx,fy,d);
                 
                 path_intensity+=act*weights;
               }
