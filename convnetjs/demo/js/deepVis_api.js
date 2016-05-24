@@ -149,6 +149,7 @@ var get_grad_magnitude = function(L, index){
     A = L.out_act;
   }
   var grad_magnitude = 0.0;
+  var area = A.sx * A.sy / 25;
 
   if(isFilter) {
     for(var d=0;d<A.depth ; d++) {
@@ -164,15 +165,21 @@ var get_grad_magnitude = function(L, index){
     for(var x=0;x<A.sx;x++) {
       for(var y=0;y<A.sy;y++) {
         var A_grad=A.get_grad(x,y,d);
-        grad_magnitude+=A_grad*A_grad;  
+        grad_magnitude+=A_grad*A_grad;
       }
     }
   }
 
-  return grad_magnitude;
+  return grad_magnitude / area;
 }
 
-var get_path_intensity = function(L, isFilter, index){
+var get_path_intensity = function(L, index){
+
+  var isFilter = false;
+
+  if(L.layer_type == 'conv') {
+    isFilter = true;
+  }
 
   var A = {};
   if(isFilter) {
@@ -181,6 +188,7 @@ var get_path_intensity = function(L, isFilter, index){
     A = L.out_act;
   }
   var path_intensity = 0.0;
+  var area = A.sx * A.sy / 100;
 
   if(isFilter) {
     for(var d=0;d<A.depth ; d++) {
@@ -203,5 +211,5 @@ var get_path_intensity = function(L, isFilter, index){
     }
   }
 
-  return path_intensity;
+  return path_intensity / area;
 }
