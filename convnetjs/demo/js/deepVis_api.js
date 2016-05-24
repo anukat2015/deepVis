@@ -98,6 +98,43 @@ var get_layer_canvas = function(L, isFilter, grads, index, scale) {
   return canv;
 }
 
+var get_canvas_img = function(L, index) {
+
+  // var get_layer_canvas = function(L, isFilter, grads, index, 2) {
+  if(L.layer_type == 'conv') {
+    return get_layer_canvas(L, true, false, index, 2);
+  }
+  else if(L.layer_type == 'relu') {
+    return get_layer_canvas(L, false, false, index, 2);
+  }
+  else if(L.layer_type == 'pool') {
+    return get_layer_canvas(L, false, false, index, 2);
+  }
+  else if(L.layer_type == 'softmax') {
+    return get_layer_canvas(L, false, false, index, 10);
+  }
+  else if(L.layer_type == 'fc') {
+    return get_layer_canvas(L, false, false, index, 10);
+  }
+  else if(L.layer_type == 'input') {
+    return get_layer_canvas(L, false, false, index, 2);
+  }
+  else {
+    console.log('Invalid layer');
+  }
+
+}
+
+var get_number_of_elements_in_layer = function(L) {
+  if(L.layer_type == 'conv') {
+      return L.filters.length;
+  }
+  else {
+    return L.out_act.depth;
+  }
+
+}
+
 var get_grad_magnitude = function(L, isFilter, index){
 
   var A = {};
