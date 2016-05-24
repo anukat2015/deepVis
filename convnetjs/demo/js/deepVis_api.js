@@ -173,19 +173,19 @@ var get_grad_magnitude = function(L, index){
   return grad_magnitude / area;
 }
 
-var get_path_intensity = function(L, index){
+var get_path_intensity = function(L1, L2, index){
 
   var isFilter = false;
 
-  if(L.layer_type == 'conv') {
+  if(L1.layer_type == 'conv') {
     isFilter = true;
   }
 
   var A = {};
   if(isFilter) {
-    A = L.filters[index];
+    A = L1.filters[index];
   } else {
-    A = L.out_act;
+    A = L1.out_act;
   }
   var path_intensity = 0.0;
   var area = A.sx * A.sy / 100;
@@ -195,21 +195,60 @@ var get_path_intensity = function(L, index){
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           var act=A.get(x,y,d);
-          if(act < 0) act = 0;
+          if(act < 0) act = -1 * act;
           path_intensity+=act;  
         }
       }
     }
-  }else {
-    var d = index;
-    for(var x=0;x<A.sx;x++) {
-      for(var y=0;y<A.sy;y++) {
-        var act=A.get(x,y,d);
-        if(act < 0) act = 0;
-        path_intensity+=act;
+  } else {
+     if(L1.layer_type == 'pool') {
+      var num_out = get_number_of_elements_in_layer(L2);
+      var path_arr = [];
+      for(var i=0; i<num_out; i++) {
+
+        path_intensity = 0.0;
+        stride = L2.stride;
+        var d = index;
+        var B = L2.filters[i];
+        for(var x=0;x<A.sx;x+=stride) {
+          for(var y=0;y<A.sy;y+=stride) {
+            for(var fx=0;fx<B.sx;fx++) {
+              for(var fy=0;fy<B.sy;fy++) {
+
+                var act=A.get(x,y,d);
+                var weights = B.get(fx,fy,i);
+                
+                path_intensity+=act*weights;
+              }
+            }
+          }
+        }
+        path_arr.push(path_intensity / area);
+      }
+      return path_arr;
+    } else {
+      var d = index;
+      for(var x=0;x<A.sx;x++) {
+        for(var y=0;y<A.sy;y++) {
+          var act=A.get(x,y,d);
+          if(act < 0) act = -1 * act;
+          path_intensity+=act;
+        }
       }
     }
   }
 
-  return path_intensity / area;
+  if(L1.layer_type == 'input') {
+    var num_out = get_number_of_elements_in_layer(L2);
+    var path_arr = [];
+    for(var i=0; i<num_out; i++) {
+      path_arr.push(path_intensity / area);
+    }
+
+    return path_arr;
+  }
+
+  var path_arr = [];
+  path_arr.push(path_intensity / area);
+  return path_arr;
 }

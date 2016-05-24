@@ -19,7 +19,7 @@ var api_example = function(net, elt) {
   for(var i=0; i<N; i++) {
     // layer start
     var L = net.layers[i];
-
+    
     example_layer_div.appendChild(document.createTextNode('layer: ' + i));
     example_layer_div.appendChild(document.createElement('br'));
 
@@ -84,16 +84,17 @@ var api_example = function(net, elt) {
   // get_path_intensity API example START
   for(var i=0; i<N; i++) {
     // layer start
-    var L = net.layers[i];
+    var L1 = net.layers[i];
+    var L2 = net.layers[i+1];
 
     example_layer_div.appendChild(document.createTextNode('layer: ' + i));
     example_layer_div.appendChild(document.createElement('br'));
 
-    var num_element = get_number_of_elements_in_layer(L);
+    var num_element = get_number_of_elements_in_layer(L1);
 
     for(var j=0; j<num_element; j++) {
 
-      var grad_mag = get_path_intensity(L, j);
+      var grad_mag = get_path_intensity(L1, L2, j);
       example_layer_div.appendChild(document.createTextNode(grad_mag + ', '));
     }
     example_layer_div.appendChild(document.createElement('br'));
