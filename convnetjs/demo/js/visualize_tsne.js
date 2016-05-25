@@ -252,26 +252,39 @@ var visualize_tsne = function(net, elt) {
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
-
+    ///////////////////////////////////
     ///////////////////////////////////
     //create option box
+    var options_div = document.createElement('div');
+    var options_div_id = 'options_div'+i;
+    options_div.setAttribute('id', options_div_id);
+    options_div.setAttribute('class', 'collapse');
 
-    create_checkbox(layer_div, 'checkbox_id1', 'Show t-SNE');
-    create_checkbox(layer_div, 'checkbox_id2', 'Image / Dot');
+    var checkbox_show_tsne_id = 'checkbox1_id' + i;
+    create_checkbox_collapse(layer_div, checkbox_show_tsne_id, 'Show t-SNE', options_div_id);
 
-    // var create_radio_btn = function(out_to, name, id, title)
+    var checkbox_show_img = 'checkbox2_id' + i;
+    create_checkbox(options_div, checkbox_show_img, 'Show Image', true);
+
     var radio_name = 'radio_name'+i;
 
-    if(L.layer_type==='conv') {
-      create_radio_btn(layer_div, radio_name, 'option1', 'filter weight');
-      create_radio_btn(layer_div, radio_name, 'option1', 'filter grad');
+    if(L.layer_type==='conv' || L.layer_type==='fc') {
+      create_radio_btn(options_div, radio_name, 'option1', 'filter weight', true);
+
+      checked="checked"
+
+      create_radio_btn(options_div, radio_name, 'option1', 'filter grad', false);
+      create_radio_btn(options_div, radio_name, 'option1', 'activation', false);
+      create_radio_btn(options_div, radio_name, 'option1', 'activation grad', false);
+    } else {
+      create_radio_btn(options_div, radio_name, 'option1', 'activation', true);
+      create_radio_btn(options_div, radio_name, 'option1', 'activation grad', false);
     }
-    create_radio_btn(layer_div, radio_name, 'option1', 'activation');
-    create_radio_btn(layer_div, radio_name, 'option1', 'activation grad');
 
     ///////////////////////////////////
 
     //close divs
+    layer_div.appendChild(options_div);
     layer_panel.appendChild(layer_div);
 
     tsne_panel.appendChild(tsne_title_div);
@@ -287,7 +300,7 @@ var visualize_tsne = function(net, elt) {
   }
 }
 
-var create_radio_btn = function(out_to, name, id, title) {
+var create_radio_btn = function(out_to, name, id, title, checked) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'radio');
@@ -297,6 +310,10 @@ var create_radio_btn = function(out_to, name, id, title) {
   radio_input.setAttribute('name', name);
   radio_input.setAttribute('id', id);
   radio_label.appendChild(radio_input);
+
+  if(checked) {
+    radio_input.setAttribute('checked', 'checked');
+  }
   
   radio_label.appendChild(document.createTextNode(title));
   radio_div.appendChild(radio_label);
@@ -304,10 +321,37 @@ var create_radio_btn = function(out_to, name, id, title) {
 
 }
 
-var create_checkbox = function(out_to, id, title) {
+var create_checkbox = function(out_to, id, title, checked) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'checkbox');
+
+  var radio_label = document.createElement('label');
+  var radio_input = document.createElement('input');
+  radio_input.setAttribute('type', 'checkbox');
+  radio_input.setAttribute('value', '');
+  radio_input.setAttribute('id', id);
+  radio_label.appendChild(radio_input);
+  
+    if(checked) {
+    radio_input.setAttribute('checked', 'checked');
+  }
+
+  radio_label.appendChild(document.createTextNode(title));
+  radio_div.appendChild(radio_label);
+  out_to.appendChild(radio_div);
+
+}
+
+var create_checkbox_collapse = function(out_to, id, title, target) {
+
+  var target_id = '#' + target;
+
+  var radio_div = document.createElement('div');
+  radio_div.setAttribute('class', 'checkbox');
+  radio_div.setAttribute('data-toggle', 'collapse');
+  radio_div.setAttribute('data-target', target_id);
+
   var radio_label = document.createElement('label');
   var radio_input = document.createElement('input');
   radio_input.setAttribute('type', 'checkbox');
