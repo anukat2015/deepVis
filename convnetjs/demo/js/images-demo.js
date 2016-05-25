@@ -457,7 +457,7 @@ var step = function(sample) {
   run_pause_div.appendChild(document.createTextNode(t));
 
   // visualize activations
-  if(step_num % 700 === 0) {
+  if(step_num % 2000 === 0) {
     var vis_elt = document.getElementById("visnet");
     visualize_activations(net, vis_elt);
   }

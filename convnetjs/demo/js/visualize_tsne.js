@@ -46,14 +46,6 @@ var visualize_tsne = function(net, elt) {
 
   });
 
-  //////////////////////
-  // test api
-  // for(var m=0; m<12; m++) {
-  //   var ttst = get_path_intensity(net.layers[11], false, m);
-  //   console.log(ttst);
-  // }
-  //////////////////////
-
   // show activations in each layer
   var N = net.layers.length;
   for(var i=0;i<N;i++) {
@@ -126,23 +118,17 @@ var visualize_tsne = function(net, elt) {
 
       // tSNE plot
 
-      var scatterplot = document.createElement('scatter');
-      // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
-      // i = layer_num
-      var tsne_width = $(window).width();
-      var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
-        // tsnescatter.change_p(filterstring);
-      
-      tsne_body_div.appendChild(scatterplot);
-
+      // var scatterplot = document.createElement('scatter');
+      // var tsne_width = $(window).width();
+      // // i = layer_num
+      // var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
+      // tsne_body_div.appendChild(scatterplot);
 
       } else {
         filters_div.appendChild(document.createTextNode('Weights hidden, too small'));
       }
       activations_div.appendChild(filters_div);
     }
-    // layer_div.appendChild(activations_div);
-
 
     var layer_t = L.layer_type
     var layer_panel = document.createElement('div');
@@ -168,9 +154,6 @@ var visualize_tsne = function(net, elt) {
     }
     else if(L.layer_type == 'softmax') {
       layer_panel.className = "panel panel-primary"
-      // layer_div.className = 'panel-body';
-      // title_div.className = 'panel-heading';
-      // title_icon.className = 'glyphicon glyphicon-chevron-up'
     }
     else if(L.layer_type == 'fc') {
       layer_panel.className = "panel panel-warning"
@@ -221,47 +204,86 @@ var visualize_tsne = function(net, elt) {
       layer_div.appendChild(document.createTextNode(t));
       layer_div.appendChild(document.createElement('br'));
     }
-
-    // find min, max activations and display them
-    var mma = maxmin(L.out_act.w);
-    var t = 'max activation: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
-    layer_div.appendChild(document.createTextNode(t));
-    layer_div.appendChild(document.createElement('br'));
-
-    var mma = maxmin(L.out_act.dw);
-    var t = 'max gradient: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
-    layer_div.appendChild(document.createTextNode(t));
-    layer_div.appendChild(document.createElement('br'));
-
-    // number of parameters
-    if(L.layer_type==='conv' || L.layer_type==='local') {
-      var tot_params = L.sx*L.sy*L.in_depth*L.filters.length + L.filters.length;
-      var t = 'parameters: ' + L.filters.length + 'x' + L.sx + 'x' + L.sy + 'x' + L.in_depth + '+' + L.filters.length + ' = ' + tot_params;
+    if(L.layer_type==='input') {
+      var t = 'Input size ' + L.out_act.sx + 'x' + L.out_act.sy;
       layer_div.appendChild(document.createTextNode(t));
       layer_div.appendChild(document.createElement('br'));
     }
-    if(L.layer_type==='fc') {
-      var tot_params = L.num_inputs*L.filters.length + L.filters.length;
-      var t = 'parameters: ' + L.filters.length + 'x' + L.num_inputs + '+' + L.filters.length + ' = ' + tot_params;
-      layer_div.appendChild(document.createTextNode(t));
-      layer_div.appendChild(document.createElement('br'));
-    }
+
+
+    // // find min, max activations and display them
+    // var mma = maxmin(L.out_act.w);
+    // var t = 'max activation: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
+    // layer_div.appendChild(document.createTextNode(t));
+    // layer_div.appendChild(document.createElement('br'));
+
+    // var mma = maxmin(L.out_act.dw);
+    // var t = 'max gradient: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
+    // layer_div.appendChild(document.createTextNode(t));
+    // layer_div.appendChild(document.createElement('br'));
+
+    // // number of parameters
+    // if(L.layer_type==='conv' || L.layer_type==='local') {
+    //   var tot_params = L.sx*L.sy*L.in_depth*L.filters.length + L.filters.length;
+    //   var t = 'parameters: ' + L.filters.length + 'x' + L.sx + 'x' + L.sy + 'x' + L.in_depth + '+' + L.filters.length + ' = ' + tot_params;
+    //   layer_div.appendChild(document.createTextNode(t));
+    //   layer_div.appendChild(document.createElement('br'));
+    // }
+    // if(L.layer_type==='fc') {
+    //   var tot_params = L.num_inputs*L.filters.length + L.filters.length;
+    //   var t = 'parameters: ' + L.filters.length + 'x' + L.num_inputs + '+' + L.filters.length + ' = ' + tot_params;
+    //   layer_div.appendChild(document.createTextNode(t));
+    //   layer_div.appendChild(document.createElement('br'));
+    // }
 
     // css madness needed here...
-    var clear = document.createElement('hr');
+    var clear = document.createElement('div');
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
     ///////////////////////////////////
     ///////////////////////////////////
     //create option box
+
     var options_div = document.createElement('div');
     var options_div_id = 'options_div'+i;
     options_div.setAttribute('id', options_div_id);
     options_div.setAttribute('class', 'collapse');
 
     var checkbox_show_tsne_id = 'checkbox1_id' + i;
-    create_checkbox_collapse(layer_div, checkbox_show_tsne_id, 'Show t-SNE', options_div_id);
+
+    var checkbox_tsne;
+    if(L.layer_type !='input') {
+      checkbox_tsne = create_checkbox_collapse(layer_div, checkbox_show_tsne_id, i, 'Show t-SNE', options_div_id);
+    }
+
+    $(checkbox_tsne).change(function() {
+
+      if(this.checked) {
+
+        var layer_num  = this.getAttribute('layer_num');
+        var scatterplot = document.createElement('div');
+        var scatterplot_div_id = 'scatter' + layer_num;
+        console.log('create this: ' + layer_num);
+        if(document.getElementById(scatterplot_div_id) == undefined) {
+          scatterplot.setAttribute('id', scatterplot_div_id);
+
+          var tsne_width = $(window).width();
+          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, 3, tsne_width);
+          tsne_body_div.appendChild(scatterplot);
+        }
+
+      } else {
+        // delete tsne
+        var layer_num  = this.getAttribute('layer_num');
+        var scatterplot_div_id = 'scatter' + layer_num;
+        console.log('delete this: ' + layer_num);
+        var scatterplot_div = document.getElementById(scatterplot_div_id);
+        // delete tsnescatter;
+        scatterplot_div.remove();
+      }
+
+    });
 
     var checkbox_show_img = 'checkbox2_id' + i;
     create_checkbox(options_div, checkbox_show_img, 'Show Image', true);
@@ -333,7 +355,7 @@ var create_checkbox = function(out_to, id, title, checked) {
   radio_input.setAttribute('id', id);
   radio_label.appendChild(radio_input);
   
-    if(checked) {
+  if(checked) {
     radio_input.setAttribute('checked', 'checked');
   }
 
@@ -341,9 +363,15 @@ var create_checkbox = function(out_to, id, title, checked) {
   radio_div.appendChild(radio_label);
   out_to.appendChild(radio_div);
 
+  $(radio_input).change(function() {
+    if(this.checked) {
+        //Do stuff
+        console.log('show img checkbox checked');
+    }
+  });
 }
 
-var create_checkbox_collapse = function(out_to, id, title, target) {
+var create_checkbox_collapse = function(out_to, id, layer_num, title, target) {
 
   var target_id = '#' + target;
 
@@ -357,11 +385,14 @@ var create_checkbox_collapse = function(out_to, id, title, target) {
   radio_input.setAttribute('type', 'checkbox');
   radio_input.setAttribute('value', '');
   radio_input.setAttribute('id', id);
+  radio_input.setAttribute('layer_num', layer_num);
+
   radio_label.appendChild(radio_input);
   
   radio_label.appendChild(document.createTextNode(title));
   radio_div.appendChild(radio_label);
   out_to.appendChild(radio_div);
 
+  return radio_input;
 }
 
