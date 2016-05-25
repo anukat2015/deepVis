@@ -195,13 +195,13 @@ var get_path_intensity = function(L1, L2, index){
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           var act=A.get(x,y,d);
-          // if(act < 0) act = -1 * act;
+          if(act < 0) act = -1 * act;
           path_intensity+=act;  
         }
       }
     }
   } else {
-     if(L1.layer_type == 'pool') {
+     if(L1.layer_type == 'pool' && L2.layer_type == 'conv') {
       var num_out = get_number_of_elements_in_layer(L2);
       var path_arr = [];
       for(var i=0; i<num_out; i++) {
@@ -217,8 +217,9 @@ var get_path_intensity = function(L1, L2, index){
 
                 var act=A.get(x,y,d);
                 var weights = B.get(fx,fy,d);
-                
-                path_intensity+=act*weights;
+                var conval = act*weights
+                if(conval < 0) conval = -1 * conval;
+                path_intensity+=conval;
               }
             }
           }
@@ -231,7 +232,7 @@ var get_path_intensity = function(L1, L2, index){
       for(var x=0;x<A.sx;x++) {
         for(var y=0;y<A.sy;y++) {
           var act=A.get(x,y,d);
-          // if(act < 0) act = -1 * act;
+          if(act < 0) act = -1 * act;
           path_intensity+=act;
         }
       }
