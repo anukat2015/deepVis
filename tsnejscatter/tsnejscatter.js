@@ -377,13 +377,13 @@ var tsnejscatter = (function(){
       .on("mouseout", tip.hide);
     }
 
-    ///////////////////////////
-    // g.append("text")
-    //   .attr("text-anchor", "top")
-    //   .attr("font-size", 12)
-    //   .attr("fill", "#333")
-    //   .text(function(d) { return d; });
-    //////////////////////////
+    gs.append("text")
+      .attr("text-anchor", "top")
+      .attr("font-size", 10)
+      .attr('x', 3)
+      .attr('y', -5)
+      .attr("fill", "#333")
+      .text(function(d, i) { return i; });
 
     zoomBeh.on("zoom", function () {
       zoom(data, svg, xscale, yscale, xAxis, yAxis, gs);

@@ -481,7 +481,7 @@ var step = function(sample) {
   //api_example
   if(step_num % 100 === 0) {
     var deepVis_div = document.getElementById("deepVis_div");
-    api_example(net, deepVis_div); //input net, dom-element
+    // api_example(net, deepVis_div); //input net, dom-element
   }
   ///////////////////////////////////////////////////////
 
