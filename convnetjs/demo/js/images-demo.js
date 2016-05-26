@@ -566,8 +566,8 @@ var step = function(sample) {
       tsneArray = visualize_activations(net, vis_elt);
     }
     else {
-      for(var i=0;i++;i<net.length) {
-        tsneArray[i].change_p(net[i]);
+      for(var i=0;i++;i<net.layers.length) {
+        tsneArray[i].change_p(net.layers[i]);
       }
     }
   }
