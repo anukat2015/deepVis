@@ -201,7 +201,7 @@ var get_path_intensity = function(L1, L2, index){
       }
     }
   } else {
-     if(L1.layer_type == 'pool' && L2.layer_type == 'conv') {
+     if(L1.layer_type == 'pool' && (L2.layer_type == 'conv' || L2.layer_type == 'fc')) {
       var num_out = get_number_of_elements_in_layer(L2);
       var path_arr = [];
       for(var i=0; i<num_out; i++) {
@@ -218,12 +218,13 @@ var get_path_intensity = function(L1, L2, index){
                 var act=A.get(x,y,d);
                 var weights = B.get(fx,fy,d);
                 var conval = act*weights
-                if(conval < 0) conval = -1 * conval;
                 path_intensity+=conval;
               }
             }
           }
         }
+        area = area * B.sx * B.sy;
+        if(path_intensity < 0) path_intensity = -1 * path_intensity;
         path_arr.push(path_intensity / area);
       }
       return path_arr;
