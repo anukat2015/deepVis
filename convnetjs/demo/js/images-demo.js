@@ -382,7 +382,7 @@ var get_filter_canvas = function(A, scale, grads, index) {
 
 var visualize_activations = function(net, elt) {
   //visualize_tsne.js
-  visualize_tsne(net, elt);
+  return visualize_tsne(net, elt);
 
 }
 
@@ -566,8 +566,11 @@ var step = function(sample) {
       tsneArray = visualize_activations(net, vis_elt);
     }
     else {
-      for(var i=0;i++;i<net.layers.length) {
-        tsneArray[i].change_p(net.layers[i]);
+      for(var i=0;i<tsneArray.length;i++) {
+        if(net.layers[i].layer_type==='conv'){
+          console.log(net.layers[i]);
+          tsneArray[i].change_p(net.layers[i]);
+        }
       }
     }
   }
