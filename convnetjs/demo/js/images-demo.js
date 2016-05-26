@@ -399,6 +399,7 @@ var wLossWindow = new cnnutil.Window(100);
 var trainAccWindow = new cnnutil.Window(100);
 var valAccWindow = new cnnutil.Window(100);
 var testAccWindow = new cnnutil.Window(50, 1);
+
 var step_num = 0;
 
 var step = function(sample) {
@@ -477,11 +478,16 @@ var step = function(sample) {
     test_predict();
   }
 
-  ///////////////////////////////////////////////////////
-  //api_example
-  if(step_num % 100 === 0) {
+  if(step_num % 1000 === 0) {
     var deepVis_div = document.getElementById("deepVis_div");
-    api_example(net, deepVis_div); //input net, dom-element
+    var neural_net_vis = document.getElementById("neural_net_vis");
+    var ae = new api_example(net);
+    if(step_num === 0){
+      window.nnv = new NeuralNetVis("#neural_net_vis", ae.layer_data, "#deepVis_div");
+    }else{
+      window.nnv.update(ae.layer_data);
+    }
+    d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
   }
   ///////////////////////////////////////////////////////
 
