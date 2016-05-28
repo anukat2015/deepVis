@@ -197,6 +197,7 @@ var tsnejscatter = (function(){
     $("#option1").click(function() {
       console.log('option1');
     });
+    return T;
   }
 
   var drawEmbedding = function(data, outdom, showImg, L, isFilter, tsne_width) {
@@ -460,7 +461,7 @@ var tsnejscatter = (function(){
 
     var outdom = out;
 
-    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width);
+    this.T = init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width);
   }
 
   tsnejsc.prototype = {
@@ -469,7 +470,6 @@ var tsnejscatter = (function(){
       for(var j=0; j< data.filters.length; j++) {  
 
         var A = data.filters[j];
-
         var afilter = [];
         
         for(var d=0;d<A.depth;d++) {
@@ -484,9 +484,7 @@ var tsnejscatter = (function(){
       }
 
       data = filter_data;
-      T.changeP(data);
-      console.log(1);
-
+      this.T.changeP(data);
   }
 }
 

@@ -239,8 +239,6 @@ var tsnejs = tsnejs || { REVISION: 'ALPHA' };
     changeP: function(X) {
       var d = xtod(X);
       this.P = d2p(d, this.perplexity, 1e-4);
-      console.log(1111);
-
     },
 
     // perform a single step of optimization to improve the embedding
