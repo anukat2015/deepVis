@@ -254,3 +254,124 @@ var get_path_intensity = function(L1, L2, index){
   path_arr.push(path_intensity / area);
   return path_arr;
 }
+
+var change_filter = function(net, layer_set_index, add_filter) {
+  console.log('change_filter');
+  toggle_pause();
+
+  var net_json = this.net.toJSON();
+  var num_conv = (layer_set_index) * 3 + 1;
+
+  var net_conv = net_json.layers[num_conv];
+
+  if(add_filter) {
+
+    //Change conv out_depth
+    net_conv.out_depth = net_conv.out_depth + 1;
+
+    //Copy last object from filter
+    var layer_filters = net_conv.filters;
+
+    var filter_len = layer_filters.length;
+    var last_filter = layer_filters[filter_len-1];
+    last_filter = JSON.parse(JSON.stringify(last_filter)); //clone json object
+    
+    // initialize last obeject
+    var lsx = last_filter.sx;
+    var lsy = last_filter.sy;
+    var ldepth = last_filter.depth;
+
+    for(var i=0; i<lsx*lsy*ldepth; i++) {
+      last_filter.w[i] = last_filter.w[i] / 2;
+    }
+    //add new weight
+    layer_filters.push(last_filter);
+    // console.log(net_conv);
+
+    //biases
+    var layer_biases = net_conv.biases;
+    var last_bias = layer_biases.w[layer_biases.depth-1];
+    layer_biases.w[layer_biases.depth] = last_bias / 2;
+    layer_biases.depth = layer_biases.depth + 1;
+
+    // net_relu
+    var net_relu = net_json.layers[num_conv+1];
+    net_relu.out_depth = net_relu.out_depth + 1;
+
+    //net_pool
+    var net_pool = net_json.layers[num_conv+2];
+    net_pool.in_depth = net_pool.in_depth + 1;
+    net_pool.out_depth = net_pool.out_depth + 1;
+
+    //next conv
+    var next_conv = net_json.layers[num_conv+3];
+    next_conv.in_depth = next_conv.in_depth + 1;
+
+    this.net = new convnetjs.Net();
+    this.net.fromJSON(net_json);
+    reset_all();
+
+  } else {
+
+    if(net_conv.out_depth > 3) {
+
+      //net_pool
+      var net_pool = net_json.layers[num_conv+2];
+      net_pool.out_depth = net_pool.out_depth - 1;
+      net_pool.in_depth = net_pool.in_depth - 1;
+
+      // net_relu
+      var net_relu = net_json.layers[num_conv+1];
+      net_relu.out_depth = net_relu.out_depth - 1;
+
+      //biases
+      var layer_biases = net_conv.biases;
+      var bias_w = layer_biases.w;
+      // var sub_bias_w = bias_w.subarray(0, layer_biases.depth-1);
+      // console.log(layer_biases);
+      // bias_w = sub_bias_w;
+      layer_biases.depth = layer_biases.depth - 1;
+
+      //conv
+      var layer_filters = net_conv.filters;
+      // console.log(layer_filters);
+      // delete layer_filters[3];
+      //       console.log(layer_filters);
+
+      layer_filters.length = layer_filters.length -1;
+      // var sub_layer_filters = layer_filters.slice(0, net_conv.out_depth -1);
+      // layer_filters = sub_layer_filters;
+      // console.log(layer_filters);
+      net_conv.out_depth = net_conv.out_depth -1;
+
+      // next conv
+      var next_conv = net_json.layers[num_conv+3];
+      next_conv_filters = next_conv.filters;
+      if(next_conv.layer_type == 'fc') {
+        
+        var fc_valnum = net_pool.out_sx * net_pool.out_sy * net_pool.out_depth;
+        for(var i=0; i<next_conv.out_depth; i++) {
+          next_conv_filters[i].depth = fc_valnum;
+        }
+
+        
+      } else {
+        next_conv.in_depth = next_conv.in_depth - 1;
+        var next_conv_filters = next_conv.filters;
+        for(var i=0; i<next_conv.out_depth; i++) {
+          next_conv_filters[i].depth = next_conv_filters[i].depth - 1;
+        }
+      }
+
+      this.net = new convnetjs.Net();
+      this.net.fromJSON(net_json);
+      reset_all();
+
+    }
+    else {
+      console.log('Not enough filter')
+    }
+
+  }
+  toggle_pause();
+}
