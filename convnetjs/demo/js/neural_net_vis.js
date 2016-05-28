@@ -452,12 +452,14 @@ NeuralNetVis.prototype.set_panel = function(){
 
 	$('.filter_minus').on("click", function(){
 		var id = $(this).attr("filter_id");
-		_self.remove_filter_at_column(id);
+		// _self.remove_filter_at_column(id);
+		change_filter(this.net, id, false);
 	});
 
 	$('.filter_plus').on("click", function(){
 		var id = $(this).attr("filter_id");
-		_self.add_filter_to_column(id);
+		// _self.add_filter_to_column(id);
+		change_filter(this.net, id, true);
 	});
 
 }
