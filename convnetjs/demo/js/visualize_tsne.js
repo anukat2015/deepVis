@@ -143,27 +143,8 @@ var visualize_tsne = function(net, elt) {
     // title_div.className = 'ltitle'
     title_div.className = 'panel-heading panel-collapsed'
 
-    if(L.layer_type == 'conv') {
-      layer_panel.className = "panel panel-info"
-    }
-    else if(L.layer_type == 'relu') {
-      layer_panel.className = "panel panel-danger"
-    }
-    else if(L.layer_type == 'pool') {
-      layer_panel.className = "panel panel-success"
-    }
-    else if(L.layer_type == 'softmax') {
-      layer_panel.className = "panel panel-primary"
-    }
-    else if(L.layer_type == 'fc') {
-      layer_panel.className = "panel panel-warning"
-    }
-    else {
-      layer_panel.className = "panel panel-primary"
-      // layer_div.className = 'panel-body';
-      // title_div.className = 'panel-heading';
-      // title_icon.className = 'glyphicon glyphicon-chevron-up'
-    }
+    //visualize_tsne.js
+    set_panel_color(L.layer_type, layer_panel);
 
     title_div.addEventListener('click', function(){
       
@@ -261,7 +242,7 @@ var visualize_tsne = function(net, elt) {
 
       if(this.checked) {
         //////////////////
-        //create tsne-panel
+        //create tsne-panel START
         var layer_div = document.createElement('div');
         var layer_num  = this.getAttribute('layer_num');
         var scatterplot = document.createElement('div');
@@ -295,11 +276,12 @@ var visualize_tsne = function(net, elt) {
             }
 
           });
-          
+
           var L = net.layers[parseInt(layer_num)];
           var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
+          set_panel_color(L.layer_type, layer_panel);
 
-          console.log(this);
+          // console.log(this);
           title_div.appendChild(document.createTextNode(t));
 
           var title_span = document.createElement('span');
@@ -317,6 +299,7 @@ var visualize_tsne = function(net, elt) {
           col2_div.appendChild(layer_panel);
 
         }
+        //create tsne-panel END
         //////////////////
       } else {
         // delete tsne
@@ -439,5 +422,30 @@ var create_checkbox_collapse = function(out_to, id, layer_num, title, target) {
   out_to.appendChild(radio_div);
 
   return radio_input;
+}
+
+var set_panel_color = function(layer_type, l_panel) {
+
+    if(layer_type == 'conv') {
+      l_panel.className = "panel panel-info"
+    }
+    else if(layer_type == 'relu') {
+      l_panel.className = "panel panel-danger"
+    }
+    else if(layer_type == 'pool') {
+      l_panel.className = "panel panel-success"
+    }
+    else if(layer_type == 'softmax') {
+      l_panel.className = "panel panel-primary"
+    }
+    else if(layer_type == 'fc') {
+      l_panel.className = "panel panel-warning"
+    }
+    else {
+      l_panel.className = "panel panel-primary"
+      // layer_div.className = 'panel-body';
+      // title_div.className = 'panel-heading';
+      // title_icon.className = 'glyphicon glyphicon-chevron-up'
+    }
 }
 
