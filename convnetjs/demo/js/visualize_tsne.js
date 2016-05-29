@@ -49,16 +49,16 @@ var visualize_tsne = function(net, elt) {
 
   //Add to tsne_body_div
   var ri = create_checkbox(tsne_body_div, 'small_tsne', 'Small t-SNE', false);
-  $(ri).change(function() {
-    if(this.checked) {
-        //Do stuff
-        console.log('show img checkbox checked');
-        col2_div.className = 'col-sm-9 col-md-5';
+  // $(ri).change(function() {
+  //   if(this.checked) {
+  //       //Do stuff
+  //       console.log('show img checkbox checked');
+  //       col2_div.className = 'col-sm-9 col-md-5';
 
-    } else {
-      col2_div.className = 'col-sm-9 col-md-10';
-    }
-  });
+  //   } else {
+  //     col2_div.className = 'col-sm-9 col-md-10';
+  //   }
+  // });
 
   //append
   tsne_panel.appendChild(tsne_title_div);
@@ -269,6 +269,7 @@ var visualize_tsne = function(net, elt) {
 
       if(this.checked) {
         //////////////////
+
         //create tsne-panel START
         var layer_div = document.createElement('div');
         var layer_num  = this.getAttribute('layer_num');
@@ -277,6 +278,15 @@ var visualize_tsne = function(net, elt) {
         console.log('create this: ' + layer_num);
 
         if(document.getElementById(scatterplot_div_id) == undefined) {
+
+          var layer_panel_col_div = document.createElement('div');
+          if (document.getElementById("small_tsne").checked) {
+            layer_panel_col_div.className = "col-md-6 nopadding";
+          } else {
+            layer_panel_col_div.className = "";
+          }
+          col2_div.appendChild(layer_panel_col_div);
+
 
           var layer_panel = document.createElement('div');
           layer_panel.setAttribute('id', scatterplot_div_id);
@@ -315,7 +325,7 @@ var visualize_tsne = function(net, elt) {
           title_span.className = 'pull-right clickable';
 
           // Set default tsnescatter
-          var tsne_width = $(col2_div).width();
+          var tsne_width = $(layer_panel_col_div).width();
 
           var layer_type = L.layer_type;
           if(layer_type == 'conv' || layer_type == 'fc') {
@@ -330,7 +340,7 @@ var visualize_tsne = function(net, elt) {
           layer_div.appendChild(scatterplot);
           layer_panel.appendChild(title_div);
           layer_panel.appendChild(layer_div);
-          col2_div.appendChild(layer_panel);
+          layer_panel_col_div.appendChild(layer_panel);
 
         }
         //create tsne-panel END

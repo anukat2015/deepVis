@@ -1,3 +1,7 @@
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
 .layer {
   /*border: 1px solid #999;*/
   /*margin-bottom: 5px;*/
