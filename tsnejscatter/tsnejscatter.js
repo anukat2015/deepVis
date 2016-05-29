@@ -132,7 +132,12 @@ var tsnejscatter = (function(){
           for(var d=0;d<A.depth;d++) {
             for(var x=0;x<A.sx;x++) {
               for(var y=0;y<A.sy;y++) {
-                var f_gd = A.get(x,y,d);
+
+                var f_gd = 0.0;
+                if(grads)
+                  f_gd = A.get(x,y,d);
+                else
+                  f_gd = A.get(x,y,d);
                 afilter.push(f_gd);
               }
             }
@@ -153,7 +158,12 @@ var tsnejscatter = (function(){
 
           for(var x=0;x<A.sx;x++) {
             for(var y=0;y<A.sy;y++) {
-              var f_gd = A.get(x,y,d);
+                
+                var f_gd = 0.0;
+                if(grads)
+                  f_gd = A.get(x,y,d);
+                else
+                  f_gd = A.get(x,y,d);
               afilter.push(f_gd);
             }
           }
@@ -169,7 +179,7 @@ var tsnejscatter = (function(){
     
     T.initDataRaw(data);
 
-    var svgc = drawEmbedding(data, outdom, showImg, L, isFilter, tsne_width);
+    var svgc = drawEmbedding(data, outdom, showImg, L, isFilter, tsne_width, grads);
     // for(var k = 0; k < 200; k++) {
     //   step(); // every time you call this, solution gets better
     // }
@@ -200,7 +210,7 @@ var tsnejscatter = (function(){
 
   }
 
-  var drawEmbedding = function(data, outdom, showImg, L, isFilter, tsne_width) {
+  var drawEmbedding = function(data, outdom, showImg, L, isFilter, tsne_width, grads) {
 
     var margin = { top: 0, right: 50, bottom: 50, left: 50 },
         outerWidth = tsne_width,
@@ -243,7 +253,7 @@ var tsnejscatter = (function(){
 
             if(L.filters[0].depth == 3) {
 
-              var fimg =  get_layer_canvas(L, isFilter, false, i, 20).toDataURL();
+              var fimg =  get_layer_canvas(L, isFilter, grads, i, 20).toDataURL();
               var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
               return img_eval;
             }
@@ -257,7 +267,7 @@ var tsnejscatter = (function(){
                   tip_div.appendChild(document.createElement('br'));
                 }
                 // var get_filter_canvas = function(A, scale, grads, index)
-                var fimg =  get_filter_canvas(L.filters[i], 6, false, j).toDataURL();
+                var fimg =  get_filter_canvas(L.filters[i], 6, grads, j).toDataURL();
                 var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
                 
                 var img_tag = document.createElement('img');
@@ -271,7 +281,7 @@ var tsnejscatter = (function(){
 
           }
           else {
-            var fimg =  get_layer_canvas(L, isFilter, false, i, 10).toDataURL();
+            var fimg =  get_layer_canvas(L, isFilter, grads, i, 10).toDataURL();
             var img_eval = '<img src=' + fimg + ' alt="Mountain View" style="width:100px;height:100px;">';
             return img_eval;
           }
@@ -360,7 +370,7 @@ var tsnejscatter = (function(){
         .attr('height', 18)
         // .attr("xlink:href", canv_img.toDataURL())
         .attr("xlink:href", function(d, i) {
-            return get_layer_canvas(L, isFilter, false, i, 5).toDataURL(); 
+            return get_layer_canvas(L, isFilter, grads, i, 5).toDataURL(); 
         })
         // .attr("xlink:href", function(d) { return "./download1.png"; })
         .on("mouseover", tip.show)

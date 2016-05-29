@@ -313,8 +313,9 @@ var visualize_tsne = function(net, elt) {
 
     });
 
-    var checkbox_show_img = 'checkbox2_id' + i;
-    create_checkbox(options_div, checkbox_show_img, 'Show Image', true);
+    // Show Image
+    // var checkbox_show_img = 'checkbox2_id' + i;
+    // create_checkbox(options_div, checkbox_show_img, 'Show Image', true);
 
     var radio_name = 'radio_name'+i;
 
@@ -339,20 +340,25 @@ var visualize_tsne = function(net, elt) {
       var scatterplot_div_id = 'scatter' + layer_num;
       var scatterplot_div = document.getElementById(scatterplot_div_id);
       var panel_body = scatterplot_div.getElementsByClassName('panel-body')[0];
-      panel_body.innerHTML = "";
+      var scatterplot = panel_body.getElementsByTagName('div')[0];
+      // panel_body.innerHTML = "";
+      scatterplot.remove();
+      var scatterplot = document.createElement('div');
 
       var tsne_width = $(col2_div).width();
 
       if (radioValue == "filter weight") {
         // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, true, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);        
       } else if (radioValue == "filter grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, true, i, tsne_width, true);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, true);        
       } else if (radioValue == "activation") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, false, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);        
       } else if (radioValue == "activation grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, false, i, tsne_width, true);
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, true);
       }
+
+      panel_body.appendChild(scatterplot);
 
     });
     ///////////////////////////////////
