@@ -300,7 +300,7 @@ NeuralNetVis.prototype.draw_path = function(threshold){
 
     var linedata = [];
     var offset = 10;
-    var domain = [];
+    var domain_obj = {};
     _self.data["path_intensity"].forEach(function(layer, l_index){
     	layer.forEach(function(filter, f_index){
     		var obj = {}
@@ -312,7 +312,6 @@ NeuralNetVis.prototype.draw_path = function(threshold){
     			obj["y"] = f_index*_self.node_size*2;
     		}
     		filter.forEach(function(path, p_index){
-    			domain.push(path);
     			var p_obj = {};
     			if(l_index==0){
     				p_obj["x"] = _self.unit_width*(l_index+1) + _self.node_size*4;
@@ -328,6 +327,15 @@ NeuralNetVis.prototype.draw_path = function(threshold){
     				p_obj["y"] = p_index*_self.node_size*2;
     			}
     			if(l_index != _self.data["path_intensity"].length-1){
+    				obj["layer"] = l_index;
+    				obj["filter"] = f_index;
+    				p_obj["layer"] = l_index;
+    				p_obj["filter"] = f_index;
+    				if(domain_obj[l_index]==undefined){
+    					domain_obj[l_index]=[path];
+    				}else{
+    					domain_obj[l_index].push(path)
+    				}
     				obj["path_intensity"] = path;
     				p_obj["path_intensity"] = path;
     				linedata.push([obj, p_obj]);
@@ -338,21 +346,39 @@ NeuralNetVis.prototype.draw_path = function(threshold){
 
     var bluered = ["#1E90FF","#FFA07A"];
     var black = ["black", "black"];
-    _self.path_scale = d3.scale.linear().domain(d3.extent(domain)).range([1, 50]);
-    _self.path_color_scale = d3.scale.linear().domain(d3.extent(domain)).range(bluered);
+
+    _self.path_scale_obj = {};
+    _self.color_scale_obj = {};
+    for(var key in domain_obj){
+    	var scale = d3.scale.linear().domain(d3.extent(domain_obj[key])).range([5, 25]);
+    	var color_scale = d3.scale.linear().domain(d3.extent(domain_obj[key])).range(bluered);
+    	_self.path_scale_obj[key] = scale;
+    	_self.color_scale_obj[key] = color_scale;
+    }
 
     _self.path = _self.svg.selectAll("path")
     				.data(linedata).enter()
     			.append("path")
     				.attr("d", line)
     				.style("stroke", "steelblue")
-    				.style("opacity", 0.2)
+    				.style("opacity", .33)
     				.style("stroke-width", "10")
     				.style("fill", "none");
     				
     _self.path.style("stroke-width", function(d){
-    	return _self.path_scale(d[0]["path_intensity"]);})
-    	.style("stroke", function(d){return _self.path_color_scale(d[0]["path_intensity"]);})
+    	return _self.path_scale_obj[d[0]["layer"]](d[0]["path_intensity"]);})
+    	.style("stroke", function(d){return _self.color_scale_obj[d[0]["layer"]](d[0]["path_intensity"]);})
+    	.style("opacity", function(d){
+    		var domain_scale = domain_obj[d[0]["layer"]].sort();
+    		if(d[0]["layer"]==0){
+    			return .33;
+    		}
+    		if(domain_scale.indexOf(d[0]["path_intensity"]) < domain_scale.length/2){
+    			return 0;
+    		}else{
+    			return .33;
+    		}
+    	});
 }
 
 
@@ -440,26 +466,25 @@ NeuralNetVis.prototype.set_panel = function(){
 
 	}
 
-	$('.layer_minus').on("click", function(){
-		_self.remove_layer();
-		_self.set_panel();
-	});
+	// $('.layer_minus').on("click", function(){
+	// 	_self.remove_layer();
+	// 	_self.set_panel();
+	// });
 
-	$('.layer_plus').on("click", function(){
-		_self.add_layer();
-		_self.set_panel();
-	});
+	// $('.layer_plus').on("click", function(){
+	// 	_self.add_layer();
+	// 	_self.set_panel();
+	// });
 
-	$('.filter_minus').on("click", function(){
-		var id = $(this).attr("filter_id");
-		_self.remove_filter_at_column(id);
-	});
+	// $('.filter_minus').on("click", function(){
+	// 	var id = $(this).attr("filter_id");
+	// 	_self.remove_filter_at_column(id);
+	// });
 
-	$('.filter_plus').on("click", function(){
-		var id = $(this).attr("filter_id");
-		_self.add_filter_to_column(id);
-	});
-
+	// $('.filter_plus').on("click", function(){
+	// 	var id = $(this).attr("filter_id");
+	// 	_self.add_filter_to_column(id);
+	// });
 }
 
 

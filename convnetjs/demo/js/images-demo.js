@@ -478,7 +478,9 @@ var step = function(sample) {
     test_predict();
   }
 
-  if(step_num % 1000 === 0) {
+
+  //// Neural Net Vis ////
+  if(step_num % 10 === 0) {
     var deepVis_div = document.getElementById("deepVis_div");
     var neural_net_vis = document.getElementById("neural_net_vis");
     var ae = new api_example(net);
@@ -489,7 +491,21 @@ var step = function(sample) {
     }
     d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
   }
-  ///////////////////////////////////////////////////////
+
+  $('body').on("click", '.filter_minus', function(){
+      var id = $(this).attr("filter_id");
+      change_filter(this.net, id, false);
+      var ae = new api_example(net);
+      window.nnv.update(ae.layer_data);
+  });
+
+  $('body').on("click", '.filter_plus', function(){
+      var id = $(this).attr("filter_id");
+      change_filter(this.net, id, true);
+      var ae = new api_example(net);
+      window.nnv.update(ae.layer_data);
+  });
+ ///////////////////////////////////////////////////////
 
   step_num++;
 }
