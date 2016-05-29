@@ -287,9 +287,9 @@ var visualize_tsne = function(net, elt) {
           var title_span = document.createElement('span');
           title_span.className = 'pull-right clickable';
 
-          // tsnescatter
+          // default tsnescatter
           var tsne_width = $(col2_div).width();
-          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, 3, tsne_width);        
+          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);        
 
           title_span.appendChild(title_icon);
           title_div.appendChild(title_span);
@@ -319,18 +319,41 @@ var visualize_tsne = function(net, elt) {
     var radio_name = 'radio_name'+i;
 
     if(L.layer_type==='conv' || L.layer_type==='fc') {
-      create_radio_btn(options_div, radio_name, 'option1', 'filter weight', true);
+      create_radio_btn(options_div, radio_name,radio_name+'opt1', i, 'filter weight', true);
 
-      checked="checked"
+      // checked="checked"
 
-      create_radio_btn(options_div, radio_name, 'option1', 'filter grad', false);
-      create_radio_btn(options_div, radio_name, 'option1', 'activation', false);
-      create_radio_btn(options_div, radio_name, 'option1', 'activation grad', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt2', i, 'filter grad', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
     } else {
-      create_radio_btn(options_div, radio_name, 'option1', 'activation', true);
-      create_radio_btn(options_div, radio_name, 'option1', 'activation grad', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', true);
+      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
     }
 
+    //radio change
+    $(options_div).on("change", "input:radio[name='"+ String('radio_name'+i) + "']", function(){
+
+      var radioValue = $(this).val();
+      var layer_num  = this.getAttribute('layer_num');
+      var scatterplot_div_id = 'scatter' + layer_num;
+      var scatterplot_div = document.getElementById(scatterplot_div_id);
+      scatterplot_div.innerHTML = "";
+
+      var tsne_width = $(col2_div).width();
+
+      if (radioValue == "filter weight") {
+        // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, true, i, tsne_width, false);        
+      } else if (radioValue == "filter grad") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, true, i, tsne_width, true);        
+      } else if (radioValue == "activation") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, false, i, tsne_width, false);        
+      } else if (radioValue == "activation grad") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, false, i, tsne_width, true);
+      }
+
+    });
     ///////////////////////////////////
 
     //close divs
@@ -350,7 +373,7 @@ var visualize_tsne = function(net, elt) {
   }
 }
 
-var create_radio_btn = function(out_to, name, id, title, checked) {
+var create_radio_btn = function(out_to, name, id, layer_num, title, checked) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'radio');
@@ -358,6 +381,9 @@ var create_radio_btn = function(out_to, name, id, title, checked) {
   var radio_input = document.createElement('input');
   radio_input.setAttribute('type', 'radio');
   radio_input.setAttribute('name', name);
+  radio_input.setAttribute('value', title);
+  radio_input.setAttribute('layer_num', layer_num);
+
   radio_input.setAttribute('id', id);
   radio_label.appendChild(radio_input);
 

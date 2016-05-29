@@ -91,7 +91,7 @@ var tsnejscatter = (function(){
   //   T.changeP(data);
   // }
 
-  var init_tSNE = function(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width) {
+  var init_tSNE = function(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width, grads) {
 
     console.log('init' + layer_num);
 
@@ -452,7 +452,7 @@ var tsnejscatter = (function(){
     return "translate(" + xscale(d[0]) + "," + yscale(d[1]) + ")";
   }
 
-  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
+  var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width, grads) {
     //constructor 
     console.log('start tsnejsc');
 
@@ -463,7 +463,7 @@ var tsnejscatter = (function(){
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width);
+    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width, grads);
   }
 
   tsnejsc.prototype = {
