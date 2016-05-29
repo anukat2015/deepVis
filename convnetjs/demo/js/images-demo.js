@@ -481,16 +481,14 @@ var step = function(sample) {
 
 
   //// Neural Net Vis ////
-  if(step_num % 10 === 0) {
+  if(step_num % 20 === 0 && !paused_vis) {
     var deepVis_div = document.getElementById("deepVis_div");
     var neural_net_vis = document.getElementById("neural_net_vis");
     var ae = new api_example(net);
     if(step_num === 0){
       window.nnv = new NeuralNetVis("#neural_net_vis", ae.layer_data, "#deepVis_div");
     }else{
-      if(!paused_vis){
-        window.nnv.update(ae.layer_data);
-      }
+      window.nnv.update(ae.layer_data);
     }
     d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
   }
@@ -539,8 +537,12 @@ var update_net_param_display = function() {
 var toggle_pause = function() {
   paused = !paused;
   var btn = document.getElementById('buttontp');
-  if(paused) { btn.value = 'resume' }
-  else { btn.value = 'pause'; }
+  if(paused) { 
+    btn.value = 'resume' 
+  }
+  else { 
+    btn.value = 'pause'; 
+  }
 }
 var toggle_vis = function() {
   paused_vis = !paused_vis;
@@ -573,6 +575,10 @@ var load_from_json = function() {
   var json = JSON.parse(jsonString);
   net = new convnetjs.Net();
   net.fromJSON(json);
+  trainer.learning_rate = 0.0001;
+  trainer.momentum = 0.9;
+  trainer.batch_size = 2;
+  trainer.l2_decay = 0.00001;
   reset_all();
 }
 

@@ -11,6 +11,8 @@ var get_layer_canvas = function(L, isFilter, grads, index, scale) {
   if(A.depth == 3) { isColor = true; }
   
   var s = scale || 2; // scale
+  if(isFilter) s = 4;
+
   var draw_grads = false;
   if(typeof(grads) !== 'undefined') draw_grads = grads;
 
@@ -149,8 +151,8 @@ var get_grad_magnitude = function(L, index){
     A = L.out_act;
   }
   var grad_magnitude = 0.0;
-  var area = A.sx * A.sy / 25;
-
+  var area = A.sx * A.sy * A.depth;
+  // console.log(A.depth);
   if(isFilter) {
     for(var d=0;d<A.depth ; d++) {
       for(var x=0;x<A.sx;x++) {
@@ -161,16 +163,16 @@ var get_grad_magnitude = function(L, index){
       }
     }
   }else {
-    var d = index;
-    for(var x=0;x<A.sx;x++) {
-      for(var y=0;y<A.sy;y++) {
-        var A_grad=A.get_grad(x,y,d);
-        grad_magnitude+=A_grad*A_grad;
-      }
-    }
+    // var d = index;
+    // for(var x=0;x<A.sx;x++) {
+    //   for(var y=0;y<A.sy;y++) {
+    //     var A_grad=A.get_grad(x,y,d);
+    //     grad_magnitude+=A_grad*A_grad;
+    //   }
+    // }
   }
 
-  return grad_magnitude / area;
+  return grad_magnitude / area * 200;
 }
 
 var get_path_intensity = function(L1, L2, index){
@@ -290,8 +292,21 @@ var change_filter = function(net, layer_set_index, add_filter) {
 
     //biases
     var layer_biases = net_conv.biases;
+
+    var normalArray = [].slice.call(layer_biases.w);
     var last_bias = layer_biases.w[layer_biases.depth-1];
-    layer_biases.w[layer_biases.depth] = last_bias / 2;
+    normalArray.push(last_bias / 2);
+    // console.log(normalArray);
+
+    layer_biases.w = new Float64Array(normalArray);
+
+
+    // var arr = new Float64Array([21,31]);
+    // console.log(arr[1]); // 31
+
+    // console.log(layer_biases);
+    // console.log(last_bias);
+
     layer_biases.depth = layer_biases.depth + 1;
 
     // net_relu
@@ -306,6 +321,22 @@ var change_filter = function(net, layer_set_index, add_filter) {
     //next conv
     var next_conv = net_json.layers[num_conv+3];
     next_conv.in_depth = next_conv.in_depth + 1;
+
+    //add weights to next_conv
+    var next_filters = next_conv.filters;
+    var num_next_filter = next_conv.out_depth;
+    for(var i=0; i<num_next_filter; i++) {
+      var afilter = next_filters[i];
+      afilter.depth = afilter.depth+1;
+
+      var normalArray = [].slice.call(afilter.w);
+
+      for(var j=0; j<afilter.sx * afilter.sy; j++) {
+        normalArray.push(0.1);
+      }
+      afilter.w = new Float64Array(normalArray);
+    }
+
 
     this.net = new convnetjs.Net();
     this.net.fromJSON(net_json);
