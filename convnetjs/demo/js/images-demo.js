@@ -481,17 +481,33 @@ var step = function(sample) {
 
 
   //// Neural Net Vis ////
-  if(step_num % 20 === 0 && !paused_vis) {
-    var deepVis_div = document.getElementById("deepVis_div");
-    var neural_net_vis = document.getElementById("neural_net_vis");
-    var ae = new api_example(net);
-    if(step_num === 0){
-      window.nnv = new NeuralNetVis("#neural_net_vis", ae.layer_data, "#deepVis_div");
-    }else{
-      window.nnv.update(ae.layer_data);
-    }
-    d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
-  }
+  // if(step_num % 20 === 0 && !paused_vis) {
+  //   var deepVis_div = document.getElementById("deepVis_div");
+  //   var neural_net_vis = document.getElementById("neural_net_vis");
+  //   var ae = new api_example(net);
+  //   if(step_num === 0){
+  //     window.nnv = new NeuralNetVis("#neural_net_vis", ae.layer_data, "#deepVis_div");
+  //   }else{
+  //     window.nnv.update(ae.layer_data);
+  //   }
+  //   d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
+  // }
+
+  if(step_num  === 0) {
+
+  var radio_div = document.createElement('div');
+  radio_div.setAttribute('class', 'checkbox');
+
+  var radio_label = document.createElement('label');
+  var radio_input = document.createElement('input');
+  radio_input.setAttribute('type', 'checkbox');
+  radio_input.setAttribute('value', '');
+  radio_input.setAttribute('id', 'filter_plus');
+  radio_label.appendChild(radio_input);
+  radio_div.appendChild(radio_label);
+
+  var out_to = document.getElementById('deepVis_div');
+  out_to.appendChild(radio_div);
 
   $('body').on("click", '.filter_minus', function(){
       var id = $(this).attr("filter_id");
@@ -500,12 +516,12 @@ var step = function(sample) {
       window.nnv.update(ae.layer_data);
   });
 
-  $('body').on("click", '.filter_plus', function(){
-      var id = $(this).attr("filter_id");
-      change_filter(this.net, id, true);
-      var ae = new api_example(net);
-      window.nnv.update(ae.layer_data);
+  $('body').on("click", '#filter_plus', function(){
+    console.log('filter_plus!!!');
+      change_filter(this.net, 0, true);
   });
+
+}
  ///////////////////////////////////////////////////////
 
   step_num++;
