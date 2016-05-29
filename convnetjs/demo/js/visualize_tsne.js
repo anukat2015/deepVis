@@ -8,11 +8,12 @@ var visualize_tsne = function(net, elt) {
   row_div.className = 'row';
 
   var col1_div = document.createElement('div');
-  col1_div.className = 'col-sm-3';
+  col1_div.className = 'col-sm-3 col-md-2';
   var col2_div = document.createElement('div');
-  col2_div.className = 'col-sm-9';
+  col2_div.className = 'col-sm-9 col-md-10';
 
-    // create tsne panel
+  ///////////////////
+  // create tsne panel
   var tsne_panel = document.createElement('div');
   var tsne_title_div = document.createElement('div');
   var tsne_body_div = document.createElement('div');
@@ -20,7 +21,7 @@ var visualize_tsne = function(net, elt) {
   tsne_panel.className = "panel panel-default"
   tsne_body_div.className = 'panel-body';
   tsne_title_div.className = 'panel-heading panel-heading-custom2';
-  tsne_title_div.appendChild(document.createTextNode('t-SNE'));
+  tsne_title_div.appendChild(document.createTextNode('Setting'));
 
   //chevron 
   var tsne_title_icon = document.createElement('i');
@@ -46,13 +47,24 @@ var visualize_tsne = function(net, elt) {
 
   });
 
-  //////////////////////
-  // test api
-  // for(var m=0; m<12; m++) {
-  //   var ttst = get_path_intensity(net.layers[11], false, m);
-  //   console.log(ttst);
-  // }
-  //////////////////////
+  //Add to tsne_body_div
+  var ri = create_checkbox(tsne_body_div, 'small_tsne', 'Small t-SNE', false);
+  // $(ri).change(function() {
+  //   if(this.checked) {
+  //       //Do stuff
+  //       console.log('show img checkbox checked');
+  //       col2_div.className = 'col-sm-9 col-md-5';
+
+  //   } else {
+  //     col2_div.className = 'col-sm-9 col-md-10';
+  //   }
+  // });
+
+  //append
+  tsne_panel.appendChild(tsne_title_div);
+  tsne_panel.appendChild(tsne_body_div);
+  col2_div.appendChild(tsne_panel);
+  ///////////////////
 
   // show activations in each layer
   var N = net.layers.length;
@@ -126,23 +138,17 @@ var visualize_tsne = function(net, elt) {
 
       // tSNE plot
 
-      var scatterplot = document.createElement('scatter');
-      // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num) {
-      // i = layer_num
-      var tsne_width = $(window).width();
-      var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
-        // tsnescatter.change_p(filterstring);
-      
-      tsne_body_div.appendChild(scatterplot);
-
+      // var scatterplot = document.createElement('scatter');
+      // var tsne_width = $(window).width();
+      // // i = layer_num
+      // var tsnescatter = new tsnejscatter($, L, scatterplot, false, true, true, i, tsne_width);
+      // tsne_body_div.appendChild(scatterplot);
 
       } else {
         filters_div.appendChild(document.createTextNode('Weights hidden, too small'));
       }
       activations_div.appendChild(filters_div);
     }
-    // layer_div.appendChild(activations_div);
-
 
     var layer_t = L.layer_type
     var layer_panel = document.createElement('div');
@@ -157,30 +163,8 @@ var visualize_tsne = function(net, elt) {
     // title_div.className = 'ltitle'
     title_div.className = 'panel-heading panel-collapsed'
 
-    if(L.layer_type == 'conv') {
-      layer_panel.className = "panel panel-info"
-    }
-    else if(L.layer_type == 'relu') {
-      layer_panel.className = "panel panel-danger"
-    }
-    else if(L.layer_type == 'pool') {
-      layer_panel.className = "panel panel-success"
-    }
-    else if(L.layer_type == 'softmax') {
-      layer_panel.className = "panel panel-primary"
-      // layer_div.className = 'panel-body';
-      // title_div.className = 'panel-heading';
-      // title_icon.className = 'glyphicon glyphicon-chevron-up'
-    }
-    else if(L.layer_type == 'fc') {
-      layer_panel.className = "panel panel-warning"
-    }
-    else {
-      layer_panel.className = "panel panel-primary"
-      // layer_div.className = 'panel-body';
-      // title_div.className = 'panel-heading';
-      // title_icon.className = 'glyphicon glyphicon-chevron-up'
-    }
+    //visualize_tsne.js
+    set_panel_color(L.layer_type, layer_panel);
 
     title_div.addEventListener('click', function(){
       
@@ -195,9 +179,16 @@ var visualize_tsne = function(net, elt) {
         $(this).parents('.panel').find('.panel-body').slideUp();
         $(this).addClass('panel-collapsed');
         $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-    }
+      }
 
     });
+
+    // Default open
+    if(i == 1) {
+      layer_div.className = 'panel-body';
+      title_div.className = 'panel-heading'
+      title_icon.className = 'glyphicon glyphicon-chevron-up'
+    }
 
     var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
     title_div.appendChild(document.createTextNode(t));
@@ -221,64 +212,207 @@ var visualize_tsne = function(net, elt) {
       layer_div.appendChild(document.createTextNode(t));
       layer_div.appendChild(document.createElement('br'));
     }
-
-    // find min, max activations and display them
-    var mma = maxmin(L.out_act.w);
-    var t = 'max activation: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
-    layer_div.appendChild(document.createTextNode(t));
-    layer_div.appendChild(document.createElement('br'));
-
-    var mma = maxmin(L.out_act.dw);
-    var t = 'max gradient: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
-    layer_div.appendChild(document.createTextNode(t));
-    layer_div.appendChild(document.createElement('br'));
-
-    // number of parameters
-    if(L.layer_type==='conv' || L.layer_type==='local') {
-      var tot_params = L.sx*L.sy*L.in_depth*L.filters.length + L.filters.length;
-      var t = 'parameters: ' + L.filters.length + 'x' + L.sx + 'x' + L.sy + 'x' + L.in_depth + '+' + L.filters.length + ' = ' + tot_params;
+    if(L.layer_type==='input') {
+      var t = 'Input size ' + L.out_act.sx + 'x' + L.out_act.sy;
       layer_div.appendChild(document.createTextNode(t));
       layer_div.appendChild(document.createElement('br'));
     }
-    if(L.layer_type==='fc') {
-      var tot_params = L.num_inputs*L.filters.length + L.filters.length;
-      var t = 'parameters: ' + L.filters.length + 'x' + L.num_inputs + '+' + L.filters.length + ' = ' + tot_params;
-      layer_div.appendChild(document.createTextNode(t));
-      layer_div.appendChild(document.createElement('br'));
-    }
+
+
+    // // find min, max activations and display them
+    // var mma = maxmin(L.out_act.w);
+    // var t = 'max activation: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
+    // layer_div.appendChild(document.createTextNode(t));
+    // layer_div.appendChild(document.createElement('br'));
+
+    // var mma = maxmin(L.out_act.dw);
+    // var t = 'max gradient: ' + f2t(mma.maxv) + ', min: ' + f2t(mma.minv);
+    // layer_div.appendChild(document.createTextNode(t));
+    // layer_div.appendChild(document.createElement('br'));
+
+    // // number of parameters
+    // if(L.layer_type==='conv' || L.layer_type==='local') {
+    //   var tot_params = L.sx*L.sy*L.in_depth*L.filters.length + L.filters.length;
+    //   var t = 'parameters: ' + L.filters.length + 'x' + L.sx + 'x' + L.sy + 'x' + L.in_depth + '+' + L.filters.length + ' = ' + tot_params;
+    //   layer_div.appendChild(document.createTextNode(t));
+    //   layer_div.appendChild(document.createElement('br'));
+    // }
+    // if(L.layer_type==='fc') {
+    //   var tot_params = L.num_inputs*L.filters.length + L.filters.length;
+    //   var t = 'parameters: ' + L.filters.length + 'x' + L.num_inputs + '+' + L.filters.length + ' = ' + tot_params;
+    //   layer_div.appendChild(document.createTextNode(t));
+    //   layer_div.appendChild(document.createElement('br'));
+    // }
 
     // css madness needed here...
-    var clear = document.createElement('hr');
+    var clear = document.createElement('div');
     clear.className = 'clear';
     layer_div.appendChild(clear);
 
-
+    ///////////////////////////////////
     ///////////////////////////////////
     //create option box
 
-    create_checkbox(layer_div, 'checkbox_id1', 'Show t-SNE');
-    create_checkbox(layer_div, 'checkbox_id2', 'Image / Dot');
+    var options_div = document.createElement('div');
+    var options_div_id = 'options_div'+i;
+    options_div.setAttribute('id', options_div_id);
+    options_div.setAttribute('class', 'collapse');
 
-    // var create_radio_btn = function(out_to, name, id, title)
+    var checkbox_show_tsne_id = 'checkbox1_id' + i;
+
+    var checkbox_tsne;
+    if(L.layer_type !='input') {
+      checkbox_tsne = create_checkbox_collapse(layer_div, checkbox_show_tsne_id, i, 'Show t-SNE', options_div_id);
+    }
+
+    $(checkbox_tsne).change(function() {
+
+      if(this.checked) {
+        //////////////////
+
+        //create tsne-panel START
+        var layer_div = document.createElement('div');
+        var layer_num  = this.getAttribute('layer_num');
+        var scatterplot = document.createElement('div');
+        var scatterplot_div_id = 'scatter' + layer_num;
+        console.log('create this: ' + layer_num);
+
+        if(document.getElementById(scatterplot_div_id) == undefined) {
+
+          var layer_panel_col_div = document.createElement('div');
+          if (document.getElementById("small_tsne").checked) {
+            layer_panel_col_div.className = "col-md-6 nopadding";
+          } else {
+            layer_panel_col_div.className = "";
+          }
+          col2_div.appendChild(layer_panel_col_div);
+
+
+          var layer_panel = document.createElement('div');
+          layer_panel.setAttribute('id', scatterplot_div_id);
+          var title_div = document.createElement('div');
+          var title_icon = document.createElement('i');
+          title_icon.className = 'glyphicon glyphicon-chevron-down'
+          layer_panel.className = "panel panel-primary"
+          layer_div.className = 'panel-body';
+          title_div.className = 'panel-heading'
+
+          title_div.addEventListener('click', function(){
+
+            if ($(this).hasClass('panel-collapsed')) {
+              // expand the panel
+              $(this).parents('.panel').find('.panel-body').slideDown();
+              $(this).removeClass('panel-collapsed');
+              $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+            else {
+              // collapse the panel
+              $(this).parents('.panel').find('.panel-body').slideUp();
+              $(this).addClass('panel-collapsed');
+              $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            }
+
+          });
+
+          var L = net.layers[parseInt(layer_num)];
+          var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
+          set_panel_color(L.layer_type, layer_panel);
+
+          // console.log(this);
+          title_div.appendChild(document.createTextNode(t));
+
+          var title_span = document.createElement('span');
+          title_span.className = 'pull-right clickable';
+
+          // Set default tsnescatter
+          var tsne_width = $(layer_panel_col_div).width();
+
+          var layer_type = L.layer_type;
+          if(layer_type == 'conv' || layer_type == 'fc') {
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);  
+          }
+          else {
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);
+          }
+          
+          title_span.appendChild(title_icon);
+          title_div.appendChild(title_span);
+          layer_div.appendChild(scatterplot);
+          layer_panel.appendChild(title_div);
+          layer_panel.appendChild(layer_div);
+          layer_panel_col_div.appendChild(layer_panel);
+
+        }
+        //create tsne-panel END
+        //////////////////
+      } else {
+        // delete tsne
+        var layer_num  = this.getAttribute('layer_num');
+        var scatterplot_div_id = 'scatter' + layer_num;
+        console.log('delete this: ' + layer_num);
+        var scatterplot_div = document.getElementById(scatterplot_div_id);
+        // delete tsnescatter;
+        scatterplot_div.remove();
+      }
+
+    });
+
+    // Show Image
+    // var checkbox_show_img = 'checkbox2_id' + i;
+    // create_checkbox(options_div, checkbox_show_img, 'Show Image', true);
+
     var radio_name = 'radio_name'+i;
 
-    if(L.layer_type==='conv') {
-      create_radio_btn(layer_div, radio_name, 'option1', 'filter weight');
-      create_radio_btn(layer_div, radio_name, 'option1', 'filter grad');
-    }
-    create_radio_btn(layer_div, radio_name, 'option1', 'activation');
-    create_radio_btn(layer_div, radio_name, 'option1', 'activation grad');
+    if(L.layer_type==='conv' || L.layer_type==='fc') {
+      create_radio_btn(options_div, radio_name,radio_name+'opt1', i, 'filter weight', true);
 
+      // checked="checked"
+
+      create_radio_btn(options_div, radio_name, radio_name +'opt2', i, 'filter grad', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', false);
+      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
+    } else {
+      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', true);
+      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
+    }
+
+    //radio change
+    $(options_div).on("change", "input:radio[name='"+ String('radio_name'+i) + "']", function(){
+
+      var radioValue = $(this).val();
+      var layer_num  = this.getAttribute('layer_num');
+      var scatterplot_div_id = 'scatter' + layer_num;
+      var scatterplot_div = document.getElementById(scatterplot_div_id);
+      var panel_body = scatterplot_div.getElementsByClassName('panel-body')[0];
+      var scatterplot = panel_body.getElementsByTagName('div')[0];
+      // panel_body.innerHTML = "";
+      scatterplot.remove();
+      var scatterplot = document.createElement('div');
+
+      var layer_panel_col_div = document.getElementsByClassName('col-md-6 nopadding')[0];
+      var tsne_width = $(layer_panel_col_div).width();
+
+      if (radioValue == "filter weight") {
+        // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);        
+      } else if (radioValue == "filter grad") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, true);        
+      } else if (radioValue == "activation") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);        
+      } else if (radioValue == "activation grad") {
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, true);
+      }
+
+      panel_body.appendChild(scatterplot);
+
+    });
     ///////////////////////////////////
 
     //close divs
+    layer_div.appendChild(options_div);
     layer_panel.appendChild(layer_div);
 
-    tsne_panel.appendChild(tsne_title_div);
-    tsne_panel.appendChild(tsne_body_div);
-
     col1_div.appendChild(layer_panel);
-    col2_div.appendChild(tsne_panel);
 
     row_div.appendChild(col1_div);
     row_div.appendChild(col2_div);
@@ -287,7 +421,7 @@ var visualize_tsne = function(net, elt) {
   }
 }
 
-var create_radio_btn = function(out_to, name, id, title) {
+var create_radio_btn = function(out_to, name, id, layer_num, title, checked) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'radio');
@@ -295,8 +429,15 @@ var create_radio_btn = function(out_to, name, id, title) {
   var radio_input = document.createElement('input');
   radio_input.setAttribute('type', 'radio');
   radio_input.setAttribute('name', name);
+  radio_input.setAttribute('value', title);
+  radio_input.setAttribute('layer_num', layer_num);
+
   radio_input.setAttribute('id', id);
   radio_label.appendChild(radio_input);
+
+  if(checked) {
+    radio_input.setAttribute('checked', 'checked');
+  }
   
   radio_label.appendChild(document.createTextNode(title));
   radio_div.appendChild(radio_label);
@@ -304,10 +445,11 @@ var create_radio_btn = function(out_to, name, id, title) {
 
 }
 
-var create_checkbox = function(out_to, id, title) {
+var create_checkbox = function(out_to, id, title, checked) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'checkbox');
+
   var radio_label = document.createElement('label');
   var radio_input = document.createElement('input');
   radio_input.setAttribute('type', 'checkbox');
@@ -315,9 +457,64 @@ var create_checkbox = function(out_to, id, title) {
   radio_input.setAttribute('id', id);
   radio_label.appendChild(radio_input);
   
+  if(checked) {
+    radio_input.setAttribute('checked', 'checked');
+  }
+
   radio_label.appendChild(document.createTextNode(title));
   radio_div.appendChild(radio_label);
   out_to.appendChild(radio_div);
 
+  return radio_input;
+}
+
+var create_checkbox_collapse = function(out_to, id, layer_num, title, target) {
+
+  var target_id = '#' + target;
+
+  var radio_div = document.createElement('div');
+  radio_div.setAttribute('class', 'checkbox');
+  radio_div.setAttribute('data-toggle', 'collapse');
+  radio_div.setAttribute('data-target', target_id);
+
+  var radio_label = document.createElement('label');
+  var radio_input = document.createElement('input');
+  radio_input.setAttribute('type', 'checkbox');
+  radio_input.setAttribute('value', '');
+  radio_input.setAttribute('id', id);
+  radio_input.setAttribute('layer_num', layer_num);
+
+  radio_label.appendChild(radio_input);
+  
+  radio_label.appendChild(document.createTextNode(title));
+  radio_div.appendChild(radio_label);
+  out_to.appendChild(radio_div);
+
+  return radio_input;
+}
+
+var set_panel_color = function(layer_type, l_panel) {
+
+    if(layer_type == 'conv') {
+      l_panel.className = "panel panel-info"
+    }
+    else if(layer_type == 'relu') {
+      l_panel.className = "panel panel-danger"
+    }
+    else if(layer_type == 'pool') {
+      l_panel.className = "panel panel-success"
+    }
+    else if(layer_type == 'softmax') {
+      l_panel.className = "panel panel-primary"
+    }
+    else if(layer_type == 'fc') {
+      l_panel.className = "panel panel-warning"
+    }
+    else {
+      l_panel.className = "panel panel-primary"
+      // layer_div.className = 'panel-body';
+      // title_div.className = 'panel-heading';
+      // title_icon.className = 'glyphicon glyphicon-chevron-up'
+    }
 }
 
