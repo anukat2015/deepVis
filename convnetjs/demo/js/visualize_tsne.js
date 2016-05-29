@@ -389,7 +389,8 @@ var visualize_tsne = function(net, elt) {
       scatterplot.remove();
       var scatterplot = document.createElement('div');
 
-      var tsne_width = $(col2_div).width();
+      var layer_panel_col_div = document.getElementsByClassName('col-md-6 nopadding')[0];
+      var tsne_width = $(layer_panel_col_div).width();
 
       if (radioValue == "filter weight") {
         // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
