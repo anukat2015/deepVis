@@ -12,39 +12,39 @@ var visualize_tsne = function(net, elt) {
   var col2_div = document.createElement('div');
   col2_div.className = 'col-sm-9';
 
-    // create tsne panel
-  var tsne_panel = document.createElement('div');
-  var tsne_title_div = document.createElement('div');
-  var tsne_body_div = document.createElement('div');
+  // create tsne panel
+  // var tsne_panel = document.createElement('div');
+  // var tsne_title_div = document.createElement('div');
+  // var tsne_body_div = document.createElement('div');
 
-  tsne_panel.className = "panel panel-default"
-  tsne_body_div.className = 'panel-body';
-  tsne_title_div.className = 'panel-heading panel-heading-custom2';
-  tsne_title_div.appendChild(document.createTextNode('t-SNE'));
+  // tsne_panel.className = "panel panel-default"
+  // tsne_body_div.className = 'panel-body';
+  // tsne_title_div.className = 'panel-heading panel-heading-custom2';
+  // tsne_title_div.appendChild(document.createTextNode('t-SNE'));
 
-  //chevron 
-  var tsne_title_icon = document.createElement('i');
-  tsne_title_icon.className = 'glyphicon glyphicon-chevron-up'
-  var tsne_title_span = document.createElement('span');
-  tsne_title_span.className = 'pull-right clickable';
-  tsne_title_span.appendChild(tsne_title_icon);
-  tsne_title_div.appendChild(tsne_title_span);
-  tsne_title_div.addEventListener('click', function(){
+  // //chevron 
+  // var tsne_title_icon = document.createElement('i');
+  // tsne_title_icon.className = 'glyphicon glyphicon-chevron-up'
+  // var tsne_title_span = document.createElement('span');
+  // tsne_title_span.className = 'pull-right clickable';
+  // tsne_title_span.appendChild(tsne_title_icon);
+  // tsne_title_div.appendChild(tsne_title_span);
+  // tsne_title_div.addEventListener('click', function(){
   
-    if ($(this).hasClass('panel-collapsed')) {
-      // expand the panel
-      $(this).parents('.panel').find('.panel-body').slideDown();
-      $(this).removeClass('panel-collapsed');
-      $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-    }
-    else {
-      // collapse the panel
-      $(this).parents('.panel').find('.panel-body').slideUp();
-      $(this).addClass('panel-collapsed');
-      $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-    }
+  //   if ($(this).hasClass('panel-collapsed')) {
+  //     // expand the panel
+  //     $(this).parents('.panel').find('.panel-body').slideDown();
+  //     $(this).removeClass('panel-collapsed');
+  //     $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+  //   }
+  //   else {
+  //     // collapse the panel
+  //     $(this).parents('.panel').find('.panel-body').slideUp();
+  //     $(this).addClass('panel-collapsed');
+  //     $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+  //   }
 
-  });
+  // });
 
   // show activations in each layer
   var N = net.layers.length;
@@ -178,7 +178,7 @@ var visualize_tsne = function(net, elt) {
         $(this).parents('.panel').find('.panel-body').slideUp();
         $(this).addClass('panel-collapsed');
         $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-    }
+      }
 
     });
 
@@ -260,19 +260,64 @@ var visualize_tsne = function(net, elt) {
     $(checkbox_tsne).change(function() {
 
       if(this.checked) {
-
+        //////////////////
+        //create tsne-panel
+        var layer_div = document.createElement('div');
         var layer_num  = this.getAttribute('layer_num');
         var scatterplot = document.createElement('div');
         var scatterplot_div_id = 'scatter' + layer_num;
         console.log('create this: ' + layer_num);
+
         if(document.getElementById(scatterplot_div_id) == undefined) {
-          scatterplot.setAttribute('id', scatterplot_div_id);
 
-          var tsne_width = $(window).width();
-          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, 3, tsne_width);
-          tsne_body_div.appendChild(scatterplot);
+          var layer_panel = document.createElement('div');
+          layer_panel.setAttribute('id', scatterplot_div_id);
+          var title_div = document.createElement('div');
+          var title_icon = document.createElement('i');
+          title_icon.className = 'glyphicon glyphicon-chevron-down'
+          layer_panel.className = "panel panel-primary"
+          layer_div.className = 'panel-body';
+          title_div.className = 'panel-heading'
+
+          title_div.addEventListener('click', function(){
+
+            if ($(this).hasClass('panel-collapsed')) {
+              // expand the panel
+              $(this).parents('.panel').find('.panel-body').slideDown();
+              $(this).removeClass('panel-collapsed');
+              $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+            else {
+              // collapse the panel
+              $(this).parents('.panel').find('.panel-body').slideUp();
+              $(this).addClass('panel-collapsed');
+              $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            }
+
+          });
+          
+          var L = net.layers[parseInt(layer_num)];
+          var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
+
+          console.log(this);
+          title_div.appendChild(document.createTextNode(t));
+
+          var title_span = document.createElement('span');
+          title_span.className = 'pull-right clickable';
+
+          // tsnescatter
+          var tsne_width = $(col2_div).width();
+          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, 3, tsne_width);        
+
+          title_span.appendChild(title_icon);
+          title_div.appendChild(title_span);
+          layer_panel.appendChild(title_div);
+          layer_div.appendChild(scatterplot);
+          layer_panel.appendChild(layer_div);
+          col2_div.appendChild(layer_panel);
+
         }
-
+        //////////////////
       } else {
         // delete tsne
         var layer_num  = this.getAttribute('layer_num');
@@ -309,11 +354,11 @@ var visualize_tsne = function(net, elt) {
     layer_div.appendChild(options_div);
     layer_panel.appendChild(layer_div);
 
-    tsne_panel.appendChild(tsne_title_div);
-    tsne_panel.appendChild(tsne_body_div);
+    // tsne_panel.appendChild(tsne_title_div);
+    // tsne_panel.appendChild(tsne_body_div);
 
     col1_div.appendChild(layer_panel);
-    col2_div.appendChild(tsne_panel);
+    // col2_div.appendChild(tsne_panel);
 
     row_div.appendChild(col1_div);
     row_div.appendChild(col2_div);

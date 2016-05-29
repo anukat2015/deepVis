@@ -203,7 +203,7 @@ var tsnejscatter = (function(){
   var drawEmbedding = function(data, outdom, showImg, L, isFilter, tsne_width) {
 
     var margin = { top: 0, right: 50, bottom: 50, left: 50 },
-        outerWidth = tsne_width * 0.6,
+        outerWidth = tsne_width,
         outerHeight = outerWidth * 0.8,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
