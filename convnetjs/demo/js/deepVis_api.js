@@ -284,7 +284,7 @@ var change_filter = function(net, layer_set_index, add_filter) {
     var ldepth = last_filter.depth;
 
     for(var i=0; i<lsx*lsy*ldepth; i++) {
-      last_filter.w[i] = last_filter.w[i] / 2;
+      last_filter.w[i] = getRandomFloat(-0.2, 0.2);
     }
     //add new weight
     layer_filters.push(last_filter);
@@ -295,7 +295,7 @@ var change_filter = function(net, layer_set_index, add_filter) {
 
     var normalArray = [].slice.call(layer_biases.w);
     var last_bias = layer_biases.w[layer_biases.depth-1];
-    normalArray.push(last_bias / 2);
+    normalArray.push(getRandomFloat(-0.2, 0.2));
     // console.log(normalArray);
 
     layer_biases.w = new Float64Array(normalArray);
@@ -332,7 +332,7 @@ var change_filter = function(net, layer_set_index, add_filter) {
       var normalArray = [].slice.call(afilter.w);
 
       for(var j=0; j<afilter.sx * afilter.sy; j++) {
-        normalArray.push(0.1);
+        normalArray.push(getRandomFloat(-0.2, 0.2));
       }
       afilter.w = new Float64Array(normalArray);
     }
