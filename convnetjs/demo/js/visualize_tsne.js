@@ -163,6 +163,13 @@ var visualize_tsne = function(net, elt) {
 
     });
 
+    // Default open
+    if(i == 1) {
+      layer_div.className = 'panel-body';
+      title_div.className = 'panel-heading'
+      title_icon.className = 'glyphicon glyphicon-chevron-up'
+    }
+
     var t = L.layer_type + ' (' + L.out_sx + 'x' + L.out_sy + 'x' + L.out_depth + ')';
     title_div.appendChild(document.createTextNode(t));
 
@@ -287,10 +294,17 @@ var visualize_tsne = function(net, elt) {
           var title_span = document.createElement('span');
           title_span.className = 'pull-right clickable';
 
-          // default tsnescatter
+          // Set default tsnescatter
           var tsne_width = $(col2_div).width();
-          var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);        
 
+          var layer_type = L.layer_type;
+          if(layer_type == 'conv' || layer_type == 'fc') {
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);  
+          }
+          else {
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);
+          }
+          
           title_span.appendChild(title_icon);
           title_div.appendChild(title_span);
           layer_panel.appendChild(title_div);
