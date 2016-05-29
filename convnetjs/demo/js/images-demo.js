@@ -288,6 +288,7 @@ var visualize_activations = function(net, elt) {
 
 // loads a training image and trains on it with the network
 var paused = false;
+var paused_vis = false;
 var load_and_step = function() {
   if(paused) return; 
 
@@ -487,7 +488,9 @@ var step = function(sample) {
     if(step_num === 0){
       window.nnv = new NeuralNetVis("#neural_net_vis", ae.layer_data, "#deepVis_div");
     }else{
-      window.nnv.update(ae.layer_data);
+      if(!paused_vis){
+        window.nnv.update(ae.layer_data);
+      }
     }
     d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
   }
@@ -537,6 +540,12 @@ var toggle_pause = function() {
   paused = !paused;
   var btn = document.getElementById('buttontp');
   if(paused) { btn.value = 'resume' }
+  else { btn.value = 'pause'; }
+}
+var toggle_vis = function() {
+  paused_vis = !paused_vis;
+  var btn = document.getElementById('toggle_vis_btn');
+  if(paused_vis) { btn.value = 'resume' }
   else { btn.value = 'pause'; }
 }
 var dump_json = function() {
