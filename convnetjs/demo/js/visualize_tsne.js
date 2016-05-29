@@ -280,6 +280,7 @@ var visualize_tsne = function(net, elt) {
         if(document.getElementById(scatterplot_div_id) == undefined) {
 
           var layer_panel_col_div = document.createElement('div');
+          layer_panel_col_div.setAttribute('id', 'layer_panel_col_div');
           if (document.getElementById("small_tsne").checked) {
             layer_panel_col_div.className = "col-md-6 nopadding";
           } else {
@@ -389,8 +390,16 @@ var visualize_tsne = function(net, elt) {
       scatterplot.remove();
       var scatterplot = document.createElement('div');
 
-      var layer_panel_col_div = document.getElementsByClassName('col-md-6 nopadding')[0];
-      var tsne_width = $(layer_panel_col_div).width();
+      var layer_panel_col_div;
+      var tsne_width = 100;
+
+      if (document.getElementById("small_tsne").checked) {
+        layer_panel_col_div = document.getElementsByClassName('col-md-6 nopadding')[0];
+        tsne_width = $(layer_panel_col_div).width();
+      } else {
+        layer_panel_col_div = document.getElementById('layer_panel_col_div');
+        tsne_width = $(layer_panel_col_div).width();
+      }
 
       if (radioValue == "filter weight") {
         // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
