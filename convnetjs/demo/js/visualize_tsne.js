@@ -338,19 +338,20 @@ var visualize_tsne = function(net, elt) {
       var layer_num  = this.getAttribute('layer_num');
       var scatterplot_div_id = 'scatter' + layer_num;
       var scatterplot_div = document.getElementById(scatterplot_div_id);
-      scatterplot_div.innerHTML = "";
+      var panel_body = scatterplot_div.getElementsByClassName('panel-body')[0];
+      panel_body.innerHTML = "";
 
       var tsne_width = $(col2_div).width();
 
       if (radioValue == "filter weight") {
         // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, true, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, true, i, tsne_width, false);        
       } else if (radioValue == "filter grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, true, i, tsne_width, true);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, true, i, tsne_width, true);        
       } else if (radioValue == "activation") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, false, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, false, i, tsne_width, false);        
       } else if (radioValue == "activation grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot_div, false, true, false, i, tsne_width, true);
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], panel_body, false, true, false, i, tsne_width, true);
       }
 
     });
