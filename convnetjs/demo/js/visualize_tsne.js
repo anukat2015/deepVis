@@ -8,43 +8,63 @@ var visualize_tsne = function(net, elt) {
   row_div.className = 'row';
 
   var col1_div = document.createElement('div');
-  col1_div.className = 'col-sm-3';
+  col1_div.className = 'col-sm-3 col-md-2';
   var col2_div = document.createElement('div');
-  col2_div.className = 'col-sm-9';
+  col2_div.className = 'col-sm-9 col-md-10';
 
+  ///////////////////
   // create tsne panel
-  // var tsne_panel = document.createElement('div');
-  // var tsne_title_div = document.createElement('div');
-  // var tsne_body_div = document.createElement('div');
+  var tsne_panel = document.createElement('div');
+  var tsne_title_div = document.createElement('div');
+  var tsne_body_div = document.createElement('div');
 
-  // tsne_panel.className = "panel panel-default"
-  // tsne_body_div.className = 'panel-body';
-  // tsne_title_div.className = 'panel-heading panel-heading-custom2';
-  // tsne_title_div.appendChild(document.createTextNode('t-SNE'));
+  tsne_panel.className = "panel panel-default"
+  tsne_body_div.className = 'panel-body';
+  tsne_title_div.className = 'panel-heading panel-heading-custom2';
+  tsne_title_div.appendChild(document.createTextNode('Setting'));
 
-  // //chevron 
-  // var tsne_title_icon = document.createElement('i');
-  // tsne_title_icon.className = 'glyphicon glyphicon-chevron-up'
-  // var tsne_title_span = document.createElement('span');
-  // tsne_title_span.className = 'pull-right clickable';
-  // tsne_title_span.appendChild(tsne_title_icon);
-  // tsne_title_div.appendChild(tsne_title_span);
-  // tsne_title_div.addEventListener('click', function(){
+  //chevron 
+  var tsne_title_icon = document.createElement('i');
+  tsne_title_icon.className = 'glyphicon glyphicon-chevron-up'
+  var tsne_title_span = document.createElement('span');
+  tsne_title_span.className = 'pull-right clickable';
+  tsne_title_span.appendChild(tsne_title_icon);
+  tsne_title_div.appendChild(tsne_title_span);
+  tsne_title_div.addEventListener('click', function(){
   
-  //   if ($(this).hasClass('panel-collapsed')) {
-  //     // expand the panel
-  //     $(this).parents('.panel').find('.panel-body').slideDown();
-  //     $(this).removeClass('panel-collapsed');
-  //     $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-  //   }
-  //   else {
-  //     // collapse the panel
-  //     $(this).parents('.panel').find('.panel-body').slideUp();
-  //     $(this).addClass('panel-collapsed');
-  //     $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-  //   }
+    if ($(this).hasClass('panel-collapsed')) {
+      // expand the panel
+      $(this).parents('.panel').find('.panel-body').slideDown();
+      $(this).removeClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    }
+    else {
+      // collapse the panel
+      $(this).parents('.panel').find('.panel-body').slideUp();
+      $(this).addClass('panel-collapsed');
+      $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    }
 
-  // });
+  });
+
+  //Add to tsne_body_div
+  var ri = create_checkbox(tsne_body_div, 'small_tsne', 'Small t-SNE', false);
+  $(ri).change(function() {
+    if(this.checked) {
+        //Do stuff
+        console.log('show img checkbox checked');
+        col2_div.className = 'col-sm-9 col-md-5';
+
+    } else {
+      col2_div.className = 'col-sm-9 col-md-10';
+    }
+  });
+
+  //append
+  tsne_panel.appendChild(tsne_title_div);
+  tsne_panel.appendChild(tsne_body_div);
+  col2_div.appendChild(tsne_panel);
+  ///////////////////
 
   // show activations in each layer
   var N = net.layers.length;
@@ -307,8 +327,8 @@ var visualize_tsne = function(net, elt) {
           
           title_span.appendChild(title_icon);
           title_div.appendChild(title_span);
-          layer_panel.appendChild(title_div);
           layer_div.appendChild(scatterplot);
+          layer_panel.appendChild(title_div);
           layer_panel.appendChild(layer_div);
           col2_div.appendChild(layer_panel);
 
@@ -381,11 +401,7 @@ var visualize_tsne = function(net, elt) {
     layer_div.appendChild(options_div);
     layer_panel.appendChild(layer_div);
 
-    // tsne_panel.appendChild(tsne_title_div);
-    // tsne_panel.appendChild(tsne_body_div);
-
     col1_div.appendChild(layer_panel);
-    // col2_div.appendChild(tsne_panel);
 
     row_div.appendChild(col1_div);
     row_div.appendChild(col2_div);
@@ -438,12 +454,7 @@ var create_checkbox = function(out_to, id, title, checked) {
   radio_div.appendChild(radio_label);
   out_to.appendChild(radio_div);
 
-  $(radio_input).change(function() {
-    if(this.checked) {
-        //Do stuff
-        console.log('show img checkbox checked');
-    }
-  });
+  return radio_input;
 }
 
 var create_checkbox_collapse = function(out_to, id, layer_num, title, target) {
