@@ -373,7 +373,7 @@ NeuralNetVis.prototype.draw_path = function(threshold){
     		if(d[0]["layer"]==0){
     			return .33;
     		}
-    		if(domain_scale.indexOf(d[0]["path_intensity"]) < domain_scale.length * 0.6){
+    		if(domain_scale.indexOf(d[0]["path_intensity"]) < domain_scale.length * 0.7){
     			return 0;
     		}else{
     			return .33;
@@ -401,33 +401,33 @@ NeuralNetVis.prototype.set_panel = function(){
 						.attr("id", "panel_div")
 						.style("height", _self.node_size*4+ "px");
 						
-	_self.layer_div = _self.panel_div.append("div")
-						.style({width: _self.node_size*3 + "px",
-							height: _self.node_size + "px",
-							"vertical-align": "middle",
-							margin: "auto"});
+	// _self.layer_div = _self.panel_div.append("div")
+	// 					.style({width: _self.node_size*3 + "px",
+	// 						height: _self.node_size + "px",
+	// 						"vertical-align": "middle",
+	// 						margin: "auto"});
 
-	_self.layer_div.append("div").style({"text-align": "center"}).text("Layer Sets:");
+	// _self.layer_div.append("div").style({"text-align": "center"}).text("Layer Sets:");
 
-	_self.layer_div.append("a").attr("class", "btn-large").attr("id", "btn_layer_minus").attr("href", "#")
-					.style("float", "left")
-				.append("img")
-			      .attr("src", function(d){ return "/convnetjs/demo/image/minus.png"; })
-  			      .attr("class", "layer_minus")
-			      .attr("x", -_self.node_size)
-			      .attr("y", "0px")
-			      .attr("width", _self.node_size)
-			      .attr("height", _self.node_size);
+	// _self.layer_div.append("a").attr("class", "btn-large").attr("id", "btn_layer_minus").attr("href", "#")
+	// 				.style("float", "left")
+	// 			.append("img")
+	// 		      .attr("src", function(d){ return "/convnetjs/demo/image/minus.png"; })
+ //  			      .attr("class", "layer_minus")
+	// 		      .attr("x", -_self.node_size)
+	// 		      .attr("y", "0px")
+	// 		      .attr("width", _self.node_size)
+	// 		      .attr("height", _self.node_size);
 
-	_self.layer_div.append("a").attr("class", "btn-large").attr("id", "btn_layer_plus").attr("href", "#")
-						.style("float", "right")
-				.append("img")
-			      .attr("src", function(d){ return "/convnetjs/demo/image/plus.png"; })
-			      .attr("class", "layer_plus")
-			      .attr("x", _self.node_size)
-			      .attr("y", "0px")
-			      .attr("width", _self.node_size)
-			      .attr("height", _self.node_size);
+	// _self.layer_div.append("a").attr("class", "btn-large").attr("id", "btn_layer_plus").attr("href", "#")
+	// 					.style("float", "right")
+	// 			.append("img")
+	// 		      .attr("src", function(d){ return "/convnetjs/demo/image/plus.png"; })
+	// 		      .attr("class", "layer_plus")
+	// 		      .attr("x", _self.node_size)
+	// 		      .attr("y", "0px")
+	// 		      .attr("width", _self.node_size)
+	// 		      .attr("height", _self.node_size);
     
     _self.filter_div = [];
 	for (var i = 0; i < _self.layer_size_initial; i++) {
@@ -437,8 +437,8 @@ NeuralNetVis.prototype.set_panel = function(){
 				height: _self.node_size+ "px",
 				"vertical-align": "middle",
 				"position": "absolute",
-				"top": _self.node_size*2+ "px",
-				"left": function(){return ((i+1)*_self.unit_width*3)+"px";}}));
+				"top": 10*2+ "px",
+				"left": function(){return ((i+1)*_self.unit_width*2.8)+"px";}}));
 
 		_self.filter_div[i].append("div").style({"text-align": "center"}).text("Filters:");
 
