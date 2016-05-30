@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>cnnVis CIFAR-10</title>
+  <title>ReVACNN CIFAR-10</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -49,11 +49,11 @@
     var layer_defs, net, trainer;
     var t = "layer_defs = [];\n\
     layer_defs.push({type:'input', out_sx:32, out_sy:32, out_depth:3});\n\
-    layer_defs.push({type:'conv', sx:5, filters:4, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'conv', sx:5, filters:16, stride:1, pad:2, activation:'relu'});\n\
     layer_defs.push({type:'pool', sx:2, stride:2});\n\
-    layer_defs.push({type:'conv', sx:5, filters:5, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
     layer_defs.push({type:'pool', sx:2, stride:2});\n\
-    layer_defs.push({type:'conv', sx:5, filters:5, stride:1, pad:2, activation:'relu'});\n\
+    layer_defs.push({type:'conv', sx:5, filters:20, stride:1, pad:2, activation:'relu'});\n\
     layer_defs.push({type:'pool', sx:2, stride:2});\n\
     layer_defs.push({type:'softmax', num_classes:10});\n\
     \n\
@@ -76,7 +76,7 @@
 
   <!-- tabs START-->
   <div class="container">
-    <h1>cnnVis</h1>
+    <h1>ReVACNN</h1>
       <ul class="nav nav-tabs">
       <li class="active"><a data-toggle="tab" href="#home">Network</a></li>
       <li><a data-toggle="tab" href="#menu1">Training Stats</a></li>

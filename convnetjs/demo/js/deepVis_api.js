@@ -100,10 +100,15 @@ var get_layer_canvas = function(L, isFilter, grads, index, scale) {
   return canv;
 }
 
-var get_canvas_img = function(L, index) {
+var get_canvas_img = function(L, index, relu) {
 
   // var get_layer_canvas = function(L, isFilter, grads, index, 2) {
   if(L.layer_type == 'conv') {
+
+    if(relu)
+    return get_layer_canvas(L, false, false, index, 2);
+
+    else
     return get_layer_canvas(L, true, false, index, 2);
   }
   else if(L.layer_type == 'relu') {

@@ -21,7 +21,12 @@ var api_example = function(net) {
   // get_canvas_img API example START
   for(var i=0; i<N; i++) {
     // layer start
+    var relu = false;
     var L = net.layers[i];
+    if(L.layer_type == 'relu') {
+      relu = true;
+      L = net.layers[i-1];
+    }
     
     // example_layer_div.appendChild(document.createTextNode('layer: ' + i));
     // example_layer_div.appendChild(document.createElement('br'));
@@ -31,7 +36,7 @@ var api_example = function(net) {
     var array_of_images = [];
     for(var j=0; j<num_element; j++) {
 
-      var canvas_img = get_canvas_img(L, j);
+      var canvas_img = get_canvas_img(L, j, relu);
       // example_layer_div.appendChild(canvas_img);
       // image
       array_of_images.push(canvas_img);

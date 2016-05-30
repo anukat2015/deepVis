@@ -373,7 +373,7 @@ NeuralNetVis.prototype.draw_path = function(threshold){
     		if(d[0]["layer"]==0){
     			return .33;
     		}
-    		if(domain_scale.indexOf(d[0]["path_intensity"]) < domain_scale.length/2){
+    		if(domain_scale.indexOf(d[0]["path_intensity"]) < domain_scale.length * 0.6){
     			return 0;
     		}else{
     			return .33;
