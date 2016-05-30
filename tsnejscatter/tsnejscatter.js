@@ -187,7 +187,8 @@ var tsnejscatter = (function(){
       step(data, T, svgc.xscale, svgc.yscale, svgc.zoomBeh, 
         svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
 
-      if(T.iter > 700) {
+      if(T.iter > 2000) {
+        console.log("ddd")
         clearInterval(iid);
       }
 
@@ -207,6 +208,8 @@ var tsnejscatter = (function(){
     $("#option1").click(function() {
       console.log('option1');
     });
+
+    return T;
 
   }
 
@@ -473,15 +476,79 @@ var tsnejscatter = (function(){
 
     var change_p = change_p;
 
-    init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width, grads);
+    this.isArrData = isArrData;
+    this.isFilter = isFilter;
+
+    this.T = init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width, grads);
   }
 
   tsnejsc.prototype = {
 
-    change_p: function(data) {
-      var data = preProData(data);
-      // T.changeP(data);
-      //console.log('changeP');
+    change_p: function(inputdata) {
+      console.log('change:' + layer_num);
+
+      var data = inputdata || {};
+      var L = data;
+
+      if(this.isArrData) {
+        data = preProData(data);
+      } else {
+
+        if(this.isFilter) {
+          var filter_data = [];
+          for(var j=0; j< L.filters.length; j++) {  
+
+            var A = L.filters[j];
+
+            var afilter = [];
+            
+            for(var d=0;d<A.depth;d++) {
+              for(var x=0;x<A.sx;x++) {
+                for(var y=0;y<A.sy;y++) {
+
+                  var f_gd = 0.0;
+                  if(grads)
+                    f_gd = A.get(x,y,d);
+                  else
+                    f_gd = A.get(x,y,d);
+                  afilter.push(f_gd);
+                }
+              }
+            }
+            filter_data.push(afilter);
+          }
+
+          data = filter_data;
+          // debugger;
+
+        } else {
+          var A = L.out_act;
+          var filter_data = [];
+
+          for(var d=0;d<A.depth;d++) {
+
+            var afilter = [];
+
+            for(var x=0;x<A.sx;x++) {
+              for(var y=0;y<A.sy;y++) {
+                  
+                  var f_gd = 0.0;
+                  if(grads)
+                    f_gd = A.get(x,y,d);
+                  else
+                    f_gd = A.get(x,y,d);
+                afilter.push(f_gd);
+              }
+            }
+            filter_data.push(afilter);
+          }
+
+          data = filter_data;
+        }
+
+      }
+      this.T.changeP(data);
+      console.log('changeP');
     }
 
   }

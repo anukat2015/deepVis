@@ -68,6 +68,7 @@ var visualize_tsne = function(net, elt) {
 
   // show activations in each layer
   var N = net.layers.length;
+  tsneArray = [];
   for(var i=0;i<N;i++) {
 
     var L = net.layers[i];
@@ -330,10 +331,12 @@ var visualize_tsne = function(net, elt) {
 
           var layer_type = L.layer_type;
           if(layer_type == 'conv' || layer_type == 'fc') {
-            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);  
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);
+            tsneArray.push(tsnescatter);  
           }
           else {
             var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);
+            tsneArray.push(tsnescatter);
           }
           
           title_span.appendChild(title_icon);
@@ -428,6 +431,8 @@ var visualize_tsne = function(net, elt) {
     elt.appendChild(row_div);
 
   }
+
+  return tsneArray;
 }
 
 var create_radio_btn = function(out_to, name, id, layer_num, title, checked) {
