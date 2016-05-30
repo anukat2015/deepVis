@@ -289,6 +289,7 @@ var visualize_activations = function(net, elt) {
 // loads a training image and trains on it with the network
 var paused = false;
 var paused_vis = false;
+var initval = true;
 var load_and_step = function() {
   if(paused) return; 
 
@@ -493,7 +494,7 @@ var step = function(sample) {
   //   d3.select("#neural_net_vis").style("position", "relative").style("top", "20px");
   // }
 
-  if(step_num  === 0) {
+  if(initval) {
 
   var radio_div = document.createElement('div');
   radio_div.setAttribute('class', 'checkbox');
@@ -509,17 +510,19 @@ var step = function(sample) {
   var out_to = document.getElementById('deepVis_div');
   out_to.appendChild(radio_div);
 
-  $('body').on("click", '.filter_minus', function(){
-      var id = $(this).attr("filter_id");
-      change_filter(this.net, id, false);
-      var ae = new api_example(net);
-      window.nnv.update(ae.layer_data);
-  });
+  // $('body').on("click", '.filter_minus', function(){
+  //     var id = $(this).attr("filter_id");
+  //     change_filter(this.net, id, false);
+  //     var ae = new api_example(net);
+  //     window.nnv.update(ae.layer_data);
+  // });
 
   $('body').on("click", '#filter_plus', function(){
     console.log('filter_plus!!!');
       change_filter(this.net, 0, true);
   });
+
+  initval = false;
 
 }
  ///////////////////////////////////////////////////////
@@ -584,7 +587,7 @@ var reset_all = function() {
   valAccWindow.reset();
   testAccWindow.reset();
   lossGraph = new cnnvis.Graph(); // reinit graph too
-  step_num = 0;
+  // step_num = 0;
 }
 var load_from_json = function() {
   var jsonString = document.getElementById("dumpjson").value;
