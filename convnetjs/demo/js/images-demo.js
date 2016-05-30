@@ -280,6 +280,7 @@ var get_filter_canvas = function(A, scale, grads, index) {
   return canv;
 }
 
+var tsneArray = [];
 var visualize_activations = function(net, elt) {
   //visualize_tsne.js
   visualize_tsne(net, elt);
@@ -461,7 +462,14 @@ var step = function(sample) {
   // visualize activations
   if(step_num % 700 === 0) {
     var vis_elt = document.getElementById("visnet");
-    visualize_activations(net, vis_elt);
+    if(step_num==0) visualize_activations(net, vis_elt);
+    else {
+      if(tsneArray.length!=0){
+        for(var i=0;i<tsneArray.length;i++) {
+          tsneArray[i].change_p(net.layers[tsneArray[i].layer_num]);
+        }
+      }
+    }
   }
 
   // log progress to graph, (full loss)

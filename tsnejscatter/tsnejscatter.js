@@ -188,7 +188,7 @@ var tsnejscatter = (function(){
         svgc.svg, svgc.gs, svgc.xAxis, svgc.yAxis);
 
       if(T.iter > 2000) {
-        console.log("ddd")
+        console.log("ddd`")
         clearInterval(iid);
       }
 
@@ -478,23 +478,21 @@ var tsnejscatter = (function(){
 
     this.isArrData = isArrData;
     this.isFilter = isFilter;
-
+    this.layer_num = layer_num;
+    this.grads = grads;
     this.T = init_tSNE(data, outdom, isArrData, showImg, L, isFilter, layer_num, tsne_width, grads);
   }
 
   tsnejsc.prototype = {
-
     change_p: function(inputdata) {
-      console.log('change:' + layer_num);
-
       var data = inputdata || {};
       var L = data;
 
       if(this.isArrData) {
         data = preProData(data);
       } else {
-
         if(this.isFilter) {
+          console.log(L.filters);
           var filter_data = [];
           for(var j=0; j< L.filters.length; j++) {  
 
@@ -507,7 +505,7 @@ var tsnejscatter = (function(){
                 for(var y=0;y<A.sy;y++) {
 
                   var f_gd = 0.0;
-                  if(grads)
+                  if(this.grads)
                     f_gd = A.get(x,y,d);
                   else
                     f_gd = A.get(x,y,d);
@@ -517,10 +515,7 @@ var tsnejscatter = (function(){
             }
             filter_data.push(afilter);
           }
-
           data = filter_data;
-          // debugger;
-
         } else {
           var A = L.out_act;
           var filter_data = [];
@@ -542,15 +537,12 @@ var tsnejscatter = (function(){
             }
             filter_data.push(afilter);
           }
-
           data = filter_data;
         }
-
       }
       this.T.changeP(data);
       console.log('changeP');
     }
-
   }
 
   return tsnejsc;

@@ -263,7 +263,7 @@ var visualize_tsne = function(net, elt) {
 
     var checkbox_tsne;
     if(L.layer_type !='input') {
-      checkbox_tsne = create_checkbox_collapse(layer_div, checkbox_show_tsne_id, i, 'Show t-SNE', options_div_id);
+      checkbox_tsne = create_checkbox_collapse(layer_div, i, i, 'Show t-SNE', options_div_id);
     }
 
     $(checkbox_tsne).change(function() {
@@ -330,12 +330,13 @@ var visualize_tsne = function(net, elt) {
           var tsne_width = $(layer_panel_col_div).width();
 
           var layer_type = L.layer_type;
+          var current_layer = this.id;
           if(layer_type == 'conv' || layer_type == 'fc') {
-            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, current_layer, tsne_width, false);
             tsneArray.push(tsnescatter);  
           }
           else {
-            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);
+            var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, current_layer, tsne_width, false);
             tsneArray.push(tsnescatter);
           }
           
@@ -368,22 +369,23 @@ var visualize_tsne = function(net, elt) {
     var radio_name = 'radio_name'+i;
 
     if(L.layer_type==='conv' || L.layer_type==='fc') {
-      create_radio_btn(options_div, radio_name,radio_name+'opt1', i, 'filter weight', true);
+      create_radio_btn(options_div, radio_name,i, i, 'filter weight', true);
 
       // checked="checked"
 
-      create_radio_btn(options_div, radio_name, radio_name +'opt2', i, 'filter grad', false);
-      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', false);
-      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
+      create_radio_btn(options_div, radio_name, i, i, 'filter grad', false);
+      create_radio_btn(options_div, radio_name, i, i, 'activation', false);
+      create_radio_btn(options_div, radio_name, i, i, 'activation grad', false);
     } else {
-      create_radio_btn(options_div, radio_name, radio_name +'opt3', i, 'activation', true);
-      create_radio_btn(options_div, radio_name, radio_name +'opt4', i, 'activation grad', false);
+      create_radio_btn(options_div, radio_name, i, i, 'activation', true);
+      create_radio_btn(options_div, radio_name, i, i, 'activation grad', false);
     }
 
     //radio change
     $(options_div).on("change", "input:radio[name='"+ String('radio_name'+i) + "']", function(){
 
       var radioValue = $(this).val();
+      var current_layer = $(this)[0].id;
       var layer_num  = this.getAttribute('layer_num');
       var scatterplot_div_id = 'scatter' + layer_num;
       var scatterplot_div = document.getElementById(scatterplot_div_id);
@@ -406,13 +408,17 @@ var visualize_tsne = function(net, elt) {
 
       if (radioValue == "filter weight") {
         // var tsnejsc = function($, inputdata, out, isArrData, showImg, isFilter, layer_num, tsne_width) {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, current_layer, tsne_width, false);
+        tsneArray.push(tsnescatter);        
       } else if (radioValue == "filter grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, i, tsne_width, true);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, true, current_layer, tsne_width, true);
+        tsneArray.push(tsnescatter);        
       } else if (radioValue == "activation") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, false);        
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, current_layer, tsne_width, false);
+        tsneArray.push(tsnescatter);        
       } else if (radioValue == "activation grad") {
-        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, i, tsne_width, true);
+        var tsnescatter = new tsnejscatter($, net.layers[layer_num], scatterplot, false, true, false, current_layer, tsne_width, true);
+        tsneArray.push(tsnescatter);
       }
 
       panel_body.appendChild(scatterplot);
