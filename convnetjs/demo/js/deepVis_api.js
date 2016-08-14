@@ -177,7 +177,7 @@ var get_grad_magnitude = function(L, index){
     // }
   }
 
-  return grad_magnitude / area * 200;
+  return Math.log(grad_magnitude / area * 20 + 1);
 }
 
 var get_path_intensity = function(L1, L2, index){

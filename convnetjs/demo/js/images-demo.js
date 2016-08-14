@@ -460,8 +460,8 @@ var step = function(sample) {
 
   // visualize activations
   if(step_num % 700 === 0) {
-    var vis_elt = document.getElementById("visnet");
-    visualize_activations(net, vis_elt);
+    // var vis_elt = document.getElementById("visnet");
+    // visualize_activations(net, vis_elt);
   }
 
   // log progress to graph, (full loss)
