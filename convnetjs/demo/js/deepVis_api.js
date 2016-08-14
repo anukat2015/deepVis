@@ -172,7 +172,7 @@ var get_grad_magnitude = function(L, index){
     // }
   }
 
-  return grad_magnitude / area * 200;
+  return grad_magnitude * 200 / area;
 }
 
 var get_path_intensity = function(L1, L2, index){
@@ -404,5 +404,100 @@ var change_filter = function(net, layer_set_index, add_filter) {
     }
 
   }
+  toggle_pause();
+}
+
+var change_layer = function(net, add_layer) {
+  console.log('change_layer');
+  toggle_pause();
+
+  var net_json = this.net.toJSON();
+  var num_layer = net_json.layers.length;
+
+  //softmax
+  net_json.layers.pop();
+  
+  //fc
+  fc = JSON.parse(JSON.stringify(net_json.layers[num_layer-2]));
+  net_json.layers.pop();
+
+  console.log(net_json);
+
+  num_layer = net_json.layers.length;
+
+
+  //copy
+  var pool = JSON.parse(JSON.stringify(net_json.layers[num_layer-1]));
+  var relu = JSON.parse(JSON.stringify(net_json.layers[num_layer-2]));
+  // var conv = JSON.parse(JSON.stringify(net_json.layers[num_layer-3]));
+  var softmax = {out_depth:10, out_sx:1, out_sy:1, layer_type:'softmax', num_inputs:10};
+
+  var conv = jQuery.extend(true, {}, net_json.layers[num_layer-3]);
+  // console.log(conv);
+
+  // relu
+  relu.out_sx = relu.out_sx / 2;
+  relu.out_sy = relu.out_sy / 2;
+
+  // pool
+  pool.out_sx = pool.out_sx / 2;
+  pool.out_sy = pool.out_sy / 2;
+
+  // conv
+  var indepth = conv.in_depth;
+  var conv_depth = pool.out_depth;
+  conv.in_depth = conv_depth;
+
+  conv.out_sx = conv.out_sx / 2;
+  conv.out_sy = conv.out_sy / 2;
+
+  var next_filters = conv.filters;
+  for(var i=0; i<conv_depth; i++) {
+    var afilter = next_filters[i];
+    afilter.depth = conv.out_depth;
+
+    var normalArray = [].slice.call(afilter.w);
+    var diff = conv.out_depth - indepth;
+    for(var j=0; j<afilter.sx * afilter.sy; j++) {
+      normalArray.push(getRandomFloat(-0.2, 0.2));
+    }
+    afilter.w = new Float64Array(normalArray);
+  }
+
+  // fc
+  fc_depth = pool.out_sx * pool.out_sy * pool.out_depth;
+  fc.num_inputs = fc_depth;
+
+  for(var i=0; i<fc.out_depth; i++) {
+    var afilter = fc.filters[i];
+    afilter.depth = fc_depth;
+
+    var normalArray = [];
+
+    for(var j=0; j<fc_depth; j++) {
+      normalArray.push(getRandomFloat(-0.2, 0.2));
+
+    }
+    afilter.w = new Float64Array(normalArray);
+  }
+
+  console.log(fc);
+
+  //softmax
+  net_json.layers.push(conv);
+  net_json.layers.push(relu);
+  net_json.layers.push(pool);
+  net_json.layers.push(fc);
+  net_json.layers.push(softmax);
+  console.log(net_json);
+
+  var num_layer = net_json.layers.length;
+
+    console.log('num_layer: '+ num_layer);
+
+
+  this.net = new convnetjs.Net();
+  this.net.fromJSON(net_json);
+  reset_all();
   toggle_pause();
 }

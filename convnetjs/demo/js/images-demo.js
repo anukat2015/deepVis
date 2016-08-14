@@ -514,6 +514,15 @@ var step = function(sample) {
       var ae = new api_example(net);
       window.nnv.update(ae.layer_data);
   });
+
+  $('body').on("click", '.layer_plus', function(){
+
+    change_layer(this.net, true);
+    console.log('+++layer');
+
+    var ae = new api_example(net);
+    window.nnv.update(ae.layer_data);
+  });
  ///////////////////////////////////////////////////////
 
   step_num++;
